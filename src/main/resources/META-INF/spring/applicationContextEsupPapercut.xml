@@ -50,12 +50,9 @@
 						<property name="reponseServerUrl" value="https://${runnEntServerHost}" />
 						<property name="payboxActionUrls">
 							<list>
-								<value>https://preprod-tpeweb.paybox.com/cgi/MYchoix_pagepaiement.cgi
-								</value>
-								<value>https://tpeweb.paybox.com/cgi/MYchoix_pagepaiement.cgi
-								</value>
-								<value>https://tpeweb1.paybox.com/cgi/MYchoix_pagepaiement.cgi
-								</value>
+								<value>https://preprod-tpeweb.paybox.com/cgi/MYchoix_pagepaiement.cgi</value>
+								<value>https://tpeweb.paybox.com/cgi/MYchoix_pagepaiement.cgi</value>
+								<value>https://tpeweb1.paybox.com/cgi/MYchoix_pagepaiement.cgi</value>
 							</list>
 						</property>
 						<property name="payboxServersIP">

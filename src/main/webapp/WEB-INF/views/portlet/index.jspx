@@ -93,10 +93,10 @@
 				<link rel="stylesheet" href="${esupPapercutCssUrl}" />
 
 				<script src="${jqueryUrl}">
-				<!-- -->				
+				<!--  -->				
 				</script>
 				<script src="${jqueryUiUrl}">
-				<!-- -->			
+				<!--  -->			
 				</script>
 
 				<portlet:resourceURL id="payboxFormMontant"
@@ -155,3 +155,5 @@
 		</div>
 	</div>
 </div>
+
+
