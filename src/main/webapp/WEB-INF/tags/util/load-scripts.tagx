@@ -1,0 +1,124 @@
+<jsp:root xmlns:c="http://java.sun.com/jsp/jstl/core" 
+          xmlns:fn="http://java.sun.com/jsp/jstl/functions" 
+          xmlns:jsp="http://java.sun.com/JSP/Page" 
+          xmlns:spring="http://www.springframework.org/tags" version="2.0">
+
+  <jsp:output omit-xml-declaration="yes" />
+
+  <spring:url value="/servlet/resources/css/bootstrap.min.css" var="bootstrap_css_url" />
+  <spring:url value="/servlet/resources/css/bootstrap-responsive.min.css" var="bootstrap_responsive_css_url" />
+  <spring:url value="/servlet/resources/css/jquery-ui-smoothness-1.10.2.css" var="jqueryui_css" />
+  <spring:url value="/servlet/resources/plugins/pschecker/style/style.css" var="pschecker_style_css_url" />
+  <spring:url value="/servlet/resources/css/docs.css" var="docs_css_url" />
+  <spring:url value="/servlet/resources/css/multipass.css" var="multipass_css_url" />
+  
+  <spring:url value="/servlet/resources/js/jquery-1.10.1.js" var="jquery_url" />
+  <spring:url value="/servlet/resources/js/jquery-ui-1.10.2.js" var="jqueryui_url" />  
+  <spring:url value="/servlet/resources/js/jquery.ui.datepicker-fr.js" var="datepickerfr_url" />  
+  <spring:url value="/servlet/resources/js/bootstrap.min.js" var="bootstrap_url" />
+  <spring:url value="/servlet/resources/plugins/pschecker/js/pschecker.js" var="pschecker_url" />
+  <spring:url value="/servlet/resources/plugins/jquery-validation/jquery.validate.js" var="jquery_validate_url" />
+  <spring:url value="/servlet/resources/plugins/jquery-validation/additional-methods.min.js" var="additional_methods_url" />
+  <spring:url value="/servlet/resources/plugins/jquery-validation/messages_fr.js" var="jq_validation_fr" />
+  <spring:url value="/servlet/resources/js/jstree/jquery.jstree.js" var="jstree_url" /> 
+  <spring:url value="/servlet/resources/js/application.js" var="application_js_url" />
+  <spring:url value="/servlet/resources/js/multipass.js" var="multipass_js_url" />
+  
+  <spring:url value="/servlet/resources/images/favicon.ico" var="favicon" />
+  
+  <link rel="stylesheet" type="text/css" href="${bootstrap_css_url}" />
+  <link rel="stylesheet" type="text/css" href="${bootstrap_responsive_css_url}" />
+  <link rel="stylesheet" type="text/css" href="${jqueryui_css}" />
+  <link rel="stylesheet" type="text/css" href="${pschecker_style_css_url}" />
+  <link rel="stylesheet" type="text/css" href="${docs_css_url}" />
+  <link rel="stylesheet" type="text/css" href="${multipass_css_url}" />
+  
+  <link rel="SHORTCUT ICON" href="${favicon}" />
+
+
+  <script src="${jquery_url}" type="text/javascript"><!-- required for FF3 and Opera --></script>
+  <script src="${jqueryui_url}" type="text/javascript"><!-- required for FF3 and Opera --></script>
+  <script src="${datepickerfr_url}" type="text/javascript"><!-- required for FF3 and Opera --></script>  
+  <script src="${bootstrap_url}" type="text/javascript"><!-- required for FF3 and Opera --></script>
+  <script src="${pschecker_url}" type="text/javascript"><!-- required for FF3 and Opera --></script>
+  <script src="${jquery_validate_url}" type="text/javascript"><!-- required for FF3 and Opera --></script>
+  <script src="${additional_methods_url}" type="text/javascript"><!-- required for FF3 and Opera --></script>
+  <script src="${jq_validation_fr}" type="text/javascript"><!-- required for FF3 and Opera --></script>
+  <script src="${jstree_url}" type="text/javascript"><!-- required for FF3 and Opera --></script>
+  <script src="${multipass_js_url}" type="text/javascript"><!-- required for FF3 and Opera --></script>
+  <script src="${application_js_url}" type="text/javascript"><!-- required for FF3 and Opera --></script>
+
+  
+  <script type="text/javascript">
+  $(function() {
+  $('#datepickerBirthday').datepicker({
+		dateFormat : "dd/mm/yy",
+		changeMonth : true,
+		changeYear : true,
+		yearRange : '1900:2014'
+	});
+	$('#dateCreation').datepicker({
+		dateFormat : "dd/mm/yy",
+		changeMonth : true,
+		changeYear : true,
+		yearRange : '1900:2014'
+	});
+	$('#dateNaissance').datepicker({
+		dateFormat : "dd/mm/yy",
+		changeMonth : true,
+		changeYear : true,
+		yearRange : '1900:2014',
+		onSelect: function() {
+	        this.focus();
+	    }
+	});
+	$("#_dateSuppression_id").datepicker({
+		dateFormat : "dd/mm/yy",
+		changeMonth : true,
+		changeYear : true
+	});
+	$("#dateSuppression").datepicker({
+		dateFormat : "dd/mm/yy",
+		changeMonth : true,
+		changeYear : true
+	});	
+  });
+</script>
+  <script type="text/javascript">
+  $(function () {
+	  var url = $(location).attr('href');
+	  var spliturl = url.split('#tab');
+	  console.log(spliturl[1]);
+	  if(spliturl[1]==null){
+		  spliturl[1]='0';
+	  }
+	 //var rule = "#_menu a:eq("+spliturl[1]+")";
+	 $("#_menu a:eq("+spliturl[1]+")").tab('show');
+	 })
+</script>
+<script type="text/javascript">
+	$('#fat-btn').click(function() {
+		var btn = $(this)
+		btn.button('loading')
+		setTimeout(function() {
+			btn.button('reset')
+		}, 3000)
+	});
+</script>
+
+<!-- urls pour requetes ajax -->
+<spring:url value="/" var="multipassRootUrl" />
+<spring:url value="/manager/users/search" var="searchUsersAjaxUrl" />
+<spring:url value="/manager/aliases/search" var="searchAliasMailsAjaxUrl" />
+<spring:url value="/admin/group/getGroupesFils" var="getGroupesFilsAjaxUrl" />
+<spring:url value="/user/password/passwordVerification" var="passwordVerificationAjaxUrl" />
+
+<script type="text/javascript">
+var multipassRootUrl = '${multipassRootUrl}';
+var searchUsersAjaxUrl = '${searchUsersAjaxUrl}'; 
+var searchAliasMailsAjaxUrl = '${searchAliasMailsAjaxUrl}';
+var getGroupesFilsAjaxUrl = '${getGroupesFilsAjaxUrl}';
+var passwordVerificationAjaxUrl = '${passwordVerificationAjaxUrl}';
+</script>
+
+</jsp:root>

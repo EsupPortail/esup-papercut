@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div class="esuppapercut"
+	xmlns:portlet="http://java.sun.com/portlet_2_0" 
+	xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" 
+	xmlns:jsp="http://java.sun.com/JSP/Page" 
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:spring="http://www.springframework.org/tags"
+	xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    
+	<portlet:renderURL portletMode="VIEW" var="homeUrl"/>
+	<portlet:renderURL portletMode="VIEW" var="historyUrl">
+		<portlet:param name="action" value="myhistory" />
+		<portlet:param name="sortFieldName" value="transactionDate" />
+		<portlet:param name="sortOrder" value="desc" />
+	</portlet:renderURL>
+	<portlet:renderURL portletMode="VIEW" var="adminUrl">
+		<portlet:param name="action" value="admin" />
+		<portlet:param name="sortFieldName" value="transactionDate" />
+		<portlet:param name="sortOrder" value="desc" />
+	</portlet:renderURL>	
+
+
+	<h3 class="portlet-section-header" role="header">
+		<a href="${homeUrl}"><spring:message code="menu.home"/></a> | 
+		<a href="${historyUrl}"><spring:message code="menu.myhistory"/></a>
+		<c:if test="${isAdmin}">
+			| <a href="${adminUrl}"><spring:message code="menu.admin"/></a>
+		</c:if>
+	</h3>
+
+	
+    <page:show create="false" delete="false" id="ps_org_esupportail_papercut_domain_PayboxPapercutTransactionLog" object="${payboxpapercuttransactionlog}" path="/admin" update="false" z="2WbuPP6kBh+jOjRZSLs6S4WtoM4=">
+        <field:display field="reference" id="s_org_esupportail_papercut_domain_PayboxPapercutTransactionLog_reference" object="${payboxpapercuttransactionlog}" z="RAqfwY6BjECzZyEixNkpmkxT86o="/>
+        <field:display field="montant" id="s_org_esupportail_papercut_domain_PayboxPapercutTransactionLog_montant" object="${payboxpapercuttransactionlog}" z="IvZrNQQv2GZfvrj3FTmSaXlqbD4="/>
+        <field:display field="auto" id="s_org_esupportail_papercut_domain_PayboxPapercutTransactionLog_auto" object="${payboxpapercuttransactionlog}" z="sKDU7xRoLGp1Gvqh4IdD4ZkAgQ4="/>
+        <field:display field="erreur" id="s_org_esupportail_papercut_domain_PayboxPapercutTransactionLog_erreur" object="${payboxpapercuttransactionlog}" z="iFAYu86JUHGJs/PzMaXjo/GS3Ns="/>
+        <field:display field="idtrans" id="s_org_esupportail_papercut_domain_PayboxPapercutTransactionLog_idtrans" object="${payboxpapercuttransactionlog}" z="mrfK0EkZkW4FKBgsN1sFtHRSi5o="/>
+        <field:display field="signature" id="s_org_esupportail_papercut_domain_PayboxPapercutTransactionLog_signature" object="${payboxpapercuttransactionlog}" z="3/E9ldy+Z3i84aYaccqMY4ABf+0=" render="false"/>
+        <field:display field="uid" id="s_org_esupportail_papercut_domain_PayboxPapercutTransactionLog_uid" object="${payboxpapercuttransactionlog}" z="TwDFWhzDS0mvAWxdbTtNYO99XW4="/>
+        <field:display field="papercutWsCallStatus" id="s_org_esupportail_papercut_domain_PayboxPapercutTransactionLog_papercutWsCallStatus" object="${payboxpapercuttransactionlog}" z="ZHA5wCTNj3ewT5fQgvToBH2RIrE="/>
+        <field:display date="true" dateTimePattern="${payboxPapercutTransactionLog_transactiondate_date_format}" field="transactionDate" id="s_org_esupportail_papercut_domain_PayboxPapercutTransactionLog_transactionDate" object="${payboxpapercuttransactionlog}" z="Mf0HwM2Gj9vLpoBARNej8rv0lso="/>
+        <field:display field="papercutOldSolde" id="s_org_esupportail_papercut_domain_PayboxPapercutTransactionLog_papercutOldSolde" object="${payboxpapercuttransactionlog}" z="Thk2dKDcACP5WzCU4+HVG2D14kk="/>
+        <field:display field="papercutNewSolde" id="s_org_esupportail_papercut_domain_PayboxPapercutTransactionLog_papercutNewSolde" object="${payboxpapercuttransactionlog}" z="jZN2MURVTDyV4+S4jzISzp7gy/M="/>
+    </page:show>
+</div>
+

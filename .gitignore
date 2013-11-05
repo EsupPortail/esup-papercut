@@ -1,0 +1,12 @@
+target
+.hg
+.hgignore
+.settings
+.classpath
+.project
+.springBeans
+/bin
+Servers
+log.roo
+hs_err_*
+doc-papercut

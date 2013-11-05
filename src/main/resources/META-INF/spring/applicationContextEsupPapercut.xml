@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd         
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd         
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd         
+	http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.1.xsd         
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd">
+
+
+	<util:map id="esupPaperCutServices">
+ 
+                <!--  paperCutContext gived in portlet.xml or when publishing portlet must be match a key here -->
+		<!--  le paperCutContext donné dans portlet.xml ou lors de la publication de la portlet doit correspondre à une key -->
+		<entry key="test">
+
+
+			<bean id="esupPaperCutService" class="org.esupportail.papercut.services.EsupPaperCutService">
+
+				<property name="payBoxService">
+
+					<bean class="org.esupportail.papercut.services.PayBoxService">
+
+						<property name="site" value="1999888" />
+						<property name="rang" value="32" />
+						<property name="identifiant" value="110647233" />
+						<property name="devise" value="978" />
+						<property name="reponseServerUrl" value="https://${runnEntServerHost}" />
+						<property name="payboxActionUrls">
+							<list>
+								<value>https://preprod-tpeweb.paybox.com/cgi/MYchoix_pagepaiement.cgi
+								</value>
+								<value>https://tpeweb.paybox.com/cgi/MYchoix_pagepaiement.cgi
+								</value>
+								<value>https://tpeweb1.paybox.com/cgi/MYchoix_pagepaiement.cgi
+								</value>
+							</list>
+						</property>
+						<property name="payboxServersIP">
+							<list>
+								<value>194.2.122.158</value>
+								<value>195.25.7.166</value>
+								<value>195.101.99.76</value>
+								<value>127.0.0.1</value>
+							</list>
+						</property>
+						<property name="derPayboxPublicKeyFile" value="META-INF/security/paybox-pubkey.der" />
+
+						<property name="hashService">
+
+							<bean class="org.esupportail.papercut.services.HashService">
+
+								<property name="hmacKey"
+									value="0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF"></property>
+
+							</bean>
+
+						</property>
+
+					</bean>
+
+				</property>
+
+				<property name="papercutService">
+
+					<bean class="org.esupportail.papercut.services.PapercutService">
+
+						<property name="authToken" value="mon-papercut-auth-token" />
+						<property name="server" value="papercut.mon-univ.fr" />
+						<property name="port" value="80" />
+
+					</bean>
+
+				</property>
+
+			</bean>
+
+		</entry>
+
+	</util:map>
+
+
+</beans>
