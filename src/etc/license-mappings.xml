@@ -69,7 +69,20 @@
     <artifact>
         <groupId>org.springframework.roo</groupId>
         <artifactId>org.springframework.roo.annotations</artifactId>
-        <version>1.2.0.RELEASE</version>
+        <version>1.2.4.RELEASE</version>
         <license>Apache License, Version 2.0</license>
     </artifact>
+    <artifact>
+        <groupId>org.esupportail.papercut</groupId>
+        <artifactId>esup-papercut</artifactId>
+        <version>1.0.0.BUILD-SNAPSHOT</version>
+        <license>Apache License, Version 2.0</license>
+    </artifact>
+    <artifact>
+        <groupId>xmlrpc</groupId>
+        <artifactId>xmlrpc</artifactId>
+        <version>2.0.1</version>
+        <license>Apache License, Version 2.0</license>        
+    </artifact>
+            
 </license-lookup>
