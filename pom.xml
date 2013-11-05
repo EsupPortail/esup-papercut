@@ -400,6 +400,9 @@
                         <include>src/main/webapp/css/esup*</include>
                         <include>src/main/resources/**</include>
                     </includes>
+                    <excludes>
+                        <exclude>src/main/java/org/esupportail/papercut/papercutapi/**</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
             <plugin>
