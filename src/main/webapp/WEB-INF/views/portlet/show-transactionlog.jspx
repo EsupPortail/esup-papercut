@@ -33,7 +33,7 @@
 	
     <page:show create="false" delete="false" id="ps_org_esupportail_papercut_domain_PayboxPapercutTransactionLog" object="${payboxpapercuttransactionlog}" path="/admin" update="false" z="2WbuPP6kBh+jOjRZSLs6S4WtoM4=">
         <field:display field="reference" id="s_org_esupportail_papercut_domain_PayboxPapercutTransactionLog_reference" object="${payboxpapercuttransactionlog}" z="RAqfwY6BjECzZyEixNkpmkxT86o="/>
-        <field:display field="montant" id="s_org_esupportail_papercut_domain_PayboxPapercutTransactionLog_montant" object="${payboxpapercuttransactionlog}" z="IvZrNQQv2GZfvrj3FTmSaXlqbD4="/>
+        <field:display field="montantDevise" id="s_org_esupportail_papercut_domain_PayboxPapercutTransactionLog_montant" object="${payboxpapercuttransactionlog}" z="IvZrNQQv2GZfvrj3FTmSaXlqbD4="/>
         <field:display field="auto" id="s_org_esupportail_papercut_domain_PayboxPapercutTransactionLog_auto" object="${payboxpapercuttransactionlog}" z="sKDU7xRoLGp1Gvqh4IdD4ZkAgQ4="/>
         <field:display field="erreur" id="s_org_esupportail_papercut_domain_PayboxPapercutTransactionLog_erreur" object="${payboxpapercuttransactionlog}" z="iFAYu86JUHGJs/PzMaXjo/GS3Ns="/>
         <field:display field="idtrans" id="s_org_esupportail_papercut_domain_PayboxPapercutTransactionLog_idtrans" object="${payboxpapercuttransactionlog}" z="mrfK0EkZkW4FKBgsN1sFtHRSi5o="/>
