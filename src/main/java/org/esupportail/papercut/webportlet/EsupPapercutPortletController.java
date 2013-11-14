@@ -64,6 +64,9 @@ public class EsupPapercutPortletController {
 
     	ModelMap model = new ModelMap();  
     	
+    	model.put("htmlHeader", request.getPreferences().getValue("htmlHeader", ""));
+    	model.put("htmlFooter", request.getPreferences().getValue("htmlFooter", ""));
+    	
     	String paperCutContext = request.getPreferences().getValue(PREF_PAPERCUT_CONTEXT, null);
         EsupPaperCutService esupPaperCutService = esupPaperCutServices.get(paperCutContext);
         

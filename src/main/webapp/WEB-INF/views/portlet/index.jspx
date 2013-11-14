@@ -40,6 +40,10 @@
 	<div class="portlet-section">
 
 		<div class="portlet-section-body">
+			<c:out value="${htmlHeader}" escapeXml="false"/>
+		</div>
+
+		<div class="portlet-section-body">
 
 			<p>
 				<spring:message code="index.sold"/> : <b>${userPapercutInfos.balance} EUR</b>
@@ -153,6 +157,11 @@
 			</div>
 
 		</div>
+		
+		<div class="portlet-section-body">
+			<c:out value="${htmlFooter}" escapeXml="false"/>
+		</div>
+		
 	</div>
 </div>
 

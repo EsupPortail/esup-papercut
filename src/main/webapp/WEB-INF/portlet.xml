@@ -47,7 +47,18 @@
 			<name>validatePayboxJustWithRedirection</name>
 			<value>true</value>
 			<read-only>true</read-only>
-		</preference>	
+		</preference>
+		<preference>
+			<name>htmlHeader</name>
+			<value>&lt;p&gt;Coûts des impressions : &lt;b&gt;10 centimes&lt;/b&gt; la page ; 15 centimes 2 pages en R/V&lt;/p&gt;</value>
+			<read-only>true</read-only>
+		</preference>
+		<preference>
+			<name>htmlFooter</name>
+			<value>&lt;p&gt;Attention, le solde d'impression restant ne peut à aucun moment vous être reversé par l'université. 
+			Aussi prenez garde à ne créditer votre solde d'impression qu'en &lt;b&gt;fonction de vos besoins réels&lt;/b&gt;.&lt;/p&gt;</value>
+			<read-only>true</read-only>
+		</preference>					
 	</portlet-preferences>
 	
 	<security-role-ref>
