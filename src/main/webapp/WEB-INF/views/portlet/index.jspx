@@ -80,6 +80,8 @@
 				</div>
 			-->
 
+		<c:if test="${not empty payBoxForm}">
+		
 			<div class="portlet-section-body">
 
 				<spring:url
@@ -155,8 +157,12 @@
 				</div>
 
 			</div>
+			
+		</c:if>
 
 		</div>
+		
+		<br/>
 		
 		<div class="portlet-section-body">
 			<c:out value="${htmlFooter}" escapeXml="false"/>

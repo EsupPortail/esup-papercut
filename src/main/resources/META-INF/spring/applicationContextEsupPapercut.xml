@@ -39,6 +39,8 @@
 
 			<bean id="esupPaperCutService" class="org.esupportail.papercut.services.EsupPaperCutService">
 
+
+				<!-- Remove the property payBoxService here if you don't want to use paybox -->
 				<property name="payBoxService">
 
 					<bean class="org.esupportail.papercut.services.PayBoxService">

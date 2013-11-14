@@ -49,7 +49,9 @@ public class EsupPaperCutService {
 	}
 
 	public PayBoxForm getPayBoxForm(String uid, String mail, double montant, String paperCutContext, String portletContextPath) {
-		return payBoxService.getPayBoxForm(uid, mail, montant, paperCutContext, portletContextPath);
+		if(payBoxService != null)
+			return payBoxService.getPayBoxForm(uid, mail, montant, paperCutContext, portletContextPath);
+		else return null;
 	}
 
 	
