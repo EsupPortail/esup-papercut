@@ -110,10 +110,10 @@
 				
 					$(function() {
 						$("#slider").slider({
-							value : 2.0,
-							min : 0.5,
-							max : 5.0,
-							step : 0.5,
+							value : ${payboxMontantDefaut},
+							min : ${payboxMontantMin},
+							max : ${payboxMontantMax},
+							step : ${payboxMontantStep},
 							slide : function(event, ui) {
 							    $.ajax({
 							        async: true,
@@ -133,7 +133,7 @@
 					});
 				</script>
 
-				<span id="amount" style="color: #888; font-weight: bold;">2</span> <spring:message code="paybox.euro"/>
+				<span id="amount" style="color: #888; font-weight: bold;">${payboxMontantDefaut}</span> <spring:message code="paybox.euro"/>
 
 				<div id="payboxFormSlider">
 					<div id="slider"></div>
@@ -148,7 +148,7 @@
 							</c:forEach>
 
 							<input type="hidden" name="PBX_HMAC" value="${payBoxForm.hmac}" />
-							<spring:message code="paybox.credit" arguments="2.0" var="creditlabel"/>
+							<spring:message code="paybox.credit" arguments="${payboxMontantDefaut}" var="creditlabel"/>
 							<input type="submit" value="${creditlabel}" />
 						</form>
 					</div>

@@ -58,7 +58,27 @@
 			<value>&lt;p&gt;Attention, le solde d'impression restant ne peut à aucun moment vous être reversé par l'université. 
 			Aussi prenez garde à ne créditer votre solde d'impression qu'en &lt;b&gt;fonction de vos besoins réels&lt;/b&gt;.&lt;/p&gt;</value>
 			<read-only>true</read-only>
-		</preference>					
+		</preference>	
+		<preference>
+			<name>payboxMontantMin</name>
+			<value>0.5</value>
+			<read-only>true</read-only>
+		</preference>	
+		<preference>
+			<name>payboxMontantMax</name>
+			<value>5.0</value>
+			<read-only>true</read-only>
+		</preference>
+		<preference>
+			<name>payboxMontantStep</name>
+			<value>0.5</value>
+			<read-only>true</read-only>
+		</preference>	
+		<preference>
+			<name>payboxMontantDefaut</name>
+			<value>2.0</value>
+			<read-only>true</read-only>
+		</preference>		
 	</portlet-preferences>
 	
 	<security-role-ref>

@@ -66,6 +66,10 @@ public class EsupPapercutPortletController {
     	
     	model.put("htmlHeader", request.getPreferences().getValue("htmlHeader", ""));
     	model.put("htmlFooter", request.getPreferences().getValue("htmlFooter", ""));
+    	model.put("payboxMontantMin", request.getPreferences().getValue("payboxMontantMin", "0.5"));
+    	model.put("payboxMontantMax", request.getPreferences().getValue("payboxMontantMax", "5.0"));
+    	model.put("payboxMontantStep", request.getPreferences().getValue("payboxMontantStep", "0.5"));	
+    	model.put("payboxMontantDefaut", request.getPreferences().getValue("payboxMontantDefaut", "2.0"));
     	
     	String paperCutContext = request.getPreferences().getValue(PREF_PAPERCUT_CONTEXT, null);
         EsupPaperCutService esupPaperCutService = esupPaperCutServices.get(paperCutContext);
