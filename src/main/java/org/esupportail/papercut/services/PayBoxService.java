@@ -48,7 +48,9 @@ public class PayBoxService {
 
 	private final static String retourVariables = "montant:M;reference:R;auto:A;erreur:E;idtrans:S;signature:K";
 
-	HashService hashService;
+	private String numCommandePrefix = "EsupPaperCut-";
+	
+	private HashService hashService;
 
 	private String site;
 	
@@ -67,6 +69,10 @@ public class PayBoxService {
 
 	private String reponseServerUrl;
 	
+
+	public void setNumCommandePrefix(String numCommandePrefix) {
+		this.numCommandePrefix = numCommandePrefix;
+	}
 
 	public void setHashService(HashService hashService) {
 		this.hashService = hashService;
@@ -152,7 +158,7 @@ public class PayBoxService {
 
 	private String getNumCommande(String uid, String montantAsCents, String paperCutContext) {
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-S");
-		return uid + "@" + paperCutContext + "@" + montantAsCents + "-" + df.format(new Date());
+		return numCommandePrefix + uid + "@" + paperCutContext + "@" + montantAsCents + "-" + df.format(new Date());
 	}
 
 	protected String getPayBoxActionUrl() {

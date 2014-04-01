@@ -45,6 +45,8 @@
 
 					<bean class="org.esupportail.papercut.services.PayBoxService">
 
+						<property name="numCommandePrefix" value="EsupPaperCut-" />
+						
 						<property name="site" value="1999888" />
 						<property name="rang" value="32" />
 						<property name="identifiant" value="110647233" />
