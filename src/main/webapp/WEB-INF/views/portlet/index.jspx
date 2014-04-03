@@ -82,6 +82,10 @@
 
 		<c:if test="${not empty payBoxForm}">
 		
+		  <c:choose>
+		  
+		  <c:when test="${canMakeTransaction}">
+		
 			<div class="portlet-section-body">
 
 				<spring:url
@@ -157,6 +161,20 @@
 				</div>
 
 			</div>
+			
+		  </c:when>
+		  
+		  <c:otherwise>
+		  
+		  	<div class="portlet-section-body">
+		  	
+		  		Nombre de transactions et/ou montant maximum autorisé dépassé. Vous ne pouvez actuellement plus recharger votre compte Papercut.
+		  	
+		  	</div>
+		  
+		  </c:otherwise>
+		  
+		  </c:choose>
 			
 		</c:if>
 

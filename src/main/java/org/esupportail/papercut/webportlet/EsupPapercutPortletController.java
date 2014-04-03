@@ -17,6 +17,7 @@
  */
 package org.esupportail.papercut.webportlet;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -76,6 +77,11 @@ public class EsupPapercutPortletController {
         
         String uid = getUid(request);
         String userMail = getUserMail(request);
+        
+        int transactionNbMax = Integer.parseInt(request.getPreferences().getValue("transactionNbMax", "-1"));
+        double transactionMontantMax  = Double.parseDouble(request.getPreferences().getValue("transactionNbMax", "-1"));
+        boolean canMakeTransaction = canMakeTransaction(paperCutContext, uid, transactionNbMax, transactionMontantMax);
+        model.put("canMakeTransaction", canMakeTransaction);
     	
     	UserPapercutInfos userPapercutInfos = esupPaperCutService.getUserPapercutInfos(uid);   		
 		model.put("userPapercutInfos", userPapercutInfos);
@@ -193,6 +199,23 @@ public class EsupPapercutPortletController {
     	model.put("isAdmin", isAdmin(request));
         return new ModelAndView("show-transactionlog", model);
     }
+    
+
+	private boolean canMakeTransaction(String paperCutContext, String uid, int transactionNbMax, double transactionMontantMax) {
+		boolean canMakeTransaction = true;		
+		if(transactionNbMax>-1 && transactionMontantMax>-1) {
+			List<PayboxPapercutTransactionLog> transactionsNotArchived = PayboxPapercutTransactionLog.findPayboxPapercutTransactionLogsByUidEqualsAndPaperCutContextEqualsAndArchived(uid, paperCutContext, false).getResultList();
+			int nbTransactionsNotArchived = transactionsNotArchived.size();
+			double montantTotalTransactionsNotArchived = 0;
+			for(PayboxPapercutTransactionLog txLog: transactionsNotArchived) {
+				montantTotalTransactionsNotArchived += Double.parseDouble(txLog.getMontant());
+			}
+			if(transactionNbMax<=nbTransactionsNotArchived || transactionMontantMax<=montantTotalTransactionsNotArchived) {
+				canMakeTransaction = false;
+			}
+		}		
+		return canMakeTransaction;
+	}
     
     void addDateTimeFormatPatterns(ModelMap model) {
         model.put("payboxPapercutTransactionLog_transactiondate_date_format", "dd/MM/yyyy-HH:mm:ss");

@@ -26,7 +26,7 @@ import org.springframework.roo.addon.tostring.RooToString;
 
 @RooJavaBean
 @RooToString
-@RooJpaActiveRecord(finders = { "findPayboxPapercutTransactionLogsByUidEqualsAndPaperCutContextEquals", "findPayboxPapercutTransactionLogsByPaperCutContextEquals", "findPayboxPapercutTransactionLogsByIdtransEquals" })
+@RooJpaActiveRecord(finders = { "findPayboxPapercutTransactionLogsByUidEqualsAndPaperCutContextEquals", "findPayboxPapercutTransactionLogsByUidEqualsAndPaperCutContextEqualsAndArchived", "findPayboxPapercutTransactionLogsByPaperCutContextEquals", "findPayboxPapercutTransactionLogsByIdtransEquals" })
 public class PayboxPapercutTransactionLog {
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -54,6 +54,8 @@ public class PayboxPapercutTransactionLog {
     private String signature;
 
     private String papercutOldSolde;
+    
+    private Boolean archived = false;
     
     public String getMontantDevise() {
     	Double mnt = new Double(montant)/100.0;
