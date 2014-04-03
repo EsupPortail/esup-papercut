@@ -203,7 +203,7 @@ public class EsupPapercutPortletController {
 
 	private boolean canMakeTransaction(String paperCutContext, String uid, int transactionNbMax, double transactionMontantMax) {
 		boolean canMakeTransaction = true;		
-		if(transactionNbMax>-1 && transactionMontantMax>-1) {
+		if(transactionNbMax>-1 || transactionMontantMax>-1) {
 			List<PayboxPapercutTransactionLog> transactionsNotArchived = PayboxPapercutTransactionLog.findPayboxPapercutTransactionLogsByUidEqualsAndPaperCutContextEqualsAndArchived(uid, paperCutContext, false).getResultList();
 			int nbTransactionsNotArchived = transactionsNotArchived.size();
 			double montantTotalTransactionsNotArchived = 0;
