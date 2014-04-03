@@ -43,6 +43,8 @@
         <field:display date="true" dateTimePattern="${payboxPapercutTransactionLog_transactiondate_date_format}" field="transactionDate" id="s_org_esupportail_papercut_domain_PayboxPapercutTransactionLog_transactionDate" object="${payboxpapercuttransactionlog}" z="Mf0HwM2Gj9vLpoBARNej8rv0lso="/>
         <field:display field="papercutOldSolde" id="s_org_esupportail_papercut_domain_PayboxPapercutTransactionLog_papercutOldSolde" object="${payboxpapercuttransactionlog}" z="Thk2dKDcACP5WzCU4+HVG2D14kk="/>
         <field:display field="papercutNewSolde" id="s_org_esupportail_papercut_domain_PayboxPapercutTransactionLog_papercutNewSolde" object="${payboxpapercuttransactionlog}" z="jZN2MURVTDyV4+S4jzISzp7gy/M="/>
+        <field:display field="archived" id="c_org_esupportail_papercut_domain_PayboxPapercutTransactionLog_archived" object="${payboxpapercuttransactionlog}" label="Archivé" z="user-managed"/>
     </page:show>
+    
 </div>
 
