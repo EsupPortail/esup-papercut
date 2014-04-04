@@ -29,6 +29,17 @@
 			| <a href="${adminUrl}"><spring:message code="menu.admin"/></a>
 		</c:if>
 	</h3>
+	
+	<c:if test="${isAdmin and not payboxpapercuttransactionlog.archived}">
+		<portlet:actionURL var="archiveUrl">
+			<portlet:param name="action" value="archive"/>
+			<portlet:param name="txLogId" value="${payboxpapercuttransactionlog.id}"/>		
+		</portlet:actionURL>
+		<form method="post" action="${archiveUrl}">
+		    <input type="submit" value="Archiver ce log"/>
+		</form>
+		<hr/>
+	</c:if>
 
 	
     <page:show create="false" delete="false" id="ps_org_esupportail_papercut_domain_PayboxPapercutTransactionLog" object="${payboxpapercuttransactionlog}" path="/admin" update="false" z="2WbuPP6kBh+jOjRZSLs6S4WtoM4=">

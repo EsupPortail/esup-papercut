@@ -17,6 +17,7 @@
  */
 package org.esupportail.papercut.webportlet;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -91,8 +92,15 @@ public class EsupPapercutPortletController {
         // check if the user can make a transaction
         int transactionNbMax = Integer.parseInt(request.getPreferences().getValue("transactionNbMax", "-1"));
         double transactionMontantMax  = Double.parseDouble(request.getPreferences().getValue("transactionMontantMax", "-1"));
-        boolean canMakeTransaction = canMakeTransaction(paperCutContext, uid, transactionNbMax, transactionMontantMax);
-        
+        boolean canMakeTransaction = true;
+	
+        // constraints via transactionNbMax
+    	if(transactionNbMax>-1) {
+    		long nbTransactionsNotArchived = PayboxPapercutTransactionLog.countFindPayboxPapercutTransactionLogsByUidEqualsAndPaperCutContextEqualsAndArchived(uid, paperCutContext, false);   			
+    		if(transactionNbMax<=nbTransactionsNotArchived) {
+    			canMakeTransaction = false;
+    		}
+    	}		
         
         // constraints on the slider via transactionMontantMax
         if(canMakeTransaction && transactionMontantMax > -1) {
@@ -104,7 +112,7 @@ public class EsupPapercutPortletController {
 			List<PayboxPapercutTransactionLog> transactionsNotArchived = PayboxPapercutTransactionLog.findPayboxPapercutTransactionLogsByUidEqualsAndPaperCutContextEqualsAndArchived(uid, paperCutContext, false).getResultList();
         	double montantTotalTransactionsNotArchived = 0;
 			for(PayboxPapercutTransactionLog txLog: transactionsNotArchived) {
-				montantTotalTransactionsNotArchived += Double.parseDouble(txLog.getMontant());
+				montantTotalTransactionsNotArchived += Double.parseDouble(txLog.getMontant())/100.0;
 			}
 			transactionMontantMax = transactionMontantMax-montantTotalTransactionsNotArchived;
         	if(transactionMontantMax < payboxMontantMax) {
@@ -245,24 +253,7 @@ public class EsupPapercutPortletController {
     	model.put("isAdmin", isAdmin(request));
         return new ModelAndView("show-transactionlog", model);
     }
-    
 
-	private boolean canMakeTransaction(String paperCutContext, String uid, int transactionNbMax, double transactionMontantMax) {
-		boolean canMakeTransaction = true;		
-		if(transactionNbMax>-1 || transactionMontantMax>-1) {
-			List<PayboxPapercutTransactionLog> transactionsNotArchived = PayboxPapercutTransactionLog.findPayboxPapercutTransactionLogsByUidEqualsAndPaperCutContextEqualsAndArchived(uid, paperCutContext, false).getResultList();
-			int nbTransactionsNotArchived = transactionsNotArchived.size();
-			double montantTotalTransactionsNotArchived = 0;
-			for(PayboxPapercutTransactionLog txLog: transactionsNotArchived) {
-				montantTotalTransactionsNotArchived += Double.parseDouble(txLog.getMontant());
-			}
-			
-			if(transactionNbMax>-1 && transactionNbMax<=nbTransactionsNotArchived || transactionMontantMax>-1 && transactionMontantMax<=montantTotalTransactionsNotArchived) {
-				canMakeTransaction = false;
-			}
-		}		
-		return canMakeTransaction;
-	}
     
     void addDateTimeFormatPatterns(ModelMap model) {
         model.put("payboxPapercutTransactionLog_transactiondate_date_format", "dd/MM/yyyy-HH:mm:ss");
@@ -339,7 +330,7 @@ public class EsupPapercutPortletController {
     
     @Transactional
     @RequestMapping(params = "action=archiveAll")  // action phase
-    public void populateSite(ActionRequest request, ActionResponse response) {
+    public void archiveAll(ActionRequest request, ActionResponse response) {
 
     	if( isAdmin(request)) {
     		List<PayboxPapercutTransactionLog> txLogs = PayboxPapercutTransactionLog.findPayboxPapercutTransactionLogsByArchived(false).getResultList();
@@ -349,6 +340,22 @@ public class EsupPapercutPortletController {
     	}
     	
         response.setRenderParameter("action", "admin");
+    }
+    
+    @Transactional
+    @RequestMapping(params = "action=archive")  // action phase
+    public void archive(@RequestParam(value = "txLogId", required = true) Long txLogId, ActionRequest request, ActionResponse response) {
+
+    	if( isAdmin(request)) {
+    		PayboxPapercutTransactionLog txLog =  PayboxPapercutTransactionLog.findPayboxPapercutTransactionLog(txLogId);
+    		txLog.setArchived(true);
+    	}
+    	
+    	Map<String, String[]> parameters = new HashMap<String, String[]>();
+    	parameters.put("action", new String[] {"show"});
+    	parameters.put("id", new String[] {String.valueOf(txLogId)});
+    	
+        response.setRenderParameters(parameters);
     }
     
 }

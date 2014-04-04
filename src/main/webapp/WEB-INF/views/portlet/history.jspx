@@ -43,7 +43,7 @@
 		<form method="post" action="${archiveAllUrl}">
 		    <input type="submit" value="Archiver l'ensemble des logs"/>
 		</form>
-		<a href="${adminUrl}"><spring:message code="menu.admin"/></a>
+		<hr/>
 	</c:if>
 
     <page:list id="pl_org_esupportail_papercut_domain_PayboxPapercutTransactionLog" items="${payboxpapercuttransactionlogs}" z="Xl/iyqvYF+KnmkDzvo9LqSL8uzk=">
