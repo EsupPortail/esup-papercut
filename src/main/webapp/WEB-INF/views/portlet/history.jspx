@@ -35,6 +35,16 @@
 			| <a href="${adminUrl}"><spring:message code="menu.admin"/></a>
 		</c:if>
 	</h3>
+	
+	<c:if test="${isAdmin and adminView}">
+		<portlet:actionURL var="archiveAllUrl">
+			<portlet:param name="action" value="archiveAll"/>
+		</portlet:actionURL>
+		<form method="post" action="${archiveAllUrl}">
+		    <input type="submit" value="Archiver l'ensemble des logs"/>
+		</form>
+		<a href="${adminUrl}"><spring:message code="menu.admin"/></a>
+	</c:if>
 
     <page:list id="pl_org_esupportail_papercut_domain_PayboxPapercutTransactionLog" items="${payboxpapercuttransactionlogs}" z="Xl/iyqvYF+KnmkDzvo9LqSL8uzk=">
         <table:table create="false" data="${payboxpapercuttransactionlogs}" delete="false" id="l_org_esupportail_papercut_domain_PayboxPapercutTransactionLog" path="/admin" update="false" z="user-managed" view="${isAdmin}">

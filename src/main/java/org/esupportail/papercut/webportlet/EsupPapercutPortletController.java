@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
 import javax.portlet.PortletRequest;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
@@ -36,6 +38,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -130,6 +133,7 @@ public class EsupPapercutPortletController {
     	
     	ModelMap model = new ModelMap();  
     	model.put("isAdmin", isAdmin);
+    	model.put("adminView", true);
     	
     	if(isAdmin) {
 	    	
@@ -288,5 +292,21 @@ public class EsupPapercutPortletController {
 
     	return sb.toString();
     }
+    
+    
+    @Transactional
+    @RequestMapping(params = "action=archiveAll")  // action phase
+    public void populateSite(ActionRequest request, ActionResponse response) {
+
+    	if( isAdmin(request)) {
+    		List<PayboxPapercutTransactionLog> txLogs = PayboxPapercutTransactionLog.findPayboxPapercutTransactionLogsByArchived(false).getResultList();
+    		for(PayboxPapercutTransactionLog txLog: txLogs) {
+    			txLog.setArchived(true);
+			}
+    	}
+    	
+        response.setRenderParameter("action", "admin");
+    }
+    
 }
 

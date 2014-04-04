@@ -9,6 +9,14 @@ import org.esupportail.papercut.domain.PayboxPapercutTransactionLog;
 
 privileged aspect PayboxPapercutTransactionLog_Roo_Finder {
     
+    public static Long PayboxPapercutTransactionLog.countFindPayboxPapercutTransactionLogsByArchived(Boolean archived) {
+        if (archived == null) throw new IllegalArgumentException("The archived argument is required");
+        EntityManager em = PayboxPapercutTransactionLog.entityManager();
+        TypedQuery q = em.createQuery("SELECT COUNT(o) FROM PayboxPapercutTransactionLog AS o WHERE o.archived = :archived", Long.class);
+        q.setParameter("archived", archived);
+        return ((Long) q.getSingleResult());
+    }
+    
     public static Long PayboxPapercutTransactionLog.countFindPayboxPapercutTransactionLogsByIdtransEquals(String idtrans) {
         if (idtrans == null || idtrans.length() == 0) throw new IllegalArgumentException("The idtrans argument is required");
         EntityManager em = PayboxPapercutTransactionLog.entityManager();
@@ -45,6 +53,29 @@ privileged aspect PayboxPapercutTransactionLog_Roo_Finder {
         q.setParameter("paperCutContext", paperCutContext);
         q.setParameter("archived", archived);
         return ((Long) q.getSingleResult());
+    }
+    
+    public static TypedQuery<PayboxPapercutTransactionLog> PayboxPapercutTransactionLog.findPayboxPapercutTransactionLogsByArchived(Boolean archived) {
+        if (archived == null) throw new IllegalArgumentException("The archived argument is required");
+        EntityManager em = PayboxPapercutTransactionLog.entityManager();
+        TypedQuery<PayboxPapercutTransactionLog> q = em.createQuery("SELECT o FROM PayboxPapercutTransactionLog AS o WHERE o.archived = :archived", PayboxPapercutTransactionLog.class);
+        q.setParameter("archived", archived);
+        return q;
+    }
+    
+    public static TypedQuery<PayboxPapercutTransactionLog> PayboxPapercutTransactionLog.findPayboxPapercutTransactionLogsByArchived(Boolean archived, String sortFieldName, String sortOrder) {
+        if (archived == null) throw new IllegalArgumentException("The archived argument is required");
+        EntityManager em = PayboxPapercutTransactionLog.entityManager();
+        String jpaQuery = "SELECT o FROM PayboxPapercutTransactionLog AS o WHERE o.archived = :archived";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        TypedQuery<PayboxPapercutTransactionLog> q = em.createQuery(jpaQuery, PayboxPapercutTransactionLog.class);
+        q.setParameter("archived", archived);
+        return q;
     }
     
     public static TypedQuery<PayboxPapercutTransactionLog> PayboxPapercutTransactionLog.findPayboxPapercutTransactionLogsByIdtransEquals(String idtrans) {
