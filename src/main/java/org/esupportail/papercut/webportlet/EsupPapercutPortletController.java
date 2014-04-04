@@ -112,11 +112,12 @@ public class EsupPapercutPortletController {
 			List<PayboxPapercutTransactionLog> transactionsNotArchived = PayboxPapercutTransactionLog.findPayboxPapercutTransactionLogsByUidEqualsAndPaperCutContextEqualsAndArchived(uid, paperCutContext, false).getResultList();
         	double montantTotalTransactionsNotArchived = 0;
 			for(PayboxPapercutTransactionLog txLog: transactionsNotArchived) {
-				montantTotalTransactionsNotArchived += Double.parseDouble(txLog.getMontant())/100.0;
+				montantTotalTransactionsNotArchived += Double.parseDouble(txLog.getMontant());
 			}
-			transactionMontantMax = transactionMontantMax-montantTotalTransactionsNotArchived;
-        	if(transactionMontantMax < payboxMontantMax) {
+			transactionMontantMax = transactionMontantMax*100.0-montantTotalTransactionsNotArchived;
+        	if(transactionMontantMax < payboxMontantMax*100) {
         		payboxMontantMax = Math.floor(transactionMontantMax/payboxMontantStep)*payboxMontantStep;
+        		payboxMontantMax = payboxMontantMax/100.0;
         		if(payboxMontantDefaut>payboxMontantMax) {
         			payboxMontantDefaut = payboxMontantMax;
         		}
