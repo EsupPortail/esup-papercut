@@ -79,6 +79,7 @@ public class EsupPaperCutService {
 		txLog.setSignature(signature);
 		txLog.setTransactionDate(new Date());
 		String uid = reference.split("@")[0];
+		uid = uid.substring(payBoxService.getNumCommandePrefix().length(), uid.length());
 		txLog.setUid(uid);
 		String paperCutContext = reference.split("@")[1];
 		txLog.setPaperCutContext(paperCutContext);
@@ -117,7 +118,13 @@ public class EsupPaperCutService {
 				}
 
 				return true;
+			} else {
+				log.warn("signature checking of paybox failed, transaction " + txLog + " canceled.");
 			}
+		} else {
+			log.warn("this ip " + ip + " is not trusted for the paybox transaction, " +
+					"or this user " + uid + " does'nt correspond to this user " + currentUserUid + "  (validatePayboxJustWithRedirection mode), " +
+					"transaction " + txLog + " canceled.");
 		}
 		
 

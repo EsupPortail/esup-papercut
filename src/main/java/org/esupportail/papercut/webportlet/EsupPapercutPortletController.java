@@ -88,9 +88,38 @@ public class EsupPapercutPortletController {
         String uid = getUid(request);
         String userMail = getUserMail(request);
         
+        // check if the user can make a transaction
         int transactionNbMax = Integer.parseInt(request.getPreferences().getValue("transactionNbMax", "-1"));
-        double transactionMontantMax  = Double.parseDouble(request.getPreferences().getValue("transactionNbMax", "-1"));
+        double transactionMontantMax  = Double.parseDouble(request.getPreferences().getValue("transactionMontantMax", "-1"));
         boolean canMakeTransaction = canMakeTransaction(paperCutContext, uid, transactionNbMax, transactionMontantMax);
+        
+        
+        // constraints on the slider via transactionMontantMax
+        if(canMakeTransaction && transactionMontantMax > -1) {
+        	double payboxMontantMin = Double.parseDouble(request.getPreferences().getValue("payboxMontantMin", "0.5"));
+        	double payboxMontantMax  = Double.parseDouble(request.getPreferences().getValue("payboxMontantMax", "5.0"));
+        	double payboxMontantStep  = Double.parseDouble(request.getPreferences().getValue("payboxMontantStep", "0.5"));	
+        	double payboxMontantDefaut  = Double.parseDouble(request.getPreferences().getValue("payboxMontantDefaut", "2.0"));
+        	
+			List<PayboxPapercutTransactionLog> transactionsNotArchived = PayboxPapercutTransactionLog.findPayboxPapercutTransactionLogsByUidEqualsAndPaperCutContextEqualsAndArchived(uid, paperCutContext, false).getResultList();
+        	double montantTotalTransactionsNotArchived = 0;
+			for(PayboxPapercutTransactionLog txLog: transactionsNotArchived) {
+				montantTotalTransactionsNotArchived += Double.parseDouble(txLog.getMontant());
+			}
+			transactionMontantMax = transactionMontantMax-montantTotalTransactionsNotArchived;
+        	if(transactionMontantMax < payboxMontantMax) {
+        		payboxMontantMax = Math.floor(transactionMontantMax/payboxMontantStep)*payboxMontantStep;
+        		if(payboxMontantDefaut>payboxMontantMax) {
+        			payboxMontantDefaut = payboxMontantMax;
+        		}
+        		if(payboxMontantMax<payboxMontantMin) {
+        			canMakeTransaction = false;
+        		}
+            	model.put("payboxMontantMax", payboxMontantMax);
+            	model.put("payboxMontantDefaut", payboxMontantDefaut);
+        	}
+        }
+        
         model.put("canMakeTransaction", canMakeTransaction);
     	
     	UserPapercutInfos userPapercutInfos = esupPaperCutService.getUserPapercutInfos(uid);   		
@@ -227,7 +256,8 @@ public class EsupPapercutPortletController {
 			for(PayboxPapercutTransactionLog txLog: transactionsNotArchived) {
 				montantTotalTransactionsNotArchived += Double.parseDouble(txLog.getMontant());
 			}
-			if(transactionNbMax<=nbTransactionsNotArchived || transactionMontantMax<=montantTotalTransactionsNotArchived) {
+			
+			if(transactionNbMax>-1 && transactionNbMax<=nbTransactionsNotArchived || transactionMontantMax>-1 && transactionMontantMax<=montantTotalTransactionsNotArchived) {
 				canMakeTransaction = false;
 			}
 		}		

@@ -70,6 +70,10 @@ public class PayBoxService {
 	private String reponseServerUrl;
 	
 
+	public String getNumCommandePrefix() {
+		return numCommandePrefix;
+	}
+
 	public void setNumCommandePrefix(String numCommandePrefix) {
 		this.numCommandePrefix = numCommandePrefix;
 	}
