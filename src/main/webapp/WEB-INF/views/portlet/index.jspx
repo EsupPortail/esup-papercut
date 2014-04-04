@@ -132,14 +132,12 @@
 							        	$("#payboxForm").html(r);
 							        }
 							    });
-
-								$("#amount").text(ui.value);
 							}
 						});
 					});
 				</script>
 
-				<span id="amount" style="color: #888; font-weight: bold;">${payboxMontantDefaut}</span> <spring:message code="paybox.euro"/>
+				<span id="amount" style="color: #888; font-weight: bold;">${payboxMontantDefaut} <spring:message code="paybox.euro"/> / ${defaultNbPages} pages</span> 
 
 				<div id="payboxFormSlider">
 					<div id="slider"></div>

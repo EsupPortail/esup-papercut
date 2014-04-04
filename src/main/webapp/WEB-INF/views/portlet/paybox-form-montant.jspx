@@ -20,5 +20,14 @@
 		<spring:message code="paybox.credit" arguments="${payBoxForm.montant}" var="creditlabel"/>
 		<input type="submit" value="${creditlabel}" />
 	</form>
+	
+	<script type="text/javascript">
+		var euroStr = '<spring:message code="paybox.euro"/>';
+		var montant = ${payBoxForm.montant};
+		var nbPages = ${nbPages};
+		$( document ).ready(function() {
+			$("#amount").html(montant + " " + euroStr + " / " + nbPages + " pages");
+		});
+	</script>
 </div>
 

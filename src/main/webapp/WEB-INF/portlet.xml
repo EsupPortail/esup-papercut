@@ -50,7 +50,7 @@
 		</preference>
 		<preference>
 			<name>htmlHeader</name>
-			<value>&lt;p&gt;Coûts des impressions : &lt;b&gt;10 centimes&lt;/b&gt; la page ; 15 centimes 2 pages en R/V&lt;/p&gt;</value>
+			<value>&lt;p&gt;Coûts des impressions : &lt;b&gt;1,85 centime&lt;/b&gt; la page (Recto ET Recto/Verso)&lt;/p&gt;</value>
 			<read-only>true</read-only>
 		</preference>
 		<preference>
@@ -89,6 +89,11 @@
 			<value>-1</value>
 			<read-only>true</read-only>
 		</preference>
+		<preference>
+			<name>papercutPageCost</name>
+			<value>0.0185</value>
+			<read-only>true</read-only>
+		</preference>		
 		
 	</portlet-preferences>
 	
