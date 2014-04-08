@@ -90,10 +90,15 @@
 			<read-only>true</read-only>
 		</preference>
 		<preference>
-			<name>papercutPageCost</name>
+			<name>papercutSheetCost</name>
 			<value>0.0185</value>
 			<read-only>true</read-only>
-		</preference>		
+		</preference>
+		<preference>
+			<name>papercutColorSheetCost</name>
+			<value>0.185</value>
+			<read-only>true</read-only>
+		</preference>			
 		
 	</portlet-preferences>
 	

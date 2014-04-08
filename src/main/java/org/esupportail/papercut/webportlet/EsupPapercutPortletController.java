@@ -77,11 +77,17 @@ public class EsupPapercutPortletController {
     	model.put("payboxMontantStep", request.getPreferences().getValue("payboxMontantStep", "0.5"));	
     	model.put("payboxMontantDefaut", request.getPreferences().getValue("payboxMontantDefaut", "2.0"));
     	
-    	double papercutPageCost = Double.parseDouble(request.getPreferences().getValue("papercutPageCost", "-1"));
-    	if(papercutPageCost > 0) {
+    	double papercutSheetCost = Double.parseDouble(request.getPreferences().getValue("papercutSheetCost", "-1"));
+    	double papercutColorSheetCost = Double.parseDouble(request.getPreferences().getValue("papercutColorSheetCost", "-1"));
+    	if(papercutSheetCost > 0) {
     		double payboxMontantDefaut = Double.parseDouble(request.getPreferences().getValue("payboxMontantDefaut", "2.0"));
-    		long defaultNbPages = (long)(payboxMontantDefaut/papercutPageCost);
+    		long defaultNbPages = (long)(payboxMontantDefaut/papercutSheetCost);
     		model.put("defaultNbPages", defaultNbPages);
+    	}    	
+    	if(papercutColorSheetCost > 0) {
+    		double payboxMontantDefaut = Double.parseDouble(request.getPreferences().getValue("payboxMontantDefaut", "2.0"));
+    		long defaultNbPages = (long)(payboxMontantDefaut/papercutColorSheetCost);
+    		model.put("defaultNbColorPages", defaultNbPages);
     	}
     	
     	String paperCutContext = request.getPreferences().getValue(PREF_PAPERCUT_CONTEXT, null);
@@ -162,12 +168,18 @@ public class EsupPapercutPortletController {
     	PayBoxForm payBoxForm = esupPaperCutService.getPayBoxForm(uid, userMail, montant, paperCutContext, portletContextPath);
     	model.put("payBoxForm", payBoxForm);
     	
-    	double papercutPageCost = Double.parseDouble(request.getPreferences().getValue("papercutPageCost", "-1"));
-    	if(papercutPageCost > 0) {
-    		long nbPages = (long)(montant/papercutPageCost);
-    		model.put("nbPages", nbPages);
+    	double papercutSheetCost = Double.parseDouble(request.getPreferences().getValue("papercutSheetCost", "-1"));
+    	double papercutColorSheetCost = Double.parseDouble(request.getPreferences().getValue("papercutColorSheetCost", "-1"));
+    	
+    	if(papercutSheetCost > 0) {
+    		long nbSheets = (long)(montant/papercutSheetCost);
+    		model.put("nbSheets", nbSheets);
     	}
-
+    	if(papercutColorSheetCost > 0) {
+    		long nbColorSheets = (long)(montant/papercutColorSheetCost);
+    		model.put("nbColorSheets", nbColorSheets);
+    	}
+    	
 	    return new ModelAndView("paybox-form-montant", model);
 	 }
 

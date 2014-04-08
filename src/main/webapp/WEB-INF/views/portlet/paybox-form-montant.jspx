@@ -22,11 +22,13 @@
 	</form>
 	
 	<script type="text/javascript">
-		var euroStr = '<spring:message code="paybox.euro"/>';
-		var montant = ${payBoxForm.montant};
-		var nbPages = ${nbPages};
 		$( document ).ready(function() {
-			$("#amount").html(montant + " " + euroStr + " / " + nbPages + " pages");
+			var euroStr = '<spring:message code="paybox.euro"/>';
+			var montant = ${payBoxForm.montant};
+			$("#amount").html(montant + " " + euroStr);
+			var nbSheets = ${nbSheets};
+			var nbColorSheets = ${nbColorSheets};
+			$("#nbSheets").html(montant + " " + euroStr + " équivaut à environ " + nbSheets + " feuilles noir et blanc ou " + nbColorSheets + " feuilles couleurs."); 
 		});
 	</script>
 </div>
