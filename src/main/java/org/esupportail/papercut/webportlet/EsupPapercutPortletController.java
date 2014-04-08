@@ -17,6 +17,7 @@
  */
 package org.esupportail.papercut.webportlet;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -91,7 +92,7 @@ public class EsupPapercutPortletController {
         
         // check if the user can make a transaction
         int transactionNbMax = Integer.parseInt(request.getPreferences().getValue("transactionNbMax", "-1"));
-        double transactionMontantMax  = Double.parseDouble(request.getPreferences().getValue("transactionMontantMax", "-1"));
+        BigDecimal transactionMontantMax  = new BigDecimal(request.getPreferences().getValue("transactionMontantMax", "-1"));
         boolean canMakeTransaction = true;
 	
         // constraints via transactionNbMax
@@ -103,29 +104,29 @@ public class EsupPapercutPortletController {
     	}		
         
         // constraints on the slider via transactionMontantMax
-        if(canMakeTransaction && transactionMontantMax > -1) {
-        	double payboxMontantMin = Double.parseDouble(request.getPreferences().getValue("payboxMontantMin", "0.5"));
-        	double payboxMontantMax  = Double.parseDouble(request.getPreferences().getValue("payboxMontantMax", "5.0"));
-        	double payboxMontantStep  = Double.parseDouble(request.getPreferences().getValue("payboxMontantStep", "0.5"));	
-        	double payboxMontantDefaut  = Double.parseDouble(request.getPreferences().getValue("payboxMontantDefaut", "2.0"));
+        if(canMakeTransaction && transactionMontantMax.intValue() > -1) {
+        	BigDecimal payboxMontantMin = new BigDecimal(request.getPreferences().getValue("payboxMontantMin", "0.5"));
+        	BigDecimal payboxMontantMax  = new BigDecimal(request.getPreferences().getValue("payboxMontantMax", "5.0"));
+        	BigDecimal payboxMontantStep  = new BigDecimal(request.getPreferences().getValue("payboxMontantStep", "0.5"));	
+        	BigDecimal payboxMontantDefaut  = new BigDecimal(request.getPreferences().getValue("payboxMontantDefaut", "2.0"));
         	
 			List<PayboxPapercutTransactionLog> transactionsNotArchived = PayboxPapercutTransactionLog.findPayboxPapercutTransactionLogsByUidEqualsAndPaperCutContextEqualsAndArchived(uid, paperCutContext, false).getResultList();
-        	double montantTotalTransactionsNotArchived = 0;
+			BigDecimal montantTotalTransactionsNotArchived = new BigDecimal("0");
 			for(PayboxPapercutTransactionLog txLog: transactionsNotArchived) {
-				montantTotalTransactionsNotArchived += Double.parseDouble(txLog.getMontant());
+				montantTotalTransactionsNotArchived = montantTotalTransactionsNotArchived.add(new BigDecimal(txLog.getMontant()));
 			}
-			transactionMontantMax = transactionMontantMax*100.0-montantTotalTransactionsNotArchived;
-        	if(transactionMontantMax < payboxMontantMax*100) {
-        		payboxMontantMax = Math.floor(transactionMontantMax/payboxMontantStep)*payboxMontantStep;
-        		payboxMontantMax = payboxMontantMax/100.0;
-        		if(payboxMontantDefaut>payboxMontantMax) {
+			transactionMontantMax = transactionMontantMax.multiply(new BigDecimal("100")).subtract(montantTotalTransactionsNotArchived);
+        	if(transactionMontantMax.doubleValue() < payboxMontantMax.doubleValue()*100) {
+        		payboxMontantMax = transactionMontantMax.divide(payboxMontantStep).multiply(payboxMontantStep);
+        		payboxMontantMax = payboxMontantMax.divide(new BigDecimal("100"));
+        		if(payboxMontantDefaut.compareTo(payboxMontantMax) == 1) {
         			payboxMontantDefaut = payboxMontantMax;
         		}
-        		if(payboxMontantMax<payboxMontantMin) {
+        		if(payboxMontantMax.compareTo(payboxMontantMin) == -1) {
         			canMakeTransaction = false;
         		}
-            	model.put("payboxMontantMax", payboxMontantMax);
-            	model.put("payboxMontantDefaut", payboxMontantDefaut);
+            	model.put("payboxMontantMax", payboxMontantMax.doubleValue());
+            	model.put("payboxMontantDefaut", payboxMontantDefaut.doubleValue());
         	}
         }
         
