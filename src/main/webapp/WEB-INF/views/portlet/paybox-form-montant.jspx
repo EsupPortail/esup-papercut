@@ -27,11 +27,10 @@
 			var montant = ${payBoxForm.montant};
 			$("#amount").html(montant + " " + euroStr);
 			var nbSheets = ${nbSheets};
-			var nbColorSheets = ${nbColorSheets};
 			var txtHtml = montant + " " + euroStr + " équivaut à environ " + nbSheets + " feuilles A4 noir et blanc";
-			if(nbColorSheets.length!=0) {
-				txtHtml = txtHtml + " ou " + nbColorSheets + " feuilles A4 couleurs";
-			}
+			<c:if test="${not empty nbColorSheets}">
+				txtHtml = txtHtml + " ou " + ${nbColorSheets} + " feuilles A4 couleur";
+			</c:if>
 			txtHtml = txtHtml + ".";
 			$("#nbSheets").html(txtHtml); 
 		});
