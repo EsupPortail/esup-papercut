@@ -50,7 +50,7 @@
 		</preference>
 		<preference>
 			<name>htmlHeader</name>
-			<value>&lt;p&gt;Coûts des impressions : &lt;b&gt;1,85 centime&lt;/b&gt; la page (Recto ET Recto/Verso)&lt;/p&gt;</value>
+			<value>&lt;p&gt;Coût des impressions : &lt;b&gt;1,85 centime&lt;/b&gt; la feuille (Recto ou Recto/Verso)&lt;/p&gt;</value>
 			<read-only>true</read-only>
 		</preference>
 		<preference>

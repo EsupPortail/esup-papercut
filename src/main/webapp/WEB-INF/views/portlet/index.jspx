@@ -162,7 +162,11 @@
 			
 			<div>
 				<span id="nbSheets" style="font-weight: italic;">
-					${payboxMontantDefaut}  <spring:message code="paybox.euro"/> équivaut à environ ${defaultNbPages} feuilles noir et blanc ou ${defaultNbColorPages} feuilles couleurs.
+					${payboxMontantDefaut}  <spring:message code="paybox.euro"/> équivaut à environ ${defaultNbPages} feuilles A4 noir et blanc 
+					<c:if test="${not empty defaultNbColorPages}">
+						ou ${defaultNbColorPages} feuilles A4 couleurs
+					</c:if>
+					.				
 				</span>
 			</div> 
 			

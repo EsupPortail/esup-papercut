@@ -28,7 +28,12 @@
 			$("#amount").html(montant + " " + euroStr);
 			var nbSheets = ${nbSheets};
 			var nbColorSheets = ${nbColorSheets};
-			$("#nbSheets").html(montant + " " + euroStr + " équivaut à environ " + nbSheets + " feuilles noir et blanc ou " + nbColorSheets + " feuilles couleurs."); 
+			var txtHtml = montant + " " + euroStr + " équivaut à environ " + nbSheets + " feuilles A4 noir et blanc";
+			if(nbColorSheets.length!=0) {
+				txtHtml = txtHtml + " ou " + nbColorSheets + " feuilles A4 couleurs";
+			}
+			txtHtml = txtHtml + ".";
+			$("#nbSheets").html(txtHtml); 
 		});
 	</script>
 </div>
