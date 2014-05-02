@@ -109,8 +109,6 @@ public class EsupPaperCutService {
 						} else {
 							txLog.merge();	
 						}
-
-						return true;
 						
 					} catch(Exception ex) {
 						log.error("Exception during creditUserBalance on papercut ?", ex);
@@ -121,8 +119,10 @@ public class EsupPaperCutService {
 				}
 				
 			} else {
-				log.warn("signature checking of paybox failed, transaction " + txLog + " canceled.");
+				log.error("signature checking of paybox failed, transaction " + txLog + " canceled.");
 			}
+
+			return true;
 			
 		} else {
 			log.warn("this ip " + ip + " is not trusted for the paybox transaction, " +
