@@ -100,44 +100,36 @@ public class EsupPaperCutService {
 						double montantEuros = new Double(montant) / 100.0;
 						papercutService.creditUserBalance(uid, montantEuros, idtrans);
 						txLog.setPapercutWsCallStatus("OK");
+						
+						String papercutNewSolde =  papercutService.getUserPapercutInfos(uid).getBalance();
+						txLog.setPapercutNewSolde(papercutNewSolde);
+
+						if(newTxLog) {
+							txLog.persist();	
+						} else {
+							txLog.merge();	
+						}
+
+						return true;
+						
 					} catch(Exception ex) {
 						log.error("Exception during creditUserBalance on papercut ?", ex);
 						txLog.setPapercutWsCallStatus("ERREUR");
 					}
 				} else {
-					log.info("Erreur " + erreur + " lors de la transaction paybox : " + reference + " pour un montant de " + montant);
+					log.info("'Erreur' " + erreur + "  (annulation) lors de la transaction paybox : " + reference + " pour un montant de " + montant);
 				}
-
-				String papercutNewSolde =  papercutService.getUserPapercutInfos(uid).getBalance();
-				txLog.setPapercutNewSolde(papercutNewSolde);
-
-				if(newTxLog) {
-					txLog.persist();	
-				} else {
-					txLog.merge();	
-				}
-
-				return true;
+				
 			} else {
 				log.warn("signature checking of paybox failed, transaction " + txLog + " canceled.");
 			}
+			
 		} else {
 			log.warn("this ip " + ip + " is not trusted for the paybox transaction, " +
 					"or this user " + uid + " does'nt correspond to this user " + currentUserUid + "  (validatePayboxJustWithRedirection mode), " +
 					"transaction " + txLog + " canceled.");
 		}
-		
 
-		// if request come from paybox, we save this log for this action which failed,
-		// else we don't trust the params sent by the user ... and so we don't save the log
-		if(payBoxService.isPayboxServer(ip)) {
-			if(newTxLog) {
-				txLog.persist();	
-			} else {
-				txLog.merge();	
-			}
-		}
-		
     	return false;
 	}
 	

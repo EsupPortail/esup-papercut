@@ -300,7 +300,7 @@ public class EsupPapercutPortletController {
      * so we can do that even if we can consider it "less" secure than the direct call of paybox) 
      */
     @RequestMapping(params="signature")
-    public ModelAndView renderViewAfterPaybox(@RequestParam String montant, @RequestParam String reference, @RequestParam String auto, 
+    public ModelAndView renderViewAfterPaybox(@RequestParam(required=false) String montant, @RequestParam String reference, @RequestParam(required=false) String auto, 
     		@RequestParam String erreur, @RequestParam String idtrans, @RequestParam String signature, RenderRequest request, RenderResponse response) {	
     	
     	if("true".equals(request.getPreferences().getValue(PREF_VALIDATE_AFTER_REDIRECT, "false"))) {
@@ -321,14 +321,18 @@ public class EsupPapercutPortletController {
     		String auto, String erreur, String idtrans, String signature) {
     	StringBuilder sb = new StringBuilder();
 
-    	sb.append(String.format("%s=%s", "montant", montant));
-    	sb.append("&");
+    	if(montant != null) {
+	    	sb.append(String.format("%s=%s", "montant", montant));
+	    	sb.append("&");
+    	}
 
     	sb.append(String.format("%s=%s", "reference", reference));
     	sb.append("&");
 
-    	sb.append(String.format("%s=%s", "auto", auto));
-    	sb.append("&");
+    	if(auto != null) {
+	    	sb.append(String.format("%s=%s", "auto", auto));
+	    	sb.append("&");
+    	}
 
     	sb.append(String.format("%s=%s", "erreur", erreur));
     	sb.append("&");	
