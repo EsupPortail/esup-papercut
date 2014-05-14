@@ -17,6 +17,8 @@
  */
 package org.esupportail.papercut.domain;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.Vector;
 
 import org.springframework.roo.addon.javabean.RooJavaBean;
@@ -43,7 +45,7 @@ public class UserPapercutInfos {
 	public UserPapercutInfos(String uid, Vector<String> propertyValues) {
 		this.uid = uid;
 		this.fullName = propertyValues.get(0);
-		this.balance = propertyValues.get(1);
+		this.balance = fixRoundPapercutError(propertyValues.get(1));
 		this.email = propertyValues.get(2);
 		this.department = propertyValues.get(3);
 		this.office = propertyValues.get(4);
@@ -79,5 +81,21 @@ public class UserPapercutInfos {
 	
 	private String notes;
 
+
+	/**
+	 * Papercut WebService gives balance values like 1.9465000000000003 
+	 * Error of epsilon machine is suspected in Papercut !
+	 * -> to workaround, we simply here round the balance ... 
+	 * 
+	 * Note that 5 decimals is the max in papercut today, but maybe one day it will be more so here we return with 10 max 
+	 * 
+	 * @param balance
+	 * @return
+	 */
+	private static String fixRoundPapercutError(String balance) {
+		DecimalFormat df = new DecimalFormat("#.##########");
+		df.setRoundingMode(RoundingMode.HALF_UP);
+		return df.format(Double.valueOf(balance)); 
+	}
 	
 }
