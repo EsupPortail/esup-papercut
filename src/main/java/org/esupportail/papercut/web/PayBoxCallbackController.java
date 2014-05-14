@@ -51,7 +51,7 @@ public class PayBoxCallbackController {
      */
 	@RequestMapping("/payboxcallback")
     @ResponseBody
-    public ResponseEntity<String> index(@RequestParam String montant, @RequestParam String reference, @RequestParam String auto, 
+    public ResponseEntity<String> index(@RequestParam String montant, @RequestParam String reference, @RequestParam(required=false) String auto, 
     		@RequestParam String erreur, @RequestParam String idtrans, @RequestParam String signature, 
     		HttpServletRequest request) {
 		
