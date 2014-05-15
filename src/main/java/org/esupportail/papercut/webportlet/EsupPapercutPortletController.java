@@ -26,6 +26,7 @@ import javax.annotation.Resource;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletRequest;
+import javax.portlet.PortletResponse;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.ResourceRequest;
@@ -36,9 +37,7 @@ import org.esupportail.papercut.domain.PayBoxForm;
 import org.esupportail.papercut.domain.PayboxPapercutTransactionLog;
 import org.esupportail.papercut.domain.UserPapercutInfos;
 import org.esupportail.papercut.services.EsupPaperCutService;
-import org.joda.time.format.DateTimeFormat;
 import org.springframework.context.annotation.Scope;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
@@ -65,8 +64,9 @@ public class EsupPapercutPortletController {
 	@Resource 
 	Map<String, EsupPaperCutService> esupPaperCutServices;
 	
+	   
     @RequestMapping
-    public ModelAndView renderView(RenderRequest request, RenderResponse response) {	
+    public ModelAndView renderView(PortletRequest request, PortletResponse response) {	
 
     	ModelMap model = new ModelMap();  
     	
@@ -141,10 +141,12 @@ public class EsupPapercutPortletController {
     	UserPapercutInfos userPapercutInfos = esupPaperCutService.getUserPapercutInfos(uid);   		
 		model.put("userPapercutInfos", userPapercutInfos);
 		
-		String portletContextPath = response.createRenderURL().toString();
-
-    	PayBoxForm payBoxForm = esupPaperCutService.getPayBoxForm(uid, userMail, 2, paperCutContext, portletContextPath);
-    	model.put("payBoxForm", payBoxForm);
+		if(response instanceof RenderResponse) {
+			String portletContextPath = ((RenderResponse)response).createRenderURL().toString();
+	
+	    	PayBoxForm payBoxForm = esupPaperCutService.getPayBoxForm(uid, userMail, 2, paperCutContext, portletContextPath);
+	    	model.put("payBoxForm", payBoxForm);
+		}
     	
     	model.put("isAdmin", isAdmin(request));
     	
@@ -208,6 +210,10 @@ public class EsupPapercutPortletController {
 	    		sortOrder = "desc";
 	    	}
 	    	
+	    	if (size == null) {
+	    		size = 10;
+	    	}
+	    	
 	    	if (page != null || size != null) {
 	            int sizeNo = size == null ? 10 : size.intValue();
 	            final int firstResult = page == null ? 0 : (page.intValue() - 1) * sizeNo;
@@ -238,6 +244,10 @@ public class EsupPapercutPortletController {
     	if(sortFieldName == null) {
     		sortFieldName = "transactionDate";
     		sortOrder = "desc";
+    	}
+    	
+    	if (size == null) {
+    		size = 10;
     	}
     	
     	ModelMap model = new ModelMap();  
