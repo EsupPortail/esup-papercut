@@ -9,6 +9,10 @@
 	<jsp:directive.page contentType="text/html;charset=UTF-8" />
 	<jsp:output omit-xml-declaration="yes"/>
 
+	<c:set var="n">
+		<portlet:namespace />
+	</c:set>
+	
 	<form method="POST" action="${payBoxForm.actionUrl}">
 
 		<c:forEach items="${payBoxForm.orderedParams}" var="payBoxParam">
@@ -25,14 +29,14 @@
 		$( document ).ready(function() {
 			var euroStr = '<spring:message code="paybox.euro"/>';
 			var montant = ${payBoxForm.montant};
-			$("#amount").html(montant + " " + euroStr);
+			$("#${n}amount").html(montant + " " + euroStr);
 			var nbSheets = ${nbSheets};
 			var txtHtml = montant + " " + euroStr + " équivaut à environ " + nbSheets + " feuilles A4 noir et blanc";
 			<c:if test="${not empty nbColorSheets}">
 				txtHtml = txtHtml + " ou " + ${nbColorSheets} + " feuilles A4 couleur";
 			</c:if>
 			txtHtml = txtHtml + ".";
-			$("#nbSheets").html(txtHtml); 
+			$("#${n}nbSheets").html(txtHtml); 
 		});
 	</script>
 </div>

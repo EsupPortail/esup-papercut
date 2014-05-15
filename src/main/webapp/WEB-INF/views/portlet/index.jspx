@@ -95,27 +95,29 @@
 					var="esupPapercutCssUrl" />
 
 				<spring:url value="/servlet/resources/js/jquery-1.9.0.min.js"
-					var="jqueryUrl" />
+					var="jqueryUrl" /> 
 				<spring:url value="/servlet/resources/js/jquery-ui-1.10.2.js"
 					var="jqueryUiUrl" />
 
 				<link rel="stylesheet" href="${jqueryUiCssUrl}" />
 				<link rel="stylesheet" href="${esupPapercutCssUrl}" />
 
+
 				<script src="${jqueryUrl}">
-				<!--  -->				
+				<!-- -->
 				</script>
 				<script src="${jqueryUiUrl}">
-				<!--  -->			
+				<!-- -->
 				</script>
-
+ 				
+ 				
 				<portlet:resourceURL id="payboxFormMontant"
 					var="payboxFormMontantURL" />
 
 				<script type="text/javascript">
 				
 					$(function() {
-						$("#slider").slider({
+						$("#${n}slider").slider({
 							value : ${payboxMontantDefaut},
 							min : ${payboxMontantMin},
 							max : ${payboxMontantMax},
@@ -129,7 +131,7 @@
 							            "montant": ui.value       
 							        },
 							        success: function (r) {
-							        	$("#payboxForm").html(r);
+							        	$("#${n}payboxForm").html(r);
 							        }
 							    });
 							}
@@ -137,12 +139,12 @@
 					});
 				</script>
 
-				<span id="amount" style="color: #888; font-weight: bold;">${payboxMontantDefaut} <spring:message code="paybox.euro"/></span> 
+				<span id="${n}amount" style="color: #888; font-weight: bold;">${payboxMontantDefaut} <spring:message code="paybox.euro"/></span> 
 
-				<div id="payboxFormSlider">
-					<div id="slider"></div>
+				<div class="payboxFormSlider">
+					<div id="${n}slider" class="esupslider"></div>
 
-					<div id="payboxForm">
+					<div id="${n}payboxForm" class="esuppayboxForm">
 
 						<form method="POST" action="${payBoxForm.actionUrl}">
 
@@ -161,7 +163,7 @@
 			</div>
 			
 			<div>
-				<span id="nbSheets" style="font-weight: italic;">
+				<span id="${n}nbSheets" style="font-weight: italic;">
 					${payboxMontantDefaut}  <spring:message code="paybox.euro"/> équivaut à environ ${defaultNbPages} feuilles A4 noir et blanc 
 					<c:if test="${not empty defaultNbColorPages}">
 						ou ${defaultNbColorPages} feuilles A4 couleur

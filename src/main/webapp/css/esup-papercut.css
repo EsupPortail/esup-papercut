@@ -15,18 +15,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-.esuppapercut #slider {
+.esuppapercut .esupslider {
 	width: 200px;
 	float: left;
 	clear: left;
 	margin: 15px;
 }
 
-.esuppapercut #payboxForm {
+.esuppapercut .esuppayboxForm {
 	margin-left: 250px;
 }
 
-.esuppapercut #payboxFormSlider {
+.esuppapercut .payboxFormSlider {
 	border: 1px solid #ccc;
 	height: 50px;
 	width: 450px;
