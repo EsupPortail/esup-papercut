@@ -53,6 +53,9 @@ public class PapercutService implements InitializingBean {
 	}
     
     public UserPapercutInfos getUserPapercutInfos(String uid) {
+    	if(!serverProxy.isUserExists(uid)) {
+    		serverProxy.addNewUser(uid);
+    	}
     	Vector<String> propertyValues = serverProxy.getUserProperties(uid, UserPapercutInfos.propertyNames);
     	UserPapercutInfos userPapercutInfos = new UserPapercutInfos(uid, propertyValues);
     	log.debug("userPapercutInfos de " + uid + " = " + userPapercutInfos);
