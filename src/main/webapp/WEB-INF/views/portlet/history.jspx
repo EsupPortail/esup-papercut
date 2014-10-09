@@ -58,4 +58,11 @@
             <table:column id="c_org_esupportail_papercut_domain_PayboxPapercutTransactionLog_archived" property="archived" sort="true" z="user-managed" label="Archivé"/>
         </table:table>
     </page:list>
+    
+    <c:if test="${isAdmin and adminView}">
+		<spring:url value="/servlet/resources/images/csv_text.png" var="csvImgUrl" />
+		<portlet:resourceURL var="csvUrl" id="csvUrl"/>
+		<a href="${csvUrl}"><img src="${csvImgUrl}" alt="CSV"/></a>
+		<hr/>
+	</c:if>
 </div>

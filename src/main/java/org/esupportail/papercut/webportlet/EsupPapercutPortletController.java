@@ -17,6 +17,8 @@
  */
 package org.esupportail.papercut.webportlet;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +34,7 @@ import javax.portlet.RenderResponse;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.esupportail.papercut.domain.PayBoxForm;
 import org.esupportail.papercut.domain.PayboxPapercutTransactionLog;
@@ -41,6 +44,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.portlet.ModelAndView;
@@ -385,6 +389,32 @@ public class EsupPapercutPortletController {
     	
         response.setRenderParameters(parameters);
     }
+    
+	@ResourceMapping("csvUrl")
+	public void getCsv(ResourceRequest request, ResourceResponse response) throws IOException {
+    	
+    	if(!isAdmin(request)) {
+    		return;
+    	}
+
+    	String csv = "Date transaction,uid,montant,ID transaction paybox";
+    	
+    	List<PayboxPapercutTransactionLog> txLogs = PayboxPapercutTransactionLog.findAllPayboxPapercutTransactionLogs();
+    	for(PayboxPapercutTransactionLog txLog : txLogs) {
+    		csv = csv + "\r\n";
+    		csv = csv + txLog.getTransactionDate() + ",";
+    		csv = csv + txLog.getUid() + ",";
+    		csv = csv + txLog.getMontant() + ",";
+    		csv = csv + txLog.getIdtrans();
+    	} 
+        InputStream csvStream = IOUtils.toInputStream(csv, "utf-8");
+        
+        response.setContentType("text/csv");
+        response.setCharacterEncoding("utf-8");   
+        response.setProperty("Content-Disposition","attachment; filename=\"paybox_papercut_transaction_log.csv\"");
+        
+        FileCopyUtils.copy(csvStream, response.getPortletOutputStream());
+	 }
     
 }
 
