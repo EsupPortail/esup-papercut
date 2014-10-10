@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <div class="esuppapercut"
-	xmlns:portlet="http://java.sun.com/portlet_2_0" 
+	xmlns:portlet="http://java.sun.com/portlet" 
 	xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" 
 	xmlns:jsp="http://java.sun.com/JSP/Page" 
 	xmlns:c="http://java.sun.com/jsp/jstl/core"

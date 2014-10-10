@@ -57,6 +57,10 @@ public class PayBoxForm {
 	
 	private String hmac;
 	
+	private Integer nbSheets;
+	
+	private Integer nbColorSheets;
+	
 	
 	public SortedMap<String, String> getOrderedParams() {
 		SortedMap<String, String> params = new TreeMap<String, String>();

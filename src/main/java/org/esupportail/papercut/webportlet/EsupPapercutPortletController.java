@@ -31,8 +31,6 @@ import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
-import javax.portlet.ResourceRequest;
-import javax.portlet.ResourceResponse;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
@@ -40,6 +38,7 @@ import org.esupportail.papercut.domain.PayBoxForm;
 import org.esupportail.papercut.domain.PayboxPapercutTransactionLog;
 import org.esupportail.papercut.domain.UserPapercutInfos;
 import org.esupportail.papercut.services.EsupPaperCutService;
+import org.hibernate.ejb.criteria.ValueHandlerFactory.DoubleValueHandler;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,7 +47,7 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.portlet.ModelAndView;
-import org.springframework.web.portlet.bind.annotation.ResourceMapping;
+
 
 @Controller
 @Scope("request")
@@ -83,16 +82,6 @@ public class EsupPapercutPortletController {
     	
     	double papercutSheetCost = Double.parseDouble(request.getPreferences().getValue("papercutSheetCost", "-1"));
     	double papercutColorSheetCost = Double.parseDouble(request.getPreferences().getValue("papercutColorSheetCost", "-1"));
-    	if(papercutSheetCost > 0) {
-    		double payboxMontantDefaut = Double.parseDouble(request.getPreferences().getValue("payboxMontantDefaut", "2.0"));
-    		long defaultNbPages = (long)(payboxMontantDefaut/papercutSheetCost);
-    		model.put("defaultNbPages", defaultNbPages);
-    	}    	
-    	if(papercutColorSheetCost > 0) {
-    		double payboxMontantDefaut = Double.parseDouble(request.getPreferences().getValue("payboxMontantDefaut", "2.0"));
-    		long defaultNbPages = (long)(payboxMontantDefaut/papercutColorSheetCost);
-    		model.put("defaultNbColorPages", defaultNbPages);
-    	}
     	
     	String paperCutContext = request.getPreferences().getValue(PREF_PAPERCUT_CONTEXT, null);
         EsupPaperCutService esupPaperCutService = esupPaperCutServices.get(paperCutContext);
@@ -113,13 +102,12 @@ public class EsupPapercutPortletController {
     		}
     	}		
         
+    	BigDecimal payboxMontantMin = new BigDecimal(request.getPreferences().getValue("payboxMontantMin", "0.5"));
+    	BigDecimal payboxMontantMax  = new BigDecimal(request.getPreferences().getValue("payboxMontantMax", "5.0"));
+    	BigDecimal payboxMontantStep  = new BigDecimal(request.getPreferences().getValue("payboxMontantStep", "0.5"));	
+    	BigDecimal payboxMontantDefaut  = new BigDecimal(request.getPreferences().getValue("payboxMontantDefaut", "2.0"));
         // constraints on the slider via transactionMontantMax
-        if(canMakeTransaction && transactionMontantMax.intValue() > -1) {
-        	BigDecimal payboxMontantMin = new BigDecimal(request.getPreferences().getValue("payboxMontantMin", "0.5"));
-        	BigDecimal payboxMontantMax  = new BigDecimal(request.getPreferences().getValue("payboxMontantMax", "5.0"));
-        	BigDecimal payboxMontantStep  = new BigDecimal(request.getPreferences().getValue("payboxMontantStep", "0.5"));	
-        	BigDecimal payboxMontantDefaut  = new BigDecimal(request.getPreferences().getValue("payboxMontantDefaut", "2.0"));
-        	
+        if(canMakeTransaction && transactionMontantMax.intValue() > -1) {  	
 			List<PayboxPapercutTransactionLog> transactionsNotArchived = PayboxPapercutTransactionLog.findPayboxPapercutTransactionLogsByUidEqualsAndPaperCutContextEqualsAndArchived(uid, paperCutContext, false).getResultList();
 			BigDecimal montantTotalTransactionsNotArchived = new BigDecimal("0");
 			for(PayboxPapercutTransactionLog txLog: transactionsNotArchived) {
@@ -139,59 +127,37 @@ public class EsupPapercutPortletController {
             	model.put("payboxMontantDefaut", payboxMontantDefaut.doubleValue());
         	}
         }
+	       
+        // generation de l'ensemble des payboxForm :  payboxMontantMin -> payboxMontantMax par pas de payboxMontantStep
+        if(response instanceof RenderResponse) {
+        	String portletContextPath = ((RenderResponse)response).createRenderURL().toString();
+        	Map<Integer, PayBoxForm> payboxForms = new HashMap<Integer, PayBoxForm>(); 
+	        for(BigDecimal montant=payboxMontantMin; montant.compareTo(payboxMontantMax)<=0; montant = montant.add(payboxMontantStep)) {
+	        	PayBoxForm payBoxForm = esupPaperCutService.getPayBoxForm(uid, userMail, montant.doubleValue(), paperCutContext, portletContextPath);
+		        if(papercutSheetCost > 0) {
+		        	  int nbSheets = (int)(montant.doubleValue()/papercutSheetCost);
+		        	  payBoxForm.setNbSheets(nbSheets);
+		        }
+		        if(papercutColorSheetCost > 0) {
+		        	 int nbColorSheets = (int)(montant.doubleValue()/papercutColorSheetCost);
+		        	 payBoxForm.setNbColorSheets(nbColorSheets);
+		        }
+		        payboxForms.put(montant.multiply(new BigDecimal(100)).intValue(), payBoxForm);
+	        }
+	        model.put("payboxForms", payboxForms);
+	        model.put("payboxMontantDefautCents", payboxMontantDefaut.multiply(new BigDecimal(100)).intValue());
+        }
         
         model.put("canMakeTransaction", canMakeTransaction);
     	
     	UserPapercutInfos userPapercutInfos = esupPaperCutService.getUserPapercutInfos(uid);   		
 		model.put("userPapercutInfos", userPapercutInfos);
-		
-		if(response instanceof RenderResponse) {
-			String portletContextPath = ((RenderResponse)response).createRenderURL().toString();
-	
-	    	PayBoxForm payBoxForm = esupPaperCutService.getPayBoxForm(uid, userMail, 2, paperCutContext, portletContextPath);
-	    	model.put("payBoxForm", payBoxForm);
-		}
     	
     	model.put("isAdmin", isAdmin(request));
     	
     	return new ModelAndView("index", model);
     }
 
-
-	@ResourceMapping("payboxFormMontant")
-	public ModelAndView payboxFormMontant(@RequestParam double montant, ResourceRequest request, ResourceResponse response) {
-    	
-    	ModelMap model = new ModelMap();  
-    	
-    	String paperCutContext = request.getPreferences().getValue(PREF_PAPERCUT_CONTEXT, null);
-        EsupPaperCutService esupPaperCutService = esupPaperCutServices.get(paperCutContext);
-        
-        String uid = getUid(request);
-        String userMail = getUserMail(request);
-		
-        String portletContextPath = response.createRenderURL().toString();
-		
-    	PayBoxForm payBoxForm = esupPaperCutService.getPayBoxForm(uid, userMail, montant, paperCutContext, portletContextPath);
-    	model.put("payBoxForm", payBoxForm);
-    	
-    	double papercutSheetCost = Double.parseDouble(request.getPreferences().getValue("papercutSheetCost", "-1"));
-    	double papercutColorSheetCost = Double.parseDouble(request.getPreferences().getValue("papercutColorSheetCost", "-1"));
-    	
-    	if(papercutSheetCost > 0) {
-    		long nbSheets = (long)(montant/papercutSheetCost);
-    		model.put("nbSheets", nbSheets);
-    	}
-    	if(papercutColorSheetCost > 0) {
-    		long nbColorSheets = (long)(montant/papercutColorSheetCost);
-    		model.put("nbColorSheets", nbColorSheets);
-    	}
-    	
-	    return new ModelAndView("paybox-form-montant", model);
-	 }
-
-
-    
-    
     @RequestMapping(params = "action=admin")
     public ModelAndView adminList(@RequestParam(value = "page", required = false) Integer page, 
     		@RequestParam(value = "size", required = false) Integer size, 
@@ -390,6 +356,7 @@ public class EsupPapercutPortletController {
         response.setRenderParameters(parameters);
     }
     
+    /*
 	@ResourceMapping("csvUrl")
 	public void getCsv(ResourceRequest request, ResourceResponse response) throws IOException {
     	
@@ -415,6 +382,6 @@ public class EsupPapercutPortletController {
         
         FileCopyUtils.copy(csvStream, response.getPortletOutputStream());
 	 }
-    
+    */
 }
 

@@ -135,4 +135,20 @@ privileged aspect PayBoxForm_Roo_JavaBean {
         this.hmac = hmac;
     }
     
+    public Integer PayBoxForm.getNbSheets() {
+        return this.nbSheets;
+    }
+    
+    public void PayBoxForm.setNbSheets(Integer nbSheets) {
+        this.nbSheets = nbSheets;
+    }
+    
+    public Integer PayBoxForm.getNbColorSheets() {
+        return this.nbColorSheets;
+    }
+    
+    public void PayBoxForm.setNbColorSheets(Integer nbColorSheets) {
+        this.nbColorSheets = nbColorSheets;
+    }
+    
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <div class="esuppapercut"
-	xmlns:portlet="http://java.sun.com/portlet_2_0" 
+	xmlns:portlet="http://java.sun.com/portlet" 
 	xmlns:jsp="http://java.sun.com/JSP/Page" 
 	xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" 
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
@@ -59,10 +59,13 @@
         </table:table>
     </page:list>
     
+    <!-- 
     <c:if test="${isAdmin and adminView}">
 		<spring:url value="/servlet/resources/images/csv_text.png" var="csvImgUrl" />
 		<portlet:resourceURL var="csvUrl" id="csvUrl"/>
 		<a href="${csvUrl}"><img src="${csvImgUrl}" alt="CSV"/></a>
 		<hr/>
 	</c:if>
+	-->
+	
 </div>

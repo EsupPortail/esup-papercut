@@ -34,6 +34,12 @@
 			<id>jlehtinen.net</id>
 			<url>http://repo.jlehtinen.net/maven2/</url>
 		</repository>
+		
+		<repository>
+	      <id>esup</id>
+	      <url>https://mvn.esup-portail.org/content/repositories/releases</url>
+    	</repository>
+    	
     </repositories>
     <pluginRepositories>
         <pluginRepository>
@@ -57,7 +63,8 @@
 		</pluginRepository>
     </pluginRepositories>
 	<dependencies>
-        <!-- General dependencies for standard applications -->
+    
+       <!-- General dependencies for standard applications -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -127,6 +134,10 @@
                     <groupId>commons-logging</groupId>
                     <artifactId>commons-logging</artifactId>
                 </exclusion>
+                <exclusion>
+                	<artifactId>spring-asm</artifactId>
+                	<groupId>org.springframework</groupId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -139,11 +150,23 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
             <version>${spring.version}</version>
+            <exclusions>
+            	<exclusion>
+            		<artifactId>spring-asm</artifactId>
+            		<groupId>org.springframework</groupId>
+            	</exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-aop</artifactId>
             <version>${spring.version}</version>
+            <exclusions>
+            	<exclusion>
+            		<artifactId>spring-asm</artifactId>
+            		<groupId>org.springframework</groupId>
+            	</exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -362,22 +385,37 @@
         <!-- Portlet -->
                 
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-webmvc-portlet</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>jsr168forwardport.org.springframework.web.portlet</artifactId>
+			<version>2.5.6.SEC01</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>spring-web</artifactId>
+					<groupId>org.springframework</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>spring-asm</artifactId>
+					<groupId>org.springframework</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>spring-beans</artifactId>
+					<groupId>org.springframework</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		
         
         <dependency>
 			<groupId>javax.portlet</groupId>
 			<artifactId>portlet-api</artifactId>
-			<version>2.0</version>
+			<version>1.0</version>
 			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
-			<groupId>org.apache.portals.pluto</groupId>
+			<groupId>org.apache.pluto</groupId>
 			<artifactId>pluto-taglib</artifactId>
-			<version>2.1.0-M2</version>
+			<version>1.1.7</version>
 			<scope>provided</scope>
 			<exclusions>
 				<exclusion>
