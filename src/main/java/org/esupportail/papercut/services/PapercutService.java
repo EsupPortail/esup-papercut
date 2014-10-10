@@ -36,6 +36,8 @@ public class PapercutService implements InitializingBean {
 	
 	int port;
 	
+	String accountName = "";
+	
     ServerCommandProxy serverProxy;    
 
 	public void setAuthToken(String authToken) {
@@ -52,6 +54,10 @@ public class PapercutService implements InitializingBean {
 
 	public void setPort(int port) {
 		this.port = port;
+	}
+
+	public void setAccountName(String accountName) {
+		this.accountName = accountName;
 	}
 
 	public void afterPropertiesSet() {
@@ -71,7 +77,7 @@ public class PapercutService implements InitializingBean {
     public void creditUserBalance(String uid, double amount, String idtrans) {
     	String logMessage = "Ajout de " + amount + " à " + uid + " via l'appli Esup-Papercut - transaction paybox : " + idtrans;
     	log.info(logMessage);
-    	serverProxy.adjustUserAccountBalance(uid, amount, logMessage);
+    	serverProxy.adjustUserAccountBalance(uid, amount, logMessage, accountName);
     }
 
 	

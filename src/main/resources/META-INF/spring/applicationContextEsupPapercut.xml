@@ -92,6 +92,7 @@
 						<property name="server" value="papercut.mon-univ.fr" />
 						<property name="scheme" value="http" />
 						<property name="port" value="80" />
+						<property name="accountName" value="" />
 
 					</bean>
 
