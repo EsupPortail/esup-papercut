@@ -34,13 +34,13 @@ public class ServerCommandProxy {
      * @param authToken The authentication token as a string. All RPC calls must pass through an authentication token.
      *                  At the current time this is simply the built-in "admin" user's password.
      */
-    public ServerCommandProxy(String server, int port, String authToken) {
+    public ServerCommandProxy(String server, String scheme, int port, String authToken) {
         _authToken = authToken;
         // We want to use keep alives if possible.
         XmlRpc.setKeepAlive(true);
         String serverURL;
         try {
-            serverURL = (new URL("http", server, port, "/rpc/api/xmlrpc")).toString();
+            serverURL = (new URL(scheme, server, port, "/rpc/api/xmlrpc")).toString();
             _xmlRpcClient = new XmlRpcClient(serverURL);
         } catch (MalformedURLException e) {
             throw new RuntimeException("Invalid server name supplied");

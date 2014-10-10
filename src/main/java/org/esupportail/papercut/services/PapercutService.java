@@ -32,6 +32,8 @@ public class PapercutService implements InitializingBean {
 	
 	String server;
 	
+	String scheme = "http";
+	
 	int port;
 	
     ServerCommandProxy serverProxy;    
@@ -44,12 +46,16 @@ public class PapercutService implements InitializingBean {
 		this.server = server;
 	}
 
+	public void setScheme(String scheme) {
+		this.scheme = scheme;
+	}
+
 	public void setPort(int port) {
 		this.port = port;
 	}
 
 	public void afterPropertiesSet() {
-		serverProxy = new ServerCommandProxy(server, port, authToken);
+		serverProxy = new ServerCommandProxy(server, scheme, port, authToken);
 	}
     
     public UserPapercutInfos getUserPapercutInfos(String uid) {

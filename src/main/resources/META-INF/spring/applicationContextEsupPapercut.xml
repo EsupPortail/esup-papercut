@@ -90,6 +90,7 @@
 
 						<property name="authToken" value="mon-papercut-auth-token" />
 						<property name="server" value="papercut.mon-univ.fr" />
+						<property name="scheme" value="http" />
 						<property name="port" value="80" />
 
 					</bean>
