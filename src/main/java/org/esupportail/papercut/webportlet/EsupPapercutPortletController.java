@@ -399,7 +399,7 @@ public class EsupPapercutPortletController {
 
     	String csv = "Date transaction,uid,montant,ID transaction paybox";
     	
-    	List<PayboxPapercutTransactionLog> txLogs = PayboxPapercutTransactionLog.findAllPayboxPapercutTransactionLogs();
+    	List<PayboxPapercutTransactionLog> txLogs = PayboxPapercutTransactionLog.findAllPayboxPapercutTransactionLogs("transactionDate", "asc");
     	for(PayboxPapercutTransactionLog txLog : txLogs) {
     		csv = csv + "\r\n";
     		csv = csv + txLog.getTransactionDate() + ",";
