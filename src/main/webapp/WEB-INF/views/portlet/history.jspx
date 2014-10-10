@@ -59,13 +59,11 @@
         </table:table>
     </page:list>
     
-    <!-- 
     <c:if test="${isAdmin and adminView}">
 		<spring:url value="/servlet/resources/images/csv_text.png" var="csvImgUrl" />
-		<portlet:resourceURL var="csvUrl" id="csvUrl"/>
+		<spring:url value="/servlet/csv?sharedSessionId=${sharedSessionId}" var="csvUrl" />
 		<a href="${csvUrl}"><img src="${csvImgUrl}" alt="CSV"/></a>
 		<hr/>
 	</c:if>
-	-->
 	
 </div>

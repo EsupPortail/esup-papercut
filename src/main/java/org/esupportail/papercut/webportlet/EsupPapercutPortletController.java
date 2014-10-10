@@ -29,11 +29,13 @@ import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
+import javax.portlet.PortletSession;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
+import org.esupportail.papercut.domain.EsupPapercutSessionObject;
 import org.esupportail.papercut.domain.PayBoxForm;
 import org.esupportail.papercut.domain.PayboxPapercutTransactionLog;
 import org.esupportail.papercut.domain.UserPapercutInfos;
@@ -47,6 +49,7 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.portlet.ModelAndView;
+import org.springframework.web.portlet.util.PortletUtils;
 
 
 @Controller
@@ -69,7 +72,7 @@ public class EsupPapercutPortletController {
 	
 	   
     @RequestMapping
-    public ModelAndView renderView(PortletRequest request, PortletResponse response) {	
+    public ModelAndView renderView(RenderRequest request, RenderResponse response) {	
 
     	ModelMap model = new ModelMap();  
     	
@@ -129,31 +132,30 @@ public class EsupPapercutPortletController {
         }
 	       
         // generation de l'ensemble des payboxForm :  payboxMontantMin -> payboxMontantMax par pas de payboxMontantStep
-        if(response instanceof RenderResponse) {
-        	String portletContextPath = ((RenderResponse)response).createRenderURL().toString();
-        	Map<Integer, PayBoxForm> payboxForms = new HashMap<Integer, PayBoxForm>(); 
-	        for(BigDecimal montant=payboxMontantMin; montant.compareTo(payboxMontantMax)<=0; montant = montant.add(payboxMontantStep)) {
-	        	PayBoxForm payBoxForm = esupPaperCutService.getPayBoxForm(uid, userMail, montant.doubleValue(), paperCutContext, portletContextPath);
-		        if(papercutSheetCost > 0) {
-		        	  int nbSheets = (int)(montant.doubleValue()/papercutSheetCost);
-		        	  payBoxForm.setNbSheets(nbSheets);
-		        }
-		        if(papercutColorSheetCost > 0) {
-		        	 int nbColorSheets = (int)(montant.doubleValue()/papercutColorSheetCost);
-		        	 payBoxForm.setNbColorSheets(nbColorSheets);
-		        }
-		        payboxForms.put(montant.multiply(new BigDecimal(100)).intValue(), payBoxForm);
-	        }
-	        model.put("payboxForms", payboxForms);
-	        model.put("payboxMontantDefautCents", payboxMontantDefaut.multiply(new BigDecimal(100)).intValue());
+        String portletContextPath = ((RenderResponse)response).createRenderURL().toString();
+        Map<Integer, PayBoxForm> payboxForms = new HashMap<Integer, PayBoxForm>(); 
+        for(BigDecimal montant=payboxMontantMin; montant.compareTo(payboxMontantMax)<=0; montant = montant.add(payboxMontantStep)) {
+        	PayBoxForm payBoxForm = esupPaperCutService.getPayBoxForm(uid, userMail, montant.doubleValue(), paperCutContext, portletContextPath);
+        	if(papercutSheetCost > 0) {
+        		int nbSheets = (int)(montant.doubleValue()/papercutSheetCost);
+        		payBoxForm.setNbSheets(nbSheets);
+        	}
+        	if(papercutColorSheetCost > 0) {
+        		int nbColorSheets = (int)(montant.doubleValue()/papercutColorSheetCost);
+        		payBoxForm.setNbColorSheets(nbColorSheets);
+        	}
+        	payboxForms.put(montant.multiply(new BigDecimal(100)).intValue(), payBoxForm);
         }
+        model.put("payboxForms", payboxForms);
+        model.put("payboxMontantDefautCents", payboxMontantDefaut.multiply(new BigDecimal(100)).intValue());
         
         model.put("canMakeTransaction", canMakeTransaction);
     	
     	UserPapercutInfos userPapercutInfos = esupPaperCutService.getUserPapercutInfos(uid);   		
 		model.put("userPapercutInfos", userPapercutInfos);
     	
-    	model.put("isAdmin", isAdmin(request));
+		boolean isAdmin = isAdmin(request);
+    	model.put("isAdmin", isAdmin);
     	
     	return new ModelAndView("index", model);
     }
@@ -163,7 +165,7 @@ public class EsupPapercutPortletController {
     		@RequestParam(value = "size", required = false) Integer size, 
     		@RequestParam(value = "sortFieldName", required = false) String sortFieldName, 
     		@RequestParam(value = "sortOrder", required = false) String sortOrder,
-    		RenderRequest request) {
+    		RenderRequest request, RenderResponse response) {
     	
     	boolean isAdmin = isAdmin(request);
     	
@@ -194,6 +196,14 @@ public class EsupPapercutPortletController {
 	            model.put("payboxpapercuttransactionlogs", PayboxPapercutTransactionLog.findPayboxPapercutTransactionLogsByPaperCutContextEquals(paperCutContext, sortFieldName, sortOrder).getResultList());
 	        }
 	        addDateTimeFormatPatterns(model);
+	        
+	    	String sharedSessionId = response.getNamespace();
+	    	EsupPapercutSessionObject objectShared = new EsupPapercutSessionObject();
+	    	objectShared.setIsAdmin(isAdmin);
+	    	objectShared.setPaperCutContext(paperCutContext);
+	    	PortletUtils.setSessionAttribute(request, sharedSessionId, objectShared, PortletSession.APPLICATION_SCOPE);
+	    	model.put("sharedSessionId", sharedSessionId);
+	    	
         
     	}
         
@@ -356,32 +366,5 @@ public class EsupPapercutPortletController {
         response.setRenderParameters(parameters);
     }
     
-    /*
-	@ResourceMapping("csvUrl")
-	public void getCsv(ResourceRequest request, ResourceResponse response) throws IOException {
-    	
-    	if(!isAdmin(request)) {
-    		return;
-    	}
-
-    	String csv = "Date transaction,uid,montant,ID transaction paybox";
-    	
-    	List<PayboxPapercutTransactionLog> txLogs = PayboxPapercutTransactionLog.findAllPayboxPapercutTransactionLogs("transactionDate", "asc");
-    	for(PayboxPapercutTransactionLog txLog : txLogs) {
-    		csv = csv + "\r\n";
-    		csv = csv + txLog.getTransactionDate() + ",";
-    		csv = csv + txLog.getUid() + ",";
-    		csv = csv + txLog.getMontant() + ",";
-    		csv = csv + txLog.getIdtrans();
-    	} 
-        InputStream csvStream = IOUtils.toInputStream(csv, "utf-8");
-        
-        response.setContentType("text/csv");
-        response.setCharacterEncoding("utf-8");   
-        response.setProperty("Content-Disposition","attachment; filename=\"paybox_papercut_transaction_log.csv\"");
-        
-        FileCopyUtils.copy(csvStream, response.getPortletOutputStream());
-	 }
-    */
 }
 
