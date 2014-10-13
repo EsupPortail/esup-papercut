@@ -34,13 +34,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.esupportail.papercut.domain.PayBoxForm;
 import org.springframework.core.io.ClassPathResource;
-
+import org.springframework.scheduling.annotation.Scheduled;
 
 public class PayBoxService {
 
@@ -68,6 +66,8 @@ public class PayBoxService {
 	private PublicKey payboxPublicKey;
 
 	private String reponseServerUrl;
+	
+	private String payboxActionUrlOK = null;
 	
 
 	public String getNumCommandePrefix() {
@@ -166,19 +166,10 @@ public class PayBoxService {
 	}
 
 	protected String getPayBoxActionUrl() {
-		for(String payboxActionUrl : payboxActionUrls) {
-			try {
-				// on teste la connection, pour voir si le serveur est disponible
-				URL url = new URL(payboxActionUrl);
-				URLConnection connection = url.openConnection();
-				connection.connect();
-				connection.getInputStream().read();
-				return payboxActionUrl;
-			} catch (Exception e) {
-				log.warn("Pb with " + payboxActionUrl, e);
-			} 
-		}			
-		throw new RuntimeException("No paybox action url is available at the moment !");
+		if(payboxActionUrlOK == null) {
+			updatePayBoxActionUrl();
+		} 
+		return this.payboxActionUrlOK;
 	}
 	
 	/**
@@ -222,6 +213,30 @@ public class PayBoxService {
 		} catch (Exception e) {
 			log.warn("Pb when checking SSL signature of Paybox", e);
 			return false;
+		}
+	}
+	
+	@Scheduled(fixedDelay=3600000)
+	public void flushPayboxActionUrlOK() {
+		updatePayBoxActionUrl();
+		log.info("Update Paybox Action Url: " + this.payboxActionUrlOK);
+	}
+	
+	public void updatePayBoxActionUrl() {
+		for(String payboxActionUrl : payboxActionUrls) {
+			try {
+				// on teste la connection, pour voir si le serveur est disponible
+				URL url = new URL(payboxActionUrl);
+				URLConnection connection = url.openConnection();
+				connection.connect();
+				connection.getInputStream().read();
+				this.payboxActionUrlOK = payboxActionUrl;
+			} catch (Exception e) {
+				log.warn("Pb with " + payboxActionUrl, e);
+			} 
+		}
+		if(this.payboxActionUrlOK == null) {
+			throw new RuntimeException("No paybox action url is available at the moment !");
 		}
 	}
 
