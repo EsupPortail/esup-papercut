@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div class="esuppapercutMobile" 
+ 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:page="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:portlet="http://java.sun.com/portlet"
+	xmlns:spring="http://www.springframework.org/tags"
+	xmlns:form="http://www.springframework.org/tags/form" version="2.0">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes"/>
+
+	<portlet:defineObjects />
+
+	<c:set var="n">
+		<portlet:namespace />
+	</c:set>
+
+	<portlet:renderURL portletMode="VIEW" var="homeUrl"/>
+	<portlet:renderURL portletMode="VIEW" var="historyUrl">
+		<portlet:param name="action" value="myhistory" />
+		<portlet:param name="sortFieldName" value="transactionDate" />
+		<portlet:param name="sortOrder" value="desc" />
+	</portlet:renderURL>
+	<portlet:renderURL portletMode="VIEW" var="adminUrl">
+		<portlet:param name="action" value="admin" />
+		<portlet:param name="sortFieldName" value="transactionDate" />
+		<portlet:param name="sortOrder" value="desc" />
+	</portlet:renderURL>	
+
+	<div data-role ="navbar">
+		<ul>
+			<li><a href="${homeUrl}" class="ui-btn-active"><spring:message
+						code="menu.home" /></a></li>
+			<li><a href="${historyUrl}"><spring:message
+						code="menu.myhistory" /></a></li>
+			<c:if test="${isAdmin}">
+				<li><a href="${adminUrl}"><spring:message code="menu.admin" /></a></li>
+			</c:if>
+		</ul>
+	</div>
+
+	<div class="ui-bar ui-bar-e info">
+		<c:out value="${htmlHeader}" escapeXml="false"/>
+	</div>
+
+	<div data-role="content">
+		<div class="ui-body ui-body-a ui-corner-all">
+			<ul data-role="listview" data-theme="b">
+				<li data-role="list-divider"><spring:message code="index.sold" />
+					: <b>${userPapercutInfos.balance} EUR</b></li>
+				<li><spring:message code="index.printJobs" />
+					<div class="ui-li-count">${userPapercutInfos.printJobs}</div></li>
+				<li><spring:message code="index.printJobs" />
+					<div class="ui-li-count">
+						<b>${userPapercutInfos.printJobs}</b>
+					</div></li>
+				<li><spring:message code="index.printPages" />
+					<div class="ui-li-count">
+						<b>${userPapercutInfos.printPages}</b>
+					</div></li>
+			</ul>
+		</div>
+
+		<c:if test="${not empty payboxForms}">
+			<c:choose>
+				<c:when test="${canMakeTransaction}">
+					<div>
+						<spring:url value="/servlet/resources/css/m_esup-papercut.css"
+							var="m_esupPapercutCssUrl" />
+
+						<link rel="stylesheet" href="${m_esupPapercutCssUrl}" />
+
+						<c:forEach items="${payboxForms}" var="payboxFormItem"
+							varStatus="status">
+							<c:if test="${status.first}">
+								<c:set var="payBoxFormActionUrl"
+									value="${payboxFormItem.value.actionUrl}" />
+							</c:if>
+						</c:forEach>
+
+						<c:set var="payboxFormsLength" value="${fn:length(payboxForms)}" />
+						<c:set var="lengthMax" value="6" />
+						<br />
+						<div class="ui-bar ui-bar-c ">Choisissez la somme à
+							créditer:</div>
+						<div id="${n}payboxForm"
+							class="${payboxFormsLength gt lengthMax ? 'ui-grid-a' : 'none'}">
+							<c:forEach items="${payboxForms}" var="payboxFormItem"
+								varStatus="loopStatus">
+
+								<c:set var="payBoxForm" value="${payboxFormItem.value}" />
+
+								<div
+									class="${n}payboxFormPost ${payboxFormsLength gt lengthMax ? (loopStatus.index % 2 == 0 ? 'ui-block-a' : 'ui-block-b'):''}"
+									id="${n}payboxForm_${payboxFormItem.key}">
+
+									<form method="POST" action="${payBoxForm.actionUrl}">
+										<c:forEach items="${payBoxForm.orderedParams}"
+											var="payBoxParam">
+											<input type="hidden" name="${payBoxParam.key}"
+												value="${payBoxParam.value}" />
+										</c:forEach>
+
+										<input type="hidden" name="PBX_HMAC"
+											value="${payBoxForm.hmac}" />
+
+										<button type="submit">${payBoxForm.montant}€<br />
+											<div id="${n}nbSheets_${payboxFormItem.key}"
+												class="${n}nbSheets_class">
+												<span class="nbFeuilles">
+												(~${payBoxForm.nbSheets} feuilles A4 N&amp;B
+												<c:if test="${not empty payBoxForm.nbColorSheets}">
+													<br />ou ${payBoxForm.nbColorSheets} feuilles A4 couleur</c:if>
+												)</span>
+											</div>
+										</button>
+									</form>
+								</div>
+							</c:forEach>
+						</div>
+					</div>
+				</c:when>
+
+				<c:otherwise>
+					<div class="ui-bar ui-bar-e ">
+						<i>Nombre de transactions et/ou montant maximum autorisé
+							dépassé. Vous ne pouvez actuellement plus recharger votre compte
+							Papercut.</i>
+					</div>
+				</c:otherwise>
+			</c:choose>
+		</c:if>
+	</div>
+		
+	<br/>
+	
+	<div class="ui-bar ui-bar-e info">
+		<c:out value="${htmlFooter}" escapeXml="false"/>
+	</div>
+</div>

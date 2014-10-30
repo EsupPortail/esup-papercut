@@ -23,6 +23,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import javax.annotation.Resource;
 import javax.portlet.ActionRequest;
@@ -40,6 +41,7 @@ import org.esupportail.papercut.domain.PayBoxForm;
 import org.esupportail.papercut.domain.PayboxPapercutTransactionLog;
 import org.esupportail.papercut.domain.UserPapercutInfos;
 import org.esupportail.papercut.services.EsupPaperCutService;
+import org.esupportail.papercut.services.UserAgentInspector;
 import org.hibernate.ejb.criteria.ValueHandlerFactory.DoubleValueHandler;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -70,6 +72,8 @@ public class EsupPapercutPortletController {
 	@Resource 
 	Map<String, EsupPaperCutService> esupPaperCutServices;
 	
+    @Resource
+    protected UserAgentInspector userAgentInspector;	
 	   
     @RequestMapping
     public ModelAndView renderView(RenderRequest request, RenderResponse response) {	
@@ -144,9 +148,12 @@ public class EsupPapercutPortletController {
         		int nbColorSheets = (int)(montant.doubleValue()/papercutColorSheetCost);
         		payBoxForm.setNbColorSheets(nbColorSheets);
         	}
+        	
         	payboxForms.put(montant.multiply(new BigDecimal(100)).intValue(), payBoxForm);
         }
-        model.put("payboxForms", payboxForms);
+        Map<Integer, PayBoxForm> sortedMap = new TreeMap<Integer, PayBoxForm>(payboxForms);
+        
+        model.put("payboxForms", sortedMap);
         model.put("payboxMontantDefautCents", payboxMontantDefaut.multiply(new BigDecimal(100)).intValue());
         
         model.put("canMakeTransaction", canMakeTransaction);
@@ -157,7 +164,7 @@ public class EsupPapercutPortletController {
 		boolean isAdmin = isAdmin(request);
     	model.put("isAdmin", isAdmin);
     	
-    	return new ModelAndView("index", model);
+    	return new ModelAndView(getViewName(request, "index"), model);
     }
 
     @RequestMapping(params = "action=admin")
@@ -207,7 +214,7 @@ public class EsupPapercutPortletController {
         
     	}
         
-        return new ModelAndView("history", model);
+        return new ModelAndView(getViewName(request,"history"), model);
     }
     
     @RequestMapping(params = "action=myhistory")
@@ -244,7 +251,7 @@ public class EsupPapercutPortletController {
         
     	model.put("isAdmin", isAdmin(request));
     	
-        return new ModelAndView("history", model);
+        return new ModelAndView(getViewName(request,"history"), model);
     }
 	
     
@@ -365,6 +372,14 @@ public class EsupPapercutPortletController {
     	
         response.setRenderParameters(parameters);
     }
+    
+    public String getViewName(PortletRequest request, String viewName){
+        if(userAgentInspector.isMobile(request)) {
+                viewName = "m_".concat(viewName);
+        }
+        return viewName;
+    }
+
     
 }
 

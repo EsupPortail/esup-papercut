@@ -27,5 +27,21 @@
    	<bean class="org.springframework.web.portlet.mvc.annotation.DefaultAnnotationHandlerMapping">
         <property name="interceptors"><bean class="org.esupportail.papercut.webportlet.MinimizedStateHandlerInterceptor"/></property>
     </bean>
+    
+    <bean id="userAgentInspector"
+              class="org.esupportail.papercut.services.UserAgentInspector">
+         <property name="userAgentMobile">
+                 <!-- Regexes of mobile device user agents -->
+                 <list>
+				    <value>.*iPhone.*</value>
+				    <value>.*iPad.*</value>
+				    <value>.*Android.*</value>
+				    <value>.*IEMobile.*</value>
+				    <value>.*Safari.*Pre.*</value>
+				    <value>.*Nokia.*AppleWebKit.*</value>
+                 </list>
+         </property>
+     </bean>
+    
    	
 </beans>
