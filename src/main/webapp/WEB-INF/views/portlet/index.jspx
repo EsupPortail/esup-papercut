@@ -141,7 +141,7 @@
 							</span>
 
 							<div class="payboxFormSlider">
-								<div id="${n}slider" class="esupslider"></div>
+								<div id="${n}slider" class="esupslider">&amp;nbsp;</div>
 
 								<div id="${n}payboxForm" class="esuppayboxForm">
 

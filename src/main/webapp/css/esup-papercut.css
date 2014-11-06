@@ -19,11 +19,12 @@
 	width: 200px;
 	float: left;
 	clear: left;
-	margin: 15px;
+	margin: 18px;
 }
 
 .esuppapercut .esuppayboxForm {
 	margin-left: 250px;
+	line-height: 50px;
 }
 
 .esuppapercut .payboxFormSlider {
