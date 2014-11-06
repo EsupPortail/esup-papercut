@@ -33,7 +33,6 @@
 	width: 450px;
 }
 
-
 .esuppapercut .sorting {
         padding-right: 20px;
         background: url("images/sort_both.png") no-repeat center right;
@@ -56,4 +55,8 @@
 
 .esuppapercut .active{
 	font-weight: bold;
+}
+
+.esuppapercut .box{
+	text-indent: 10px;
 }
