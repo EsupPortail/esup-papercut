@@ -30,9 +30,9 @@
 
 	<h3 class="portlet-section-header" role="header">
 		<a href="${homeUrl}"><spring:message code="menu.home"/></a> | 
-		<a href="${historyUrl}"><spring:message code="menu.myhistory"/></a>
+		<a href="${historyUrl}" class="${active == 'history' ? 'active' : 'nonActive'}"><spring:message code="menu.myhistory"/></a>
 		<c:if test="${isAdmin}">
-			| <a href="${adminUrl}"><spring:message code="menu.admin"/></a>
+			| <a href="${adminUrl}" class="${active == 'admin' ? 'active' : 'nonActive'}"><spring:message code="menu.admin"/></a>
 		</c:if>
 	</h3>
 	

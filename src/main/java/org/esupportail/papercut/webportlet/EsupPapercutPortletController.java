@@ -163,7 +163,7 @@ public class EsupPapercutPortletController {
     	
 		boolean isAdmin = isAdmin(request);
     	model.put("isAdmin", isAdmin);
-    	
+    	model.put("active", "home");
     	return new ModelAndView(getViewName(request, "index"), model);
     }
 
@@ -210,7 +210,7 @@ public class EsupPapercutPortletController {
 	    	objectShared.setPaperCutContext(paperCutContext);
 	    	PortletUtils.setSessionAttribute(request, sharedSessionId, objectShared, PortletSession.APPLICATION_SCOPE);
 	    	model.put("sharedSessionId", sharedSessionId);
-	    	
+	    	model.put("active", "admin");
         
     	}
         
@@ -250,7 +250,7 @@ public class EsupPapercutPortletController {
         addDateTimeFormatPatterns(model);
         
     	model.put("isAdmin", isAdmin(request));
-    	
+    	model.put("active", "history");
         return new ModelAndView(getViewName(request,"history"), model);
     }
 	
@@ -262,6 +262,7 @@ public class EsupPapercutPortletController {
         model.put("payboxpapercuttransactionlog", PayboxPapercutTransactionLog.findPayboxPapercutTransactionLog(id));
         model.put("itemId", id);
     	model.put("isAdmin", isAdmin(request));
+    	model.put("active", "admin"); 	
         return new ModelAndView("show-transactionlog", model);
     }
 

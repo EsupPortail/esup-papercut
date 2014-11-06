@@ -21,12 +21,16 @@
 		<portlet:param name="sortOrder" value="desc" />
 	</portlet:renderURL>	
 
+	<spring:url value="/servlet/resources/css/esup-papercut.css"
+		var="esupPapercutCssUrl" />
+
+	<link rel="stylesheet" href="${esupPapercutCssUrl}" />
 
 	<h3 class="portlet-section-header" role="header">
 		<a href="${homeUrl}"><spring:message code="menu.home"/></a> | 
 		<a href="${historyUrl}"><spring:message code="menu.myhistory"/></a>
 		<c:if test="${isAdmin}">
-			| <a href="${adminUrl}"><spring:message code="menu.admin"/></a>
+			| <a href="${adminUrl}" class="${active == 'admin' ? 'active' : 'nonActive'}"><spring:message code="menu.admin"/></a>
 		</c:if>
 	</h3>
 	

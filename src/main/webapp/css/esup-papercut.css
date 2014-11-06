@@ -53,3 +53,7 @@
 .esuppapercut table td {
 	border: 1px solid !important;
 }
+
+.esuppapercut .active{
+	font-weight: bold;
+}
