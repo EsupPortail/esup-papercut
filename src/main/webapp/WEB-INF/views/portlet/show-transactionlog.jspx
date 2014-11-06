@@ -9,6 +9,11 @@
     <jsp:directive.page contentType="text/html;charset=UTF-8"/>
     <jsp:output omit-xml-declaration="yes"/>
     
+	<spring:url value="/servlet/resources/css/esup-papercut.css"
+		var="esupPapercutCssUrl" />
+
+	<link rel="stylesheet" href="${esupPapercutCssUrl}" />    
+    
 	<portlet:renderURL portletMode="VIEW" var="homeUrl"/>
 	<portlet:renderURL portletMode="VIEW" var="historyUrl">
 		<portlet:param name="action" value="myhistory" />
@@ -21,10 +26,6 @@
 		<portlet:param name="sortOrder" value="desc" />
 	</portlet:renderURL>	
 
-	<spring:url value="/servlet/resources/css/esup-papercut.css"
-		var="esupPapercutCssUrl" />
-
-	<link rel="stylesheet" href="${esupPapercutCssUrl}" />
 
 	<h3 class="portlet-section-header" role="header">
 		<a href="${homeUrl}"><spring:message code="menu.home"/></a> | 

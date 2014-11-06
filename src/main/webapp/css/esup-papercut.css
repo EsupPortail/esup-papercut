@@ -24,13 +24,13 @@
 
 .esuppapercut .esuppayboxForm {
 	margin-left: 250px;
-	line-height: 50px;
 }
 
 .esuppapercut .payboxFormSlider {
 	border: 1px solid #ccc;
 	height: 50px;
 	width: 450px;
+	line-height: 50px;
 }
 
 .esuppapercut .sorting {
