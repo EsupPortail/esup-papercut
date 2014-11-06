@@ -83,8 +83,7 @@
 						<c:set var="payboxFormsLength" value="${fn:length(payboxForms)}" />
 						<c:set var="lengthMax" value="6" />
 						<br />
-						<div class="ui-bar ui-bar-c ">Choisissez la somme à
-							créditer:</div>
+						<div class="ui-bar ui-bar-c"><spring:message code="index.mChoixSomme" />:</div>
 						<div id="${n}payboxForm"
 							class="${payboxFormsLength gt lengthMax ? 'ui-grid-a' : 'none'}">
 							<c:forEach items="${payboxForms}" var="payboxFormItem"
@@ -110,9 +109,9 @@
 											<div id="${n}nbSheets_${payboxFormItem.key}"
 												class="${n}nbSheets_class">
 												<span class="nbFeuilles">
-												(~${payBoxForm.nbSheets} feuilles A4 N&amp;B
+												(<spring:message code="index.mFeuillesNb" arguments="${payBoxForm.nbSheets}"  />&amp;nbsp;
 												<c:if test="${not empty payBoxForm.nbColorSheets}">
-													<br />ou ${payBoxForm.nbColorSheets} feuilles A4 couleur</c:if>
+													<br /><spring:message code="index.feuillesCouleur" arguments="${payBoxForm.nbColorSheets}" /></c:if>
 												)</span>
 											</div>
 										</button>
@@ -125,9 +124,7 @@
 
 				<c:otherwise>
 					<div class="ui-bar ui-bar-e ">
-						<i>Nombre de transactions et/ou montant maximum autorisé
-							dépassé. Vous ne pouvez actuellement plus recharger votre compte
-							Papercut.</i>
+						<i><spring:message code="index.nbTransactions" /></i>
 					</div>
 				</c:otherwise>
 			</c:choose>

@@ -181,10 +181,11 @@
 								<c:set var="payBoxForm" value="${payboxFormItem.value}" />
 								<span id="${n}nbSheets_${payboxFormItem.key}"
 									style="font-weight: italic;" class="${n}nbSheets_class">
-									${payBoxForm.montant} <spring:message code="paybox.euro" />
-									équivaut à environ ${payBoxForm.nbSheets} feuilles A4 noir et
-									blanc <c:if test="${not empty payBoxForm.nbColorSheets}">
-										ou ${payBoxForm.nbColorSheets} feuilles A4 couleur</c:if> .
+									${payBoxForm.montant} <spring:message code="paybox.euro" />&amp;nbsp;
+									<spring:message code="index.feuillesNb" arguments="${payBoxForm.nbSheets}"  /> 
+									 <c:if test="${not empty payBoxForm.nbColorSheets}">
+										&amp;nbsp;<spring:message code="index.feuillesCouleur" arguments="${payBoxForm.nbColorSheets}" />
+									 </c:if> .
 								</span>
 							</c:forEach>
 						</div>
@@ -195,7 +196,7 @@
 		  
 		  	<div class="portlet-section-body">
 		  	
-		  		<i>Nombre de transactions et/ou montant maximum autorisé dépassé. Vous ne pouvez actuellement plus recharger votre compte Papercut.</i>
+		  		<i><spring:message code="index.nbTransactions" /></i>
 		  	
 		  	</div>
 		  
