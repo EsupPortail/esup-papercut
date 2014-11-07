@@ -162,7 +162,9 @@ public class EsupPapercutPortletController {
 		model.put("userPapercutInfos", userPapercutInfos);
     	
 		boolean isAdmin = isAdmin(request);
+		boolean isManager = isManager(request);
     	model.put("isAdmin", isAdmin);
+    	model.put("isManager", isManager);
     	model.put("active", "home");
     	return new ModelAndView(getViewName(request, "index"), model);
     }
@@ -175,12 +177,14 @@ public class EsupPapercutPortletController {
     		RenderRequest request, RenderResponse response) {
     	
     	boolean isAdmin = isAdmin(request);
+    	boolean isManager = isManager(request);
     	
     	ModelMap model = new ModelMap();  
     	model.put("isAdmin", isAdmin);
     	model.put("adminView", true);
+    	model.put("isManager", isManager);
     	
-    	if(isAdmin) {
+    	if(isAdmin || isManager) {
 	    	
 	    	String paperCutContext = request.getPreferences().getValue(PREF_PAPERCUT_CONTEXT, null);
 
@@ -211,7 +215,6 @@ public class EsupPapercutPortletController {
 	    	PortletUtils.setSessionAttribute(request, sharedSessionId, objectShared, PortletSession.APPLICATION_SCOPE);
 	    	model.put("sharedSessionId", sharedSessionId);
 	    	model.put("active", "admin");
-        
     	}
         
         return new ModelAndView(getViewName(request,"history"), model);
@@ -250,6 +253,7 @@ public class EsupPapercutPortletController {
         addDateTimeFormatPatterns(model);
         
     	model.put("isAdmin", isAdmin(request));
+    	model.put("isManager", isManager(request));
     	model.put("active", "history");
         return new ModelAndView(getViewName(request,"history"), model);
     }
@@ -262,6 +266,7 @@ public class EsupPapercutPortletController {
         model.put("payboxpapercuttransactionlog", PayboxPapercutTransactionLog.findPayboxPapercutTransactionLog(id));
         model.put("itemId", id);
     	model.put("isAdmin", isAdmin(request));
+    	model.put("isManager", isManager(request));
     	model.put("active", "admin"); 	
         return new ModelAndView("show-transactionlog", model);
     }
@@ -289,7 +294,10 @@ public class EsupPapercutPortletController {
 	private boolean isAdmin(PortletRequest request) {
 		return request.isUserInRole("esupPapercutAdmin");
 	}
-	
+	private boolean isManager(PortletRequest request) {
+		return request.isUserInRole("esupPapercutManager");
+	}
+		
     /**
      * When user is redirected on the portlet after the paybox process, 
      * and if validatePayboxJustWithRedirection in pref portlet is true,

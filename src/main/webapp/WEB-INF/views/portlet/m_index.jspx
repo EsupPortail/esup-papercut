@@ -35,7 +35,7 @@
 						code="menu.home" /></a></li>
 			<li><a href="${historyUrl}"><spring:message
 						code="menu.myhistory" /></a></li>
-			<c:if test="${isAdmin}">
+			<c:if test="${isAdmin or isManager}">
 				<li><a href="${adminUrl}"><spring:message code="menu.admin" /></a></li>
 			</c:if>
 		</ul>

@@ -31,7 +31,7 @@
 	<h3 class="portlet-section-header" role="header">
 		<a href="${homeUrl}"><spring:message code="menu.home"/></a> | 
 		<a href="${historyUrl}" class="${active == 'history' ? 'active' : 'nonActive'}"><spring:message code="menu.myhistory"/></a>
-		<c:if test="${isAdmin}">
+		<c:if test="${isAdmin or isManager}">
 			| <a href="${adminUrl}" class="${active == 'admin' ? 'active' : 'nonActive'}"><spring:message code="menu.admin"/></a>
 		</c:if>
 	</h3>
@@ -51,7 +51,7 @@
 	</c:if>
 
     <page:list id="pl_org_esupportail_papercut_domain_PayboxPapercutTransactionLog" items="${payboxpapercuttransactionlogs}" z="Xl/iyqvYF+KnmkDzvo9LqSL8uzk=">
-        <table:table create="false" data="${payboxpapercuttransactionlogs}" delete="false" id="l_org_esupportail_papercut_domain_PayboxPapercutTransactionLog" path="/admin" update="false" z="user-managed" view="${isAdmin}" render="${renderTable}">
+        <table:table create="false" data="${payboxpapercuttransactionlogs}" delete="false" id="l_org_esupportail_papercut_domain_PayboxPapercutTransactionLog" path="/admin" update="false" z="user-managed" view="${isAdmin or isManager}" render="${renderTable}">
             <table:column date="true" dateTimePattern="${payboxPapercutTransactionLog_transactiondate_date_format}" id="c_org_esupportail_papercut_domain_PayboxPapercutTransactionLog_transactionDate" property="transactionDate" sort="true" z="user-managed"/>
             <table:column id="c_org_esupportail_papercut_domain_PayboxPapercutTransactionLog_uid" property="uid" sort="true"/>
             <table:column id="c_org_esupportail_papercut_domain_PayboxPapercutTransactionLog_reference" property="reference" sort="true" z="user-managed"/>

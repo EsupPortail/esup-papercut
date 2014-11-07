@@ -31,7 +31,7 @@
 	    <ul>
 		<li><a href="${homeUrl}"><spring:message code="menu.home"/></a></li>
 		<c:choose>
-			<c:when test="${isAdmin and not adminView}">
+			<c:when test="${isAdmin  and not adminView}">
 				<li><a href="${historyUrl}" class="ui-btn-active"><spring:message code="menu.myhistory"/></a></li>
 				<li><a href="${adminUrl}"><spring:message code="menu.admin"/></a></li>
 			</c:when>
@@ -39,6 +39,10 @@
 				<li><a href="${historyUrl}"><spring:message code="menu.myhistory"/></a></li>
 				<li><a href="${adminUrl}" class="ui-btn-active"><spring:message code="menu.admin"/></a></li>
 			</c:when>
+			<c:when test="${isManager and adminView}">
+				<li><a href="${historyUrl}"><spring:message code="menu.myhistory"/></a></li>
+				<li><a href="${adminUrl}" class="ui-btn-active"><spring:message code="menu.admin"/></a></li>
+			</c:when>			
 			<c:otherwise>
 				<li><a href="${historyUrl}" class="ui-btn-active"><spring:message code="menu.myhistory"/></a></li>
 			</c:otherwise>
@@ -88,7 +92,7 @@
 		 <c:otherwise>
 		 <c:set var="label" value="Papercut Transaction Log" />
 		 	<c:choose>	 		
-			 	<c:when test="${isAdmin and adminView}">
+			 	<c:when test="${isAdmin or isManager and adminView}">
 					 <div class="ui-bar ui-bar-e info">
 					 	<p><spring:message arguments="${label}" code="entity_not_found" /></p>
 					 </div> 

@@ -106,8 +106,11 @@
             <role-name>esupPapercutAdmin</role-name>
             <role-link>pags.super_admins</role-link>
 	</security-role-ref>
-
-	
+	<security-role-ref>
+            <role-name>esupPapercutManager</role-name>
+            <role-link>pags.super_managers</role-link>
+	</security-role-ref>
+		
     </portlet>
 
 	<user-attribute>
