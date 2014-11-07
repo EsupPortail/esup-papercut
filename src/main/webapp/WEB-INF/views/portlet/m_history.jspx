@@ -42,7 +42,11 @@
 			<c:when test="${isManager and adminView}">
 				<li><a href="${historyUrl}"><spring:message code="menu.myhistory"/></a></li>
 				<li><a href="${adminUrl}" class="ui-btn-active"><spring:message code="menu.admin"/></a></li>
-			</c:when>			
+			</c:when>		
+			<c:when test="${isManager and not adminView}">
+				<li><a href="${historyUrl}" class="ui-btn-active"><spring:message code="menu.myhistory"/></a></li>
+				<li><a href="${adminUrl}"><spring:message code="menu.admin"/></a></li>
+			</c:when>		
 			<c:otherwise>
 				<li><a href="${historyUrl}" class="ui-btn-active"><spring:message code="menu.myhistory"/></a></li>
 			</c:otherwise>
@@ -67,7 +71,15 @@
 			</div>
 		</div>
 	</c:if>
-	
+	<c:if test="${isManager and adminView}">
+		<div class="ui-grid-solo">
+			<spring:url value="/servlet/resources/images/csv_text.png" var="csvImgUrl" />
+			<spring:url value="/servlet/csv?sharedSessionId=${sharedSessionId}" var="csvUrl" />
+			<div class="ui-block-a">
+				<a href="${csvUrl}" data-role="button"><img src="${csvImgUrl}" alt="CSV"/></a>
+			</div>
+		</div>
+	</c:if>
 	<div data-role="collapsible-set" data-theme="b" data-content-theme="d">
 		<c:choose>
 		 <c:when test="${not empty payboxpapercuttransactionlogs}">
