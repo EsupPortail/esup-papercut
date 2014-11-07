@@ -63,7 +63,7 @@
         </table:table>
     </page:list>
     
-    <c:if test="${isAdmin or isManager and adminView}">
+    <c:if test="${(isAdmin or isManager) and adminView}">
 		<spring:url value="/servlet/resources/images/csv_text.png" var="csvImgUrl" />
 		<spring:url value="/servlet/csv?sharedSessionId=${sharedSessionId}" var="csvUrl" />
 		<a href="${csvUrl}"><img src="${csvImgUrl}" alt="CSV"/></a>
