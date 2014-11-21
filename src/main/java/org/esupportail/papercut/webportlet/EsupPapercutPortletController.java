@@ -210,7 +210,7 @@ public class EsupPapercutPortletController {
 	        
 	    	String sharedSessionId = response.getNamespace();
 	    	EsupPapercutSessionObject objectShared = new EsupPapercutSessionObject();
-	    	objectShared.setIsAdmin(isAdmin);
+	    	objectShared.setIsAdmin(true);
 	    	objectShared.setPaperCutContext(paperCutContext);
 	    	PortletUtils.setSessionAttribute(request, sharedSessionId, objectShared, PortletSession.APPLICATION_SCOPE);
 	    	model.put("sharedSessionId", sharedSessionId);
