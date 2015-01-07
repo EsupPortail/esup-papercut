@@ -76,30 +76,33 @@
                 <c:when test="${sort}">
                     <c:set var="sortOrderSet" value="false" />
                     <c:set var="sortOrderClass" value="sorting" />
-                    <spring:url value="" var="querySortUrl">
+                     <portlet:renderURL portletMode="VIEW" var="querySortUrl">
+				        <c:if test="${not empty portletActionPagination}">
+				        	<portlet:param name="action" value="${portletActionPagination}" />
+				        </c:if>
                         <c:forEach items="${paramValues}" var="p">
                             <c:if test="${p.key ne 'sortFieldName' and p.key ne 'sortOrder'}">
                                 <c:forEach var='value' items='${p.value}'>
-                                    <spring:param name="${p.key}" value="${value}" />
+                                    <portlet:param name="${p.key}" value="${value}" />
                                 </c:forEach>
                             </c:if>
                             <c:if test="${p.key eq 'sortOrder' and paramValues['sortFieldName'][0] eq columnProperty}">
                                 <c:set var="sortOrderSet" value="true" />
                                 <c:if test="${p.value[0] eq 'asc'}">
-                                    <spring:param name="sortOrder" value="desc" />
+                                    <portlet:param name="sortOrder" value="desc" />
                                     <c:set var="sortOrderClass" value="sorting_desc" />
                                 </c:if>
                                 <c:if test="${p.value[0] eq 'desc'}">
-                                    <spring:param name="sortOrder" value="asc" />
+                                    <portlet:param name="sortOrder" value="asc" />
                                     <c:set var="sortOrderClass" value="sorting_asc" />
                                 </c:if>
                             </c:if>
                         </c:forEach>
-                        <spring:param name="sortFieldName" value="${columnProperty}" />
+                        <portlet:param name="sortFieldName" value="${columnProperty}" />
                         <c:if test="${not sortOrderSet}">
-                            <spring:param name="sortOrder" value="asc" />
+                            <portlet:param name="sortOrder" value="asc" />
                         </c:if>
-                    </spring:url>
+                    </portlet:renderURL>
                     <th><a href="${querySortUrl}" class="${sortOrderClass}"><c:out value="${columnHeading}" /> <spring:eval var="colCounter" expression="colCounter  + 1" /></a></th>
                 </c:when>
                 <c:otherwise>

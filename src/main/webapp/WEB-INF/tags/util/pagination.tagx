@@ -26,13 +26,8 @@
 	    <c:if test="${not empty portletActionPagination}">
         	<portlet:param name="action" value="${portletActionPagination}" />
         </c:if>
-		<c:forEach items="${paramValues}" var="p">
-			<c:if test="${p.key ne 'page' and p.key ne 'size'}">
-				<c:forEach var='value' items='${p.value}'>
-					<portlet:param name="${p.key}" value="${value}" />
-				</c:forEach>
-			</c:if>
-		</c:forEach>
+		<portlet:param name="sortFieldName" value="${sortFieldName}" />
+		<portlet:param name="sortOrder" value="${sortOrder}" />
 	</portlet:renderURL>
 
 
@@ -46,6 +41,8 @@
           	<c:if test="${not empty portletActionPagination}">
           		<portlet:param name="action" value="${portletActionPagination}" />
           	</c:if>
+          	<portlet:param name="sortFieldName" value="${sortFieldName}" />
+			<portlet:param name="sortOrder" value="${sortOrder}" />
             <portlet:param name="page" value="1" />
             <portlet:param name="size" value="${i}" />
           </portlet:renderURL>
@@ -61,6 +58,8 @@
         <c:if test="${not empty portletActionPagination}">
         	<portlet:param name="action" value="${portletActionPagination}" />
         </c:if>
+        <portlet:param name="sortFieldName" value="${sortFieldName}" />
+		<portlet:param name="sortOrder" value="${sortOrder}" />
         <portlet:param name="page" value="1" />
         <portlet:param name="size" value="${size}" />
       </portlet:renderURL>
@@ -75,6 +74,8 @@
         <c:if test="${not empty portletActionPagination}">
         	<portlet:param name="action" value="${portletActionPagination}" />
         </c:if>
+        <portlet:param name="sortFieldName" value="${sortFieldName}" />
+		<portlet:param name="sortOrder" value="${sortOrder}" />
         <portlet:param name="page" value="${page - 1}" />
         <portlet:param name="size" value="${size}" />
       </portlet:renderURL>
@@ -92,6 +93,8 @@
         <c:if test="${not empty portletActionPagination}">
         	<portlet:param name="action" value="${portletActionPagination}" />
         </c:if>
+        <portlet:param name="sortFieldName" value="${sortFieldName}" />
+		<portlet:param name="sortOrder" value="${sortOrder}" />
         <portlet:param name="page" value="${page + 1}" />
         <portlet:param name="size" value="${size}" />
       </portlet:renderURL>
@@ -106,6 +109,8 @@
         <c:if test="${not empty portletActionPagination}">
         	<portlet:param name="action" value="${portletActionPagination}" />
         </c:if>
+        <portlet:param name="sortFieldName" value="${sortFieldName}" />
+		<portlet:param name="sortOrder" value="${sortOrder}" />
         <portlet:param name="page" value="${maxPages}" />
         <portlet:param name="size" value="${size}" />
       </portlet:renderURL>

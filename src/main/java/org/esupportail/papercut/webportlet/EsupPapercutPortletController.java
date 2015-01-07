@@ -183,7 +183,7 @@ public class EsupPapercutPortletController {
     	model.put("isAdmin", isAdmin);
     	model.put("adminView", true);
     	model.put("isManager", isManager);
-    	
+
     	if(isAdmin || isManager) {
 	    	
 	    	String paperCutContext = request.getPreferences().getValue(PREF_PAPERCUT_CONTEXT, null);
@@ -215,8 +215,11 @@ public class EsupPapercutPortletController {
 	    	PortletUtils.setSessionAttribute(request, sharedSessionId, objectShared, PortletSession.APPLICATION_SCOPE);
 	    	model.put("sharedSessionId", sharedSessionId);
 	    	model.put("active", "admin");
-    	}
-        
+    	}	
+    	
+    	model.put("sortFieldName", sortFieldName);
+    	model.put("sortOrder", sortOrder);
+    	
         return new ModelAndView(getViewName(request,"history"), model);
     }
     
@@ -255,6 +258,10 @@ public class EsupPapercutPortletController {
     	model.put("isAdmin", isAdmin(request));
     	model.put("isManager", isManager(request));
     	model.put("active", "history");
+    	
+    	model.put("sortFieldName", sortFieldName);
+    	model.put("sortOrder", sortOrder);
+    	
         return new ModelAndView(getViewName(request,"history"), model);
     }
 	
