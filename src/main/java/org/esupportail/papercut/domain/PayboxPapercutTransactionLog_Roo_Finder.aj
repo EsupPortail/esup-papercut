@@ -66,14 +66,14 @@ privileged aspect PayboxPapercutTransactionLog_Roo_Finder {
     public static TypedQuery<PayboxPapercutTransactionLog> PayboxPapercutTransactionLog.findPayboxPapercutTransactionLogsByArchived(Boolean archived, String sortFieldName, String sortOrder) {
         if (archived == null) throw new IllegalArgumentException("The archived argument is required");
         EntityManager em = PayboxPapercutTransactionLog.entityManager();
-        String jpaQuery = "SELECT o FROM PayboxPapercutTransactionLog AS o WHERE o.archived = :archived";
+        StringBuilder queryBuilder = new StringBuilder("SELECT o FROM PayboxPapercutTransactionLog AS o WHERE o.archived = :archived");
         if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
-            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            queryBuilder.append(" ORDER BY ").append(sortFieldName);
             if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
-                jpaQuery = jpaQuery + " " + sortOrder;
+                queryBuilder.append(" ").append(sortOrder);
             }
         }
-        TypedQuery<PayboxPapercutTransactionLog> q = em.createQuery(jpaQuery, PayboxPapercutTransactionLog.class);
+        TypedQuery<PayboxPapercutTransactionLog> q = em.createQuery(queryBuilder.toString(), PayboxPapercutTransactionLog.class);
         q.setParameter("archived", archived);
         return q;
     }
@@ -89,14 +89,14 @@ privileged aspect PayboxPapercutTransactionLog_Roo_Finder {
     public static TypedQuery<PayboxPapercutTransactionLog> PayboxPapercutTransactionLog.findPayboxPapercutTransactionLogsByIdtransEquals(String idtrans, String sortFieldName, String sortOrder) {
         if (idtrans == null || idtrans.length() == 0) throw new IllegalArgumentException("The idtrans argument is required");
         EntityManager em = PayboxPapercutTransactionLog.entityManager();
-        String jpaQuery = "SELECT o FROM PayboxPapercutTransactionLog AS o WHERE o.idtrans = :idtrans";
+        StringBuilder queryBuilder = new StringBuilder("SELECT o FROM PayboxPapercutTransactionLog AS o WHERE o.idtrans = :idtrans");
         if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
-            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            queryBuilder.append(" ORDER BY ").append(sortFieldName);
             if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
-                jpaQuery = jpaQuery + " " + sortOrder;
+                queryBuilder.append(" ").append(sortOrder);
             }
         }
-        TypedQuery<PayboxPapercutTransactionLog> q = em.createQuery(jpaQuery, PayboxPapercutTransactionLog.class);
+        TypedQuery<PayboxPapercutTransactionLog> q = em.createQuery(queryBuilder.toString(), PayboxPapercutTransactionLog.class);
         q.setParameter("idtrans", idtrans);
         return q;
     }
@@ -112,14 +112,14 @@ privileged aspect PayboxPapercutTransactionLog_Roo_Finder {
     public static TypedQuery<PayboxPapercutTransactionLog> PayboxPapercutTransactionLog.findPayboxPapercutTransactionLogsByPaperCutContextEquals(String paperCutContext, String sortFieldName, String sortOrder) {
         if (paperCutContext == null || paperCutContext.length() == 0) throw new IllegalArgumentException("The paperCutContext argument is required");
         EntityManager em = PayboxPapercutTransactionLog.entityManager();
-        String jpaQuery = "SELECT o FROM PayboxPapercutTransactionLog AS o WHERE o.paperCutContext = :paperCutContext";
+        StringBuilder queryBuilder = new StringBuilder("SELECT o FROM PayboxPapercutTransactionLog AS o WHERE o.paperCutContext = :paperCutContext");
         if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
-            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            queryBuilder.append(" ORDER BY ").append(sortFieldName);
             if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
-                jpaQuery = jpaQuery + " " + sortOrder;
+                queryBuilder.append(" ").append(sortOrder);
             }
         }
-        TypedQuery<PayboxPapercutTransactionLog> q = em.createQuery(jpaQuery, PayboxPapercutTransactionLog.class);
+        TypedQuery<PayboxPapercutTransactionLog> q = em.createQuery(queryBuilder.toString(), PayboxPapercutTransactionLog.class);
         q.setParameter("paperCutContext", paperCutContext);
         return q;
     }
@@ -138,14 +138,14 @@ privileged aspect PayboxPapercutTransactionLog_Roo_Finder {
         if (uid == null || uid.length() == 0) throw new IllegalArgumentException("The uid argument is required");
         if (paperCutContext == null || paperCutContext.length() == 0) throw new IllegalArgumentException("The paperCutContext argument is required");
         EntityManager em = PayboxPapercutTransactionLog.entityManager();
-        String jpaQuery = "SELECT o FROM PayboxPapercutTransactionLog AS o WHERE o.uid = :uid  AND o.paperCutContext = :paperCutContext";
+        StringBuilder queryBuilder = new StringBuilder("SELECT o FROM PayboxPapercutTransactionLog AS o WHERE o.uid = :uid  AND o.paperCutContext = :paperCutContext");
         if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
-            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            queryBuilder.append(" ORDER BY ").append(sortFieldName);
             if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
-                jpaQuery = jpaQuery + " " + sortOrder;
+                queryBuilder.append(" ").append(sortOrder);
             }
         }
-        TypedQuery<PayboxPapercutTransactionLog> q = em.createQuery(jpaQuery, PayboxPapercutTransactionLog.class);
+        TypedQuery<PayboxPapercutTransactionLog> q = em.createQuery(queryBuilder.toString(), PayboxPapercutTransactionLog.class);
         q.setParameter("uid", uid);
         q.setParameter("paperCutContext", paperCutContext);
         return q;
@@ -168,14 +168,14 @@ privileged aspect PayboxPapercutTransactionLog_Roo_Finder {
         if (paperCutContext == null || paperCutContext.length() == 0) throw new IllegalArgumentException("The paperCutContext argument is required");
         if (archived == null) throw new IllegalArgumentException("The archived argument is required");
         EntityManager em = PayboxPapercutTransactionLog.entityManager();
-        String jpaQuery = "SELECT o FROM PayboxPapercutTransactionLog AS o WHERE o.uid = :uid  AND o.paperCutContext = :paperCutContext  AND o.archived = :archived";
+        StringBuilder queryBuilder = new StringBuilder("SELECT o FROM PayboxPapercutTransactionLog AS o WHERE o.uid = :uid  AND o.paperCutContext = :paperCutContext  AND o.archived = :archived");
         if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
-            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            queryBuilder.append(" ORDER BY ").append(sortFieldName);
             if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
-                jpaQuery = jpaQuery + " " + sortOrder;
+                queryBuilder.append(" ").append(sortOrder);
             }
         }
-        TypedQuery<PayboxPapercutTransactionLog> q = em.createQuery(jpaQuery, PayboxPapercutTransactionLog.class);
+        TypedQuery<PayboxPapercutTransactionLog> q = em.createQuery(queryBuilder.toString(), PayboxPapercutTransactionLog.class);
         q.setParameter("uid", uid);
         q.setParameter("paperCutContext", paperCutContext);
         q.setParameter("archived", archived);

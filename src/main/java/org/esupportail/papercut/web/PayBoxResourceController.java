@@ -32,17 +32,26 @@ import org.apache.log4j.Logger;
 import org.esupportail.papercut.domain.EsupPapercutSessionObject;
 import org.esupportail.papercut.domain.PayboxPapercutTransactionLog;
 import org.esupportail.papercut.services.EsupPaperCutService;
+import org.esupportail.papercut.services.StatsService;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import flexjson.JSONSerializer;
+
 @Controller
+@Scope("request")
 public class PayBoxResourceController {
 
 	private final Logger log = Logger.getLogger(getClass());
 	
 	@Resource 
 	Map<String, EsupPaperCutService> esupPaperCutServices;
+	
+	@Resource 
+	StatsService statsService;
 
 	@RequestMapping("/csv")
 	public void getCsv(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -73,7 +82,35 @@ public class PayBoxResourceController {
 		        FileCopyUtils.copy(csvStream, response.getOutputStream());
 			}
     	}
-
-    	
 	 }
+	
+	@RequestMapping(value="/statsPapercut")
+	public void getStats(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletRequestBindingException {
+	
+		HttpSession session = request.getSession();
+		
+		String sharedSessionId = request.getParameter("sharedSessionId");
+		if(sharedSessionId != null) {
+			EsupPapercutSessionObject objectShared  = (EsupPapercutSessionObject)session.getAttribute(sharedSessionId);
+			if(objectShared.isIsAdmin()) {
+				String flexJsonString = "Aucune statistique à récupérer";
+				try {
+					
+					JSONSerializer serializer = new JSONSerializer();
+					flexJsonString = serializer.deepSerialize(statsService.getStatsPapercut());
+					
+				} catch (Exception e) {
+					log.warn("Impossible de récupérer les statistiques", e);
+				}
+				
+		        InputStream jsonStream = IOUtils.toInputStream(flexJsonString, "utf-8");
+		        
+		        response.setContentType("application/json");
+		        response.setCharacterEncoding("utf-8");   
+		        
+		        FileCopyUtils.copy(jsonStream, response.getOutputStream());
+			}
+
+		}
+	}    
 }

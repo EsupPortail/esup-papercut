@@ -27,12 +27,16 @@
 		<portlet:param name="sortFieldName" value="transactionDate" />
 		<portlet:param name="sortOrder" value="desc" />
 	</portlet:renderURL>	
-
+	<portlet:renderURL portletMode="VIEW" var="statsUrl">
+		<portlet:param name="action" value="stats" />
+	</portlet:renderURL>	
+	
 	<h3 class="portlet-section-header" role="header">
 		<a href="${homeUrl}" class="${active == 'home' ? 'active' : 'nonActive'}"><spring:message code="menu.home"/></a> | 
 		<a href="${historyUrl}"><spring:message code="menu.myhistory"/></a>
 		<c:if test="${isAdmin or isManager}">
 			| <a href="${adminUrl}"><spring:message code="menu.admin"/></a>
+			| <a href="${statsUrl}" class="${active == 'stats' ? 'active' : 'nonActive'}"><spring:message code="menu.stats"/></a>
 		</c:if>
 	</h3>
 

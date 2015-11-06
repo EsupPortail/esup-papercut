@@ -60,3 +60,15 @@
 .esuppapercut .box{
 	text-indent: 10px;
 }
+.esuppapercut .canvas{
+	width: 450px;
+	height: 300px;
+
+	}
+.esuppapercut .charts{
+	float: left;
+	margin-left: 10px;
+	margin-bottom: 10px;
+	border: 1px solid #ccc;
+	padding: 15px;
+}

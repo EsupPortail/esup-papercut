@@ -35,3 +35,10 @@
 .esuppapercutMobile .ui-btn img{
 	height: 35px!important;
 }
+.esuppapercutMobile .charts{
+	float: left;
+	margin-left: 10px;
+	margin-bottom: 10px;
+	border: 1px solid #ccc;
+	padding: 15px;
+}

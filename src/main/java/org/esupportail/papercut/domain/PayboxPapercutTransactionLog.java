@@ -17,8 +17,13 @@
  */
 package org.esupportail.papercut.domain;
 import java.util.Date;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
@@ -61,4 +66,42 @@ public class PayboxPapercutTransactionLog {
     	Double mnt = new Double(montant)/100.0;
     	return mnt.toString();
     }
+    
+	/*
+	 * 
+	 * Requêtes pour PostgreSQL : à adapter pour un autre SGBD,
+	 *
+	*/
+    public static List<Object>  countNumberTranscationsBydate() {
+    	String requete = "SELECT date_part('year',transaction_date) as year, date_part('month',transaction_date) as month, count(*) as count FROM paybox_papercut_transaction_log GROUP BY year, month ORDER BY year,month";
+    	EntityManager em = new PayboxPapercutTransactionLog().entityManager;
+		Query q = em.createNativeQuery(requete);
+
+        return q.getResultList();
+    }
+    
+    public static List<Object>  countMontantTranscationsBydate() {
+    	String requete = "SELECT date_part('year',transaction_date) as year, date_part('month',transaction_date) as month, sum(CAST(montant AS decimal)) as totalMois FROM paybox_papercut_transaction_log GROUP BY year, month ORDER BY year,month";
+    	EntityManager em = new PayboxPapercutTransactionLog().entityManager;
+		Query q = em.createNativeQuery(requete);
+
+        return q.getResultList();
+    }
+    
+    public static List<Object>  countCumulNombreTranscationsBydate() {
+    	String requete = "SELECT date_part('year',transaction_date) as year, date_part('month',transaction_date) as month, sum(count(* )) OVER (PARTITION BY date_part('year',transaction_date) ORDER BY  date_part('year',transaction_date),date_part('month',transaction_date)) as cumul FROM paybox_papercut_transaction_log Where date_part('year',transaction_date) in (select distinct date_part('year',transaction_date) from paybox_papercut_transaction_log) GROUP BY year, month ORDER BY year,month";
+    	EntityManager em = new PayboxPapercutTransactionLog().entityManager;
+		Query q = em.createNativeQuery(requete);
+
+        return q.getResultList();
+    }
+    
+    public static List<Object>  countCumulMontantTranscationsBydate() {
+    	String requete = "SELECT date_part('year',transaction_date) as year, date_part('month',transaction_date) as month ,sum( sum(CAST(montant AS decimal))) OVER (PARTITION BY date_part('year',transaction_date) ORDER BY  date_part('year',transaction_date),date_part('month',transaction_date)) as cumul FROM paybox_papercut_transaction_log Where date_part('year',transaction_date) in (select distinct date_part('year',transaction_date) from paybox_papercut_transaction_log) GROUP BY year, month ORDER BY year,month";
+    	EntityManager em = new PayboxPapercutTransactionLog().entityManager;
+		Query q = em.createNativeQuery(requete);
+
+        return q.getResultList();
+    }
+
 }

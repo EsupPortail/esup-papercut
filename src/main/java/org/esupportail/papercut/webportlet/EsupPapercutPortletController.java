@@ -17,8 +17,6 @@
  */
 package org.esupportail.papercut.webportlet;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
@@ -29,12 +27,10 @@ import javax.annotation.Resource;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletRequest;
-import javax.portlet.PortletResponse;
 import javax.portlet.PortletSession;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.esupportail.papercut.domain.EsupPapercutSessionObject;
 import org.esupportail.papercut.domain.PayBoxForm;
@@ -42,12 +38,10 @@ import org.esupportail.papercut.domain.PayboxPapercutTransactionLog;
 import org.esupportail.papercut.domain.UserPapercutInfos;
 import org.esupportail.papercut.services.EsupPaperCutService;
 import org.esupportail.papercut.services.UserAgentInspector;
-import org.hibernate.ejb.criteria.ValueHandlerFactory.DoubleValueHandler;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.portlet.ModelAndView;
@@ -396,6 +390,27 @@ public class EsupPapercutPortletController {
         return viewName;
     }
 
-    
+    @RequestMapping(params = "action=stats")
+    public ModelAndView renderStats(RenderRequest request, RenderResponse response) {	
+
+    	boolean isAdmin = isAdmin(request);
+    	boolean isManager = isManager(request);
+    	
+    	ModelMap model = new ModelMap();  
+    	
+    	if(isAdmin || isManager) {
+	    	String paperCutContext = request.getPreferences().getValue(PREF_PAPERCUT_CONTEXT, null);	
+	    	String sharedSessionId = response.getNamespace();
+	    	EsupPapercutSessionObject objectShared = new EsupPapercutSessionObject();
+	    	objectShared.setIsAdmin(true);
+	    	objectShared.setPaperCutContext(paperCutContext);
+	    	PortletUtils.setSessionAttribute(request, sharedSessionId, objectShared, PortletSession.APPLICATION_SCOPE);
+	    	model.put("sharedSessionId", sharedSessionId);
+    	}
+    	model.put("isAdmin", isAdmin);
+    	model.put("isManager", isManager);
+    	model.put("active", "stats"); 	
+    	return new ModelAndView(getViewName(request,"stats"), model);
+    }
 }
 
