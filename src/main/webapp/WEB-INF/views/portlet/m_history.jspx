@@ -28,6 +28,9 @@
 		<portlet:param name="sortFieldName" value="transactionDate" />
 		<portlet:param name="sortOrder" value="desc" />
 	</portlet:renderURL>	
+	<portlet:renderURL portletMode="VIEW" var="statsUrl">
+		<portlet:param name="action" value="stats" />
+	</portlet:renderURL>		
 
 	<div data-role="navbar">
 	    <ul>
@@ -36,18 +39,22 @@
 			<c:when test="${isAdmin  and not adminView}">
 				<li><a href="${historyUrl}" class="ui-btn-active"><spring:message code="menu.myhistory"/></a></li>
 				<li><a href="${adminUrl}"><spring:message code="menu.admin"/></a></li>
+				<li><a href="${statsUrl}"><spring:message code="menu.stats"/></a></li>
 			</c:when>
 			<c:when test="${isAdmin and adminView}">
 				<li><a href="${historyUrl}"><spring:message code="menu.myhistory"/></a></li>
 				<li><a href="${adminUrl}" class="ui-btn-active"><spring:message code="menu.admin"/></a></li>
+				<li><a href="${statsUrl}"><spring:message code="menu.stats"/></a></li>
 			</c:when>
 			<c:when test="${isManager and adminView}">
 				<li><a href="${historyUrl}"><spring:message code="menu.myhistory"/></a></li>
 				<li><a href="${adminUrl}" class="ui-btn-active"><spring:message code="menu.admin"/></a></li>
+				<li><a href="${statsUrl}"><spring:message code="menu.stats"/></a></li>
 			</c:when>		
 			<c:when test="${isManager and not adminView}">
 				<li><a href="${historyUrl}" class="ui-btn-active"><spring:message code="menu.myhistory"/></a></li>
 				<li><a href="${adminUrl}"><spring:message code="menu.admin"/></a></li>
+				<li><a href="${statsUrl}"><spring:message code="menu.stats"/></a></li>
 			</c:when>		
 			<c:otherwise>
 				<li><a href="${historyUrl}" class="ui-btn-active"><spring:message code="menu.myhistory"/></a></li>
