@@ -10,15 +10,15 @@ import org.springframework.stereotype.Service;
 public class StatsService {
 
 	@SuppressWarnings("serial")
-	public  LinkedHashMap<String,Object> getStatsPapercut() {
+	public  LinkedHashMap<String,Object> getStatsPapercut(final String requeteNbTransactions, final String requeteMontantTransactions, final String requeteCumulTransactions, final String requeteCumulMontants) {
     	
 		//on remplit le futur json
 		LinkedHashMap<String, Object> results = new LinkedHashMap<String, Object>() {
 	        {
-	            put("nombre", mapField(PayboxPapercutTransactionLog.countNumberTranscationsBydate(),3));
-	            put("montants", mapField(PayboxPapercutTransactionLog.countMontantTranscationsBydate(),3));
-	            put("cumulTransac", mapField(PayboxPapercutTransactionLog.countCumulNombreTranscationsBydate(),3));
-	            put("cumulMontant", mapField(PayboxPapercutTransactionLog.countCumulMontantTranscationsBydate(),3));
+	            put("nombre", mapField(countNumberTranscationsBydate(requeteNbTransactions),3));
+	            put("montants", mapField(countMontantTranscationsBydate(requeteMontantTransactions),3));
+	            put("cumulTransac", mapField(countCumulNombreTranscationsBydate(requeteCumulTransactions),3));
+	            put("cumulMontant", mapField(countCumulMontantTranscationsBydate(requeteCumulMontants),3));
 	        }
 	    };	
 		return results;
@@ -55,16 +55,16 @@ public class StatsService {
         return map;
     }
 
-    public List<Object>  countNumberTranscationsBydate() {
-        return PayboxPapercutTransactionLog.countNumberTranscationsBydate();
+    public List<Object>  countNumberTranscationsBydate(String requeteNbTransactions) {
+        return PayboxPapercutTransactionLog.countNumberTranscationsBydate(requeteNbTransactions);
     }
-    public List<Object>  countMontantTranscationsBydate(String requete) {
-        return PayboxPapercutTransactionLog.countMontantTranscationsBydate();
+    public List<Object>  countMontantTranscationsBydate(String requeteMontantTransactions) {
+        return PayboxPapercutTransactionLog.countMontantTranscationsBydate(requeteMontantTransactions);
     }
-    public List<Object>  countCumulNombreTranscationsBydate(String requete) {
-        return PayboxPapercutTransactionLog.countCumulNombreTranscationsBydate();
+    public List<Object>  countCumulNombreTranscationsBydate(String requeteCumulTransactions) {
+        return PayboxPapercutTransactionLog.countCumulNombreTranscationsBydate(requeteCumulTransactions);
     }
-    public List<Object>  countCumulMontantTranscationsBydate() {
-        return PayboxPapercutTransactionLog.countCumulMontantTranscationsBydate();
+    public List<Object>  countCumulMontantTranscationsBydate(String requeteCumulMontants) {
+        return PayboxPapercutTransactionLog.countCumulMontantTranscationsBydate(requeteCumulMontants);
     }
 }

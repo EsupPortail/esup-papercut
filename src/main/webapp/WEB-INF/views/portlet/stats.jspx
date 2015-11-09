@@ -21,6 +21,7 @@
 	
 	<script type="text/javascript">
 		var statsPapercut = '${statsPapercut}';
+		var sessionId = '${sessionId}';
 	</script>
 	<script src="${jqueryUrl}"><!-- --></script>
 	<script type="text/javascript" src="${chartUrl}"><!-- --></script>

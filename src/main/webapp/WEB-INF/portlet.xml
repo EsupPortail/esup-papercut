@@ -99,7 +99,26 @@
 			<value>0.185</value>
 			<read-only>true</read-only>
 		</preference>			
-		
+		<preference>
+			<name>requeteNbTransactions</name>
+			<value>useOriginal</value>
+			<read-only>true</read-only>
+		</preference>
+		<preference>
+			<name>requeteMontantTransactions</name>
+			<value>useOriginal</value>
+			<read-only>true</read-only>
+		</preference>
+		<preference>
+			<name>requeteCumulTransactions</name>
+			<value>useOriginal</value>
+			<read-only>true</read-only>
+		</preference>
+		<preference>
+			<name>requeteCumulMontants</name>
+			<value>useOriginal</value>
+			<read-only>true</read-only>
+		</preference>	
 	</portlet-preferences>
 	
 	<security-role-ref>

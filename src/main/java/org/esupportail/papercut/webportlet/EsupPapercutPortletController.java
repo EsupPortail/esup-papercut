@@ -26,6 +26,7 @@ import java.util.TreeMap;
 import javax.annotation.Resource;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
+import javax.portlet.PortletPreferences;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletSession;
 import javax.portlet.RenderRequest;
@@ -62,6 +63,11 @@ public class EsupPapercutPortletController {
 	private final static String PREF_PAPERCUT_USER_MAIL_ATTR = "userEmail";
 	
 	private final static String PREF_VALIDATE_AFTER_REDIRECT = "validatePayboxJustWithRedirection";
+	
+	public static final String PREF_NB_TRANSCATIONS = "requeteNbTransactions";
+	public static final String PREF_MONTANT_TRANSACTIONS = "requeteMontantTransactions";
+	public static final String PREF_CUMUL_TRANSACTIONS = "requeteCumulTransactions";
+	public static final String PREF_CUMUL_MONTANT = "requeteCumulMontants";
 	
 	@Resource 
 	Map<String, EsupPaperCutService> esupPaperCutServices;
@@ -404,8 +410,17 @@ public class EsupPapercutPortletController {
 	    	EsupPapercutSessionObject objectShared = new EsupPapercutSessionObject();
 	    	objectShared.setIsAdmin(true);
 	    	objectShared.setPaperCutContext(paperCutContext);
-	    	PortletUtils.setSessionAttribute(request, sharedSessionId, objectShared, PortletSession.APPLICATION_SCOPE);
 	    	model.put("sharedSessionId", sharedSessionId);
+	    	model.put("sessionId", sharedSessionId);
+	    	model.put("objectShared", objectShared);
+	    	
+	    	final PortletPreferences prefs =  request.getPreferences();
+	    	model.put("requeteNbTransactions", prefs.getValue(PREF_NB_TRANSCATIONS, "useOriginal"));	
+	    	model.put("requeteMontantTransactions", prefs.getValue(PREF_MONTANT_TRANSACTIONS, "useOriginal"));	
+	    	model.put("requeteCumulTransactions", prefs.getValue(PREF_CUMUL_TRANSACTIONS, "useOriginal"));	
+	    	model.put("requeteCumulMontants", prefs.getValue(PREF_CUMUL_MONTANT, "useOriginal"));
+	    	
+	    	PortletUtils.setSessionAttribute(request, sharedSessionId, model, PortletSession.APPLICATION_SCOPE);
     	}
     	model.put("isAdmin", isAdmin);
     	model.put("isManager", isManager);
