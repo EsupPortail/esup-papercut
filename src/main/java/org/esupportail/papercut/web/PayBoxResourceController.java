@@ -33,7 +33,6 @@ import org.esupportail.papercut.domain.EsupPapercutSessionObject;
 import org.esupportail.papercut.domain.PayboxPapercutTransactionLog;
 import org.esupportail.papercut.services.EsupPaperCutService;
 import org.esupportail.papercut.services.StatsService;
-import org.jasig.web.service.AjaxPortletSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -49,13 +48,6 @@ public class PayBoxResourceController {
 
 	private final Logger log = Logger.getLogger(getClass());
 	
-    private AjaxPortletSupport ajaxPortletSupport;
-    
-    @Autowired
-    public void setAjaxPortletSupport(AjaxPortletSupport ajaxPortletSupport) {
-        this.ajaxPortletSupport = ajaxPortletSupport;
-    }
-	
 	@Resource 
 	Map<String, EsupPaperCutService> esupPaperCutServices;
 	
@@ -69,7 +61,7 @@ public class PayBoxResourceController {
 		
 		String sharedSessionId = request.getParameter("sharedSessionId");
 		if(sharedSessionId != null) {
-			EsupPapercutSessionObject objectShared  = (EsupPapercutSessionObject)session.getAttribute(sharedSessionId);
+			EsupPapercutSessionObject objectShared  = (EsupPapercutSessionObject) session.getAttribute(sharedSessionId);
 		
 			if(objectShared.isIsAdmin()) {
 				String csv = "Date transaction,uid,montant,ID transaction paybox";
@@ -96,14 +88,15 @@ public class PayBoxResourceController {
 	@RequestMapping(value="/statsPapercut")
 	public void getStats(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletRequestBindingException {
 	
+		HttpSession session = request.getSession();
+		
 		String sharedSessionId = request.getParameter("sharedSessionId");
 		if(sharedSessionId != null) {
-			final Map<String, ?> model = this.ajaxPortletSupport.getAjaxModel(request, response);	
-			EsupPapercutSessionObject objectShared  = (EsupPapercutSessionObject) model.get("objectShared");
-			String requeteNbTransactions = (String) model.get("requeteNbTransactions");
-			String requeteMontantTransactions = (String) model.get("requeteMontantTransactions");
-			String requeteCumulTransactions = (String) model.get("requeteCumulTransactions");
-			String requeteCumulMontants = (String) model.get("requeteCumulMontants");
+			EsupPapercutSessionObject objectShared  = (EsupPapercutSessionObject) session.getAttribute(sharedSessionId);
+			String requeteNbTransactions = objectShared.getRequeteNbTransactions();
+			String requeteMontantTransactions = objectShared.getRequeteMontantTransactions();
+			String requeteCumulTransactions = objectShared.getRequeteCumulTransactions();
+			String requeteCumulMontants =objectShared.getRequeteCumulMontants();
 			
 			if(objectShared.isIsAdmin()) {
 				String flexJsonString = "Aucune statistique à récupérer";

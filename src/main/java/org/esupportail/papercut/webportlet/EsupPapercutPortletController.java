@@ -212,7 +212,15 @@ public class EsupPapercutPortletController {
 	    	EsupPapercutSessionObject objectShared = new EsupPapercutSessionObject();
 	    	objectShared.setIsAdmin(true);
 	    	objectShared.setPaperCutContext(paperCutContext);
+	    	
+	    	final PortletPreferences prefs =  request.getPreferences();
+	    	objectShared.setRequeteCumulMontants(prefs.getValue(PREF_CUMUL_MONTANT, "useOriginal"));
+	    	objectShared.setRequeteCumulTransactions(prefs.getValue(PREF_CUMUL_TRANSACTIONS, "useOriginal"));
+	    	objectShared.setRequeteMontantTransactions((String)prefs.getValue(PREF_MONTANT_TRANSACTIONS, "useOriginal"));
+	    	objectShared.setRequeteNbTransactions((String)prefs.getValue(PREF_NB_TRANSCATIONS, "useOriginal"));
+	    	
 	    	PortletUtils.setSessionAttribute(request, sharedSessionId, objectShared, PortletSession.APPLICATION_SCOPE);
+	    	
 	    	model.put("sharedSessionId", sharedSessionId);
 	    	model.put("active", "admin");
     	}	
@@ -415,10 +423,10 @@ public class EsupPapercutPortletController {
 	    	model.put("objectShared", objectShared);
 	    	
 	    	final PortletPreferences prefs =  request.getPreferences();
-	    	model.put("requeteNbTransactions", prefs.getValue(PREF_NB_TRANSCATIONS, "useOriginal"));	
-	    	model.put("requeteMontantTransactions", prefs.getValue(PREF_MONTANT_TRANSACTIONS, "useOriginal"));	
-	    	model.put("requeteCumulTransactions", prefs.getValue(PREF_CUMUL_TRANSACTIONS, "useOriginal"));	
-	    	model.put("requeteCumulMontants", prefs.getValue(PREF_CUMUL_MONTANT, "useOriginal"));
+	    	objectShared.setRequeteCumulMontants(prefs.getValue(PREF_CUMUL_MONTANT, "useOriginal"));
+	    	objectShared.setRequeteCumulTransactions(prefs.getValue(PREF_CUMUL_TRANSACTIONS, "useOriginal"));
+	    	objectShared.setRequeteMontantTransactions((String)prefs.getValue(PREF_MONTANT_TRANSACTIONS, "useOriginal"));
+	    	objectShared.setRequeteNbTransactions((String)prefs.getValue(PREF_NB_TRANSCATIONS, "useOriginal"));
 	    	
 	    	PortletUtils.setSessionAttribute(request, sharedSessionId, model, PortletSession.APPLICATION_SCOPE);
     	}

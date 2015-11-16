@@ -23,4 +23,36 @@ privileged aspect EsupPapercutSessionObject_Roo_JavaBean {
         this.paperCutContext = paperCutContext;
     }
     
+    public String EsupPapercutSessionObject.getRequeteNbTransactions() {
+        return this.requeteNbTransactions;
+    }
+    
+    public void EsupPapercutSessionObject.setRequeteNbTransactions(String requeteNbTransactions) {
+        this.requeteNbTransactions = requeteNbTransactions;
+    }
+    
+    public String EsupPapercutSessionObject.getRequeteMontantTransactions() {
+        return this.requeteMontantTransactions;
+    }
+    
+    public void EsupPapercutSessionObject.setRequeteMontantTransactions(String requeteMontantTransactions) {
+        this.requeteMontantTransactions = requeteMontantTransactions;
+    }
+    
+    public String EsupPapercutSessionObject.getRequeteCumulTransactions() {
+        return this.requeteCumulTransactions;
+    }
+    
+    public void EsupPapercutSessionObject.setRequeteCumulTransactions(String requeteCumulTransactions) {
+        this.requeteCumulTransactions = requeteCumulTransactions;
+    }
+    
+    public String EsupPapercutSessionObject.getRequeteCumulMontants() {
+        return this.requeteCumulMontants;
+    }
+    
+    public void EsupPapercutSessionObject.setRequeteCumulMontants(String requeteCumulMontants) {
+        this.requeteCumulMontants = requeteCumulMontants;
+    }
+    
 }

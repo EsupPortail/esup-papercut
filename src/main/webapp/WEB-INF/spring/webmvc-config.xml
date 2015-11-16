@@ -4,8 +4,6 @@
     <!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources -->
     <mvc:resources location="/, classpath:/META-INF/web-resources/" mapping="/resources/**"/>
     
-    <bean id="ajaxPortletSupportService" class="org.jasig.web.service.AjaxPortletSupportService"/>
-    
     <mvc:annotation-driven/>
     <context:component-scan base-package="org.esupportail.papercut.web" />
 

@@ -8,5 +8,13 @@ public class EsupPapercutSessionObject {
 	boolean isAdmin;
 	
     String paperCutContext;
+   
+    String requeteNbTransactions;
+    
+	String requeteMontantTransactions;
+	
+	String requeteCumulTransactions;
+	
+	String requeteCumulMontants;
 	
 }
