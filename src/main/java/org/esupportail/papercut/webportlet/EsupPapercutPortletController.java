@@ -428,7 +428,7 @@ public class EsupPapercutPortletController {
 	    	objectShared.setRequeteMontantTransactions((String)prefs.getValue(PREF_MONTANT_TRANSACTIONS, "useOriginal"));
 	    	objectShared.setRequeteNbTransactions((String)prefs.getValue(PREF_NB_TRANSCATIONS, "useOriginal"));
 	    	
-	    	PortletUtils.setSessionAttribute(request, sharedSessionId, model, PortletSession.APPLICATION_SCOPE);
+	    	PortletUtils.setSessionAttribute(request, sharedSessionId, objectShared, PortletSession.APPLICATION_SCOPE);
     	}
     	model.put("isAdmin", isAdmin);
     	model.put("isManager", isManager);
