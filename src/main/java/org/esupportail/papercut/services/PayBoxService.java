@@ -67,6 +67,8 @@ public class PayBoxService {
 
 	private String reponseServerUrl;
 	
+	private String forwardServerUrl;
+	
 	private String payboxActionUrlOK = null;
 	
 
@@ -124,6 +126,10 @@ public class PayBoxService {
 		this.reponseServerUrl = reponseServerUrl;
 	}
 
+	public void setForwardServerUrl(String forwardServerUrl) {
+		this.forwardServerUrl = forwardServerUrl;
+	}
+
 	/**
 	 * @param uid
 	 * @param montant en €
@@ -149,7 +155,10 @@ public class PayBoxService {
 		String callbackUrl = reponseServerUrl + "/esup-papercut/servlet/payboxcallback";
 		payBoxForm.setCallbackUrl(callbackUrl);
 		
-		String forwardUrl = reponseServerUrl + portletContextPath;
+		if(forwardServerUrl == null) {
+			forwardServerUrl = reponseServerUrl;
+		}
+		String forwardUrl = forwardServerUrl + portletContextPath;
 		payBoxForm.setForwardAnnuleUrl(forwardUrl);
 		payBoxForm.setForwardEffectueUrl(forwardUrl);
 		payBoxForm.setForwardRefuseUrl(forwardUrl);

@@ -51,7 +51,10 @@
 						<property name="rang" value="32" />
 						<property name="identifiant" value="110647233" />
 						<property name="devise" value="978" />
+						<!-- Callback Url used by Paybox server to call esup-papercut -->
 						<property name="reponseServerUrl" value="https://${runnEntServerHost}" />
+						<!-- Forward Url used to redirect user to esup-papercut after paybox payment (often same than responseServerUrl) -->
+						<property name="forwardServerUrl" value="https://${runnEntServerHost}" />
 						<property name="payboxActionUrls">
 							<list>
 								<value>https://preprod-tpeweb.paybox.com/cgi/MYchoix_pagepaiement.cgi</value>
