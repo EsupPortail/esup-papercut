@@ -41,4 +41,9 @@
 	margin-bottom: 10px;
 	border: 1px solid #ccc;
 	padding: 15px;
+	background-color: #fff;
+}
+.esuppapercutMobile .charts canvas {
+	height: 158px!important;
+	width: 316px!important;
 }
