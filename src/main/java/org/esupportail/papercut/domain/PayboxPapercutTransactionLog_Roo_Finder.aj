@@ -9,11 +9,13 @@ import org.esupportail.papercut.domain.PayboxPapercutTransactionLog;
 
 privileged aspect PayboxPapercutTransactionLog_Roo_Finder {
     
-    public static Long PayboxPapercutTransactionLog.countFindPayboxPapercutTransactionLogsByArchived(Boolean archived) {
+    public static Long PayboxPapercutTransactionLog.countFindPayboxPapercutTransactionLogsByArchivedAndPaperCutContextEquals(Boolean archived, String paperCutContext) {
         if (archived == null) throw new IllegalArgumentException("The archived argument is required");
+        if (paperCutContext == null || paperCutContext.length() == 0) throw new IllegalArgumentException("The paperCutContext argument is required");
         EntityManager em = PayboxPapercutTransactionLog.entityManager();
-        TypedQuery q = em.createQuery("SELECT COUNT(o) FROM PayboxPapercutTransactionLog AS o WHERE o.archived = :archived", Long.class);
+        TypedQuery q = em.createQuery("SELECT COUNT(o) FROM PayboxPapercutTransactionLog AS o WHERE o.archived = :archived AND o.paperCutContext = :paperCutContext", Long.class);
         q.setParameter("archived", archived);
+        q.setParameter("paperCutContext", paperCutContext);
         return ((Long) q.getSingleResult());
     }
     
@@ -55,18 +57,21 @@ privileged aspect PayboxPapercutTransactionLog_Roo_Finder {
         return ((Long) q.getSingleResult());
     }
     
-    public static TypedQuery<PayboxPapercutTransactionLog> PayboxPapercutTransactionLog.findPayboxPapercutTransactionLogsByArchived(Boolean archived) {
+    public static TypedQuery<PayboxPapercutTransactionLog> PayboxPapercutTransactionLog.findPayboxPapercutTransactionLogsByArchivedAndPaperCutContextEquals(Boolean archived, String paperCutContext) {
         if (archived == null) throw new IllegalArgumentException("The archived argument is required");
+        if (paperCutContext == null || paperCutContext.length() == 0) throw new IllegalArgumentException("The paperCutContext argument is required");
         EntityManager em = PayboxPapercutTransactionLog.entityManager();
-        TypedQuery<PayboxPapercutTransactionLog> q = em.createQuery("SELECT o FROM PayboxPapercutTransactionLog AS o WHERE o.archived = :archived", PayboxPapercutTransactionLog.class);
+        TypedQuery<PayboxPapercutTransactionLog> q = em.createQuery("SELECT o FROM PayboxPapercutTransactionLog AS o WHERE o.archived = :archived AND o.paperCutContext = :paperCutContext", PayboxPapercutTransactionLog.class);
         q.setParameter("archived", archived);
+        q.setParameter("paperCutContext", paperCutContext);
         return q;
     }
     
-    public static TypedQuery<PayboxPapercutTransactionLog> PayboxPapercutTransactionLog.findPayboxPapercutTransactionLogsByArchived(Boolean archived, String sortFieldName, String sortOrder) {
+    public static TypedQuery<PayboxPapercutTransactionLog> PayboxPapercutTransactionLog.findPayboxPapercutTransactionLogsByArchivedAndPaperCutContextEquals(Boolean archived, String paperCutContext, String sortFieldName, String sortOrder) {
         if (archived == null) throw new IllegalArgumentException("The archived argument is required");
+        if (paperCutContext == null || paperCutContext.length() == 0) throw new IllegalArgumentException("The paperCutContext argument is required");
         EntityManager em = PayboxPapercutTransactionLog.entityManager();
-        StringBuilder queryBuilder = new StringBuilder("SELECT o FROM PayboxPapercutTransactionLog AS o WHERE o.archived = :archived");
+        StringBuilder queryBuilder = new StringBuilder("SELECT o FROM PayboxPapercutTransactionLog AS o WHERE o.archived = :archived AND o.paperCutContext = :paperCutContext");
         if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
             queryBuilder.append(" ORDER BY ").append(sortFieldName);
             if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
@@ -75,6 +80,7 @@ privileged aspect PayboxPapercutTransactionLog_Roo_Finder {
         }
         TypedQuery<PayboxPapercutTransactionLog> q = em.createQuery(queryBuilder.toString(), PayboxPapercutTransactionLog.class);
         q.setParameter("archived", archived);
+        q.setParameter("paperCutContext", paperCutContext);
         return q;
     }
     

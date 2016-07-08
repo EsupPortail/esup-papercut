@@ -372,7 +372,8 @@ public class EsupPapercutPortletController {
     public void archiveAll(ActionRequest request, ActionResponse response) {
 
     	if( isAdmin(request)) {
-    		List<PayboxPapercutTransactionLog> txLogs = PayboxPapercutTransactionLog.findPayboxPapercutTransactionLogsByArchived(false).getResultList();
+    		String paperCutContext = request.getPreferences().getValue(PREF_PAPERCUT_CONTEXT, null);	
+    		List<PayboxPapercutTransactionLog> txLogs = PayboxPapercutTransactionLog.findPayboxPapercutTransactionLogsByArchivedAndPaperCutContextEquals(false, paperCutContext).getResultList();
     		for(PayboxPapercutTransactionLog txLog: txLogs) {
     			txLog.setArchived(true);
 			}

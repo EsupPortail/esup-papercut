@@ -31,7 +31,7 @@ import org.springframework.roo.addon.tostring.RooToString;
 
 @RooJavaBean
 @RooToString
-@RooJpaActiveRecord(finders = { "findPayboxPapercutTransactionLogsByUidEqualsAndPaperCutContextEquals", "findPayboxPapercutTransactionLogsByUidEqualsAndPaperCutContextEqualsAndArchived", "findPayboxPapercutTransactionLogsByArchived", "findPayboxPapercutTransactionLogsByPaperCutContextEquals", "findPayboxPapercutTransactionLogsByIdtransEquals" })
+@RooJpaActiveRecord(finders = { "findPayboxPapercutTransactionLogsByUidEqualsAndPaperCutContextEquals", "findPayboxPapercutTransactionLogsByUidEqualsAndPaperCutContextEqualsAndArchived", "findPayboxPapercutTransactionLogsByArchivedAndPaperCutContextEquals", "findPayboxPapercutTransactionLogsByPaperCutContextEquals", "findPayboxPapercutTransactionLogsByIdtransEquals" })
 public class PayboxPapercutTransactionLog {
 
     @Temporal(TemporalType.TIMESTAMP)
