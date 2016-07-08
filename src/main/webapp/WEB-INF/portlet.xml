@@ -111,12 +111,12 @@
 		</preference>
 		<preference>
 			<name>requeteCumulTransactions</name>
-			<value>SELECT date_part('year',transaction_date) as year, date_part('month',transaction_date) as month, sum(count(* )) OVER (PARTITION BY date_part('year',transaction_date) ORDER BY  date_part('year',transaction_date),date_part('month',transaction_date)) as cumul FROM paybox_papercut_transaction_log Where date_part('year',transaction_date) in (select distinct date_part('year',transaction_date) from paybox_papercut_transaction_log) WHERE paper_cut_context='test' GROUP BY year, month ORDER BY year,month</value>
+			<value>SELECT date_part('year',transaction_date) as year, date_part('month',transaction_date) as month, sum(count(* )) OVER (PARTITION BY date_part('year',transaction_date) ORDER BY  date_part('year',transaction_date),date_part('month',transaction_date)) as cumul FROM paybox_papercut_transaction_log Where date_part('year',transaction_date) in (select distinct date_part('year',transaction_date) from paybox_papercut_transaction_log WHERE paper_cut_context='test') GROUP BY year, month ORDER BY year,month</value>
 			<read-only>true</read-only>
 		</preference>
 		<preference>
 			<name>requeteCumulMontants</name>
-			<value>SELECT date_part('year',transaction_date) as year, date_part('month',transaction_date) as month ,sum( sum(CAST(montant AS decimal))) OVER (PARTITION BY date_part('year',transaction_date) ORDER BY  date_part('year',transaction_date),date_part('month',transaction_date)) as cumul FROM paybox_papercut_transaction_log Where date_part('year',transaction_date) in (select distinct date_part('year',transaction_date) from paybox_papercut_transaction_log) WHERE paper_cut_context='test' GROUP BY year, month ORDER BY year,month</value>
+			<value>SELECT date_part('year',transaction_date) as year, date_part('month',transaction_date) as month ,sum( sum(CAST(montant AS decimal))) OVER (PARTITION BY date_part('year',transaction_date) ORDER BY  date_part('year',transaction_date),date_part('month',transaction_date)) as cumul FROM paybox_papercut_transaction_log Where date_part('year',transaction_date) in (select distinct date_part('year',transaction_date) from paybox_papercut_transaction_log WHERE paper_cut_context='test') GROUP BY year, month ORDER BY year,month</value>
 			<read-only>true</read-only>
 		</preference>	
 	</portlet-preferences>
