@@ -57,16 +57,16 @@ public class StatsService {
         return map;
     }
 
-    public List<Object>  countNumberTranscationsBydate(String requeteNbTransactions) {
+    protected List<Object>  countNumberTranscationsBydate(String requeteNbTransactions) {
         return PayboxPapercutTransactionLog.countNumberTranscationsBydate(requeteNbTransactions);
     }
-    public List<Object>  countMontantTranscationsBydate(String requeteMontantTransactions) {
+    protected List<Object>  countMontantTranscationsBydate(String requeteMontantTransactions) {
         return PayboxPapercutTransactionLog.countMontantTranscationsBydate(requeteMontantTransactions);
     }
-    public List<Object>  countCumulNombreTranscationsBydate(String requeteCumulTransactions) {
+    protected List<Object>  countCumulNombreTranscationsBydate(String requeteCumulTransactions) {
         return PayboxPapercutTransactionLog.countCumulNombreTranscationsBydate(requeteCumulTransactions);
     }
-    public List<Object>  countCumulMontantTranscationsBydate(String requeteCumulMontants) {
+    protected List<Object>  countCumulMontantTranscationsBydate(String requeteCumulMontants) {
         return PayboxPapercutTransactionLog.countCumulMontantTranscationsBydate(requeteCumulMontants);
     }
 }
