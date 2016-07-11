@@ -65,9 +65,17 @@ public class EsupPapercutPortletController {
 	private final static String PREF_VALIDATE_AFTER_REDIRECT = "validatePayboxJustWithRedirection";
 	
 	public static final String PREF_NB_TRANSCATIONS = "requeteNbTransactions";
+	
 	public static final String PREF_MONTANT_TRANSACTIONS = "requeteMontantTransactions";
+	
 	public static final String PREF_CUMUL_TRANSACTIONS = "requeteCumulTransactions";
+	
 	public static final String PREF_CUMUL_MONTANT = "requeteCumulMontants";
+	
+	public static final String PREF_ROLE_NAME_ADMIN = "esupPapercutAdminRoleName";
+	
+	public static final String PREF_ROLE_NAME_MANAGER = "esupPapercutManagerRoleName";
+	
 	
 	@Resource 
 	Map<String, EsupPaperCutService> esupPaperCutServices;
@@ -307,10 +315,12 @@ public class EsupPapercutPortletController {
 	}
 	
 	private boolean isAdmin(PortletRequest request) {
-		return request.isUserInRole("esupPapercutAdmin");
+		String adminRoleName = request.getPreferences().getValue(PREF_ROLE_NAME_ADMIN, "esupPapercutAdmin");
+		return request.isUserInRole(adminRoleName);
 	}
 	private boolean isManager(PortletRequest request) {
-		return request.isUserInRole("esupPapercutManager");
+		String managerRoleName = request.getPreferences().getValue(PREF_ROLE_NAME_MANAGER, "esupPapercutManager");
+		return request.isUserInRole(managerRoleName);
 	}
 		
     /**
