@@ -59,6 +59,11 @@
 			Aussi prenez garde à ne créditer votre solde d'impression qu'en &lt;b&gt;fonction de vos besoins réels&lt;/b&gt;.&lt;/p&gt;</value>
 			<read-only>true</read-only>
 		</preference>	
+                <preference>
+                        <name>cgvText</name>
+                        <value>J'ai lu et j'accepte les &lt;a href="https://ma-page-cgv.html" target=_blank&gt;conditions générales de vente&lt;/a&gt; (obligatoire)</value>
+                        <read-only>true</read-only>
+                </preference>
 		<preference>
 			<name>payboxMontantMin</name>
 			<value>0.5</value>

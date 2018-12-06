@@ -31,6 +31,20 @@
 		<portlet:param name="action" value="stats" />
 	</portlet:renderURL>	
 	
+        <script type="text/javascript">
+                window.onload=function(){changeCheckCgv()};
+                function changeCheckCgv() {
+                var checkBox = document.getElementById("checkbox_cgv");
+                var btn_credit = document.getElementById("pbx_credit");
+
+                if (checkBox.checked == true){
+                        $("input[id^='pbx_credit_']").show(200);
+                } else {
+                        $("input[id^='pbx_credit_']").hide(200);
+                };
+                }
+        </script>
+
 	<h3 class="portlet-section-header" role="header">
 		<a href="${homeUrl}" class="${active == 'home' ? 'active' : 'nonActive'}"><spring:message code="menu.home"/></a> | 
 		<a href="${historyUrl}"><spring:message code="menu.myhistory"/></a>
@@ -168,7 +182,7 @@
 													value="${payBoxForm.hmac}" />
 												<spring:message code="paybox.credit"
 													arguments="${payBoxForm.montant}" var="creditlabel" />
-												<input type="submit" value="${creditlabel}" />
+												<input type="submit" id="pbx_credit_${payboxFormItem.key}" value="${creditlabel}"/>
 											</form>
 
 										</div>
@@ -215,8 +229,12 @@
 		<br/>
 		
 		<div class="portlet-section-body">
+                        <div style="visibility: visible">
+                                <input type="checkbox" id="checkbox_cgv" aria-required="true" onchange="changeCheckCgv()"/><label for="conditions"><c:out value="${cgvText}" escapeXml="false"/></label>
+                        </div>
 			<c:out value="${htmlFooter}" escapeXml="false"/>
 		</div>
+
 		
 	</div>
 </div>
