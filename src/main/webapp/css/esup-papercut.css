@@ -76,3 +76,15 @@
 	min-height: 176px;
 	min-width: 353px;
 }
+
+.esuppapercut #checkbox_cgv {
+	vertical-align:bottom;
+	margin-right: 7px;
+}
+.esuppapercut input[type='checkbox'] {
+	float: left;
+	width: 20px;
+	margin-top: -5px;
+}
+
+
