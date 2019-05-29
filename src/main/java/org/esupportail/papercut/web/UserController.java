@@ -74,7 +74,6 @@ public class UserController {
     	BigDecimal payboxMontantMin = new BigDecimal(context.getPayboxMontantMin());
     	BigDecimal payboxMontantMax  = new BigDecimal(context.getPayboxMontantMax());
     	BigDecimal payboxMontantStep  = new BigDecimal(context.getPayboxMontantStep());	
-    	BigDecimal payboxMontantDefaut  = new BigDecimal(context.getPayboxMontantDefaut());
         // constraints on the slider via transactionMontantMax
         if(canMakeTransaction && transactionMontantMax.intValue() > -1) {  	
 			List<PayboxPapercutTransactionLog> transactionsNotArchived = repository.findPayboxPapercutTransactionLogsByUidAndPaperCutContextAndArchived(uid, papercutContext, false, PageRequest.of(0, Integer.MAX_VALUE));
@@ -86,14 +85,10 @@ public class UserController {
         	if(transactionMontantMax.doubleValue() < payboxMontantMax.doubleValue()*100) {
         		payboxMontantMax = transactionMontantMax.divide(payboxMontantStep).multiply(payboxMontantStep);
         		payboxMontantMax = payboxMontantMax.divide(new BigDecimal("100"));
-        		if(payboxMontantDefaut.compareTo(payboxMontantMax) == 1) {
-        			payboxMontantDefaut = payboxMontantMax;
-        		}
         		if(payboxMontantMax.compareTo(payboxMontantMin) == -1) {
         			canMakeTransaction = false;
         		}
             	uiModel.addAttribute("payboxMontantMax", payboxMontantMax.doubleValue());
-            	uiModel.addAttribute("payboxMontantDefaut", payboxMontantDefaut.doubleValue());
         	}
         }
 	       
@@ -117,7 +112,6 @@ public class UserController {
         Map<Integer, PayBoxForm> sortedMap = new TreeMap<Integer, PayBoxForm>(payboxForms);
         
         uiModel.addAttribute("payboxForms", sortedMap);
-        uiModel.addAttribute("payboxMontantDefautCents", payboxMontantDefaut.multiply(new BigDecimal(100)).intValue());
         
         uiModel.addAttribute("canMakeTransaction", canMakeTransaction);
 

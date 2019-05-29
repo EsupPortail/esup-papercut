@@ -44,8 +44,6 @@ public class EsupPapercutContext {
 	
 	String payboxMontantStep = "0.5";	
 	
-	String payboxMontantDefaut = "2.0";
-	
 	String papercutSheetCost = "-1";
 	
 	String papercutColorSheetCost = "-1";
@@ -184,14 +182,6 @@ public class EsupPapercutContext {
 
 	public void setPayboxMontantStep(String payboxMontantStep) {
 		this.payboxMontantStep = payboxMontantStep;
-	}
-
-	public String getPayboxMontantDefaut() {
-		return payboxMontantDefaut;
-	}
-
-	public void setPayboxMontantDefaut(String payboxMontantDefaut) {
-		this.payboxMontantDefaut = payboxMontantDefaut;
 	}
 
 	public String getPapercutSheetCost() {
