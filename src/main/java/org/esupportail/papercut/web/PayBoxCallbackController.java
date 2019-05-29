@@ -17,29 +17,33 @@
  */
 package org.esupportail.papercut.web;
 
-import java.util.Map;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.log4j.Logger;
+import org.esupportail.papercut.config.EsupPapercutConfig;
 import org.esupportail.papercut.services.EsupPaperCutService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
+@RequestMapping("/{papercutContext}/payboxcallback")
 public class PayBoxCallbackController {
 
-	private final Logger log = Logger.getLogger(getClass());
+	private final Logger log = LoggerFactory.getLogger(getClass());
 	
 	@Resource 
-	Map<String, EsupPaperCutService> esupPaperCutServices;
+	EsupPaperCutService esupPaperCutService;
 
+	@Resource
+	EsupPapercutConfig config;
 	
     /** 
      * Manage callback response from paybox - url like :  
@@ -49,17 +53,15 @@ public class PayBoxCallbackController {
      * @param uiModel
      * @return empty page
      */
-	@RequestMapping("/payboxcallback")
-    @ResponseBody
-    public ResponseEntity<String> index(@RequestParam String montant, @RequestParam String reference, @RequestParam(required=false) String auto, 
+	@GetMapping
+    public ResponseEntity<String> index(@PathVariable String papercutContext, @RequestParam String montant, @RequestParam String reference, @RequestParam(required=false) String auto, 
     		@RequestParam String erreur, @RequestParam String idtrans, @RequestParam String signature, 
     		HttpServletRequest request) {
 		
-		String paperCutContext = reference.split("@")[1];
 		String ip = request.getRemoteAddr();
 		String queryString = request.getQueryString();
 		
-		if(esupPaperCutServices.get(paperCutContext).payboxCallback(montant, reference, auto, erreur, idtrans, signature, queryString, ip, null)) {
+		if(esupPaperCutService.payboxCallback(config.getContext(papercutContext), montant, reference, auto, erreur, idtrans, signature, queryString, ip, null)) {
     		HttpHeaders headers = new HttpHeaders();
     		headers.add("Content-Type", "text/html; charset=utf-8");
     		return new ResponseEntity<String>("", headers, HttpStatus.OK);

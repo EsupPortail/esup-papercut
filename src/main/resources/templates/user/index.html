@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout}">
+
+<head>
+<title>Crédits d'impression</title>
+</head>
+<body>
+	<header> </header>
+
+	<main class="container-fluid">
+
+	<div layout:fragment="content">
+
+		<div class="row my-5">
+			<div class="col-md text-center">
+				<h1 th:text="#{home.h1}">Crédits d'impression</h1>
+			</div>
+		</div>
+
+		<div class="row">
+
+			<div class="col-2"></div>
+
+			<div class="col-8">
+
+				<div class="esupPapercutHeader"
+					th:utext="${papercutContext.htmlHeader}"></div>
+
+				<div class="esupPapercutBody">
+
+					<p>
+						<span th:text="#{index.sold}">Solde</span> : <b
+							th:text="${userPapercutInfos.balance}">0 EUR</b>
+					</p>
+					<p>
+						<span th:text="#{index.printJobs}">Print Jobs</span> : <b
+							th:text="${userPapercutInfos.printJobs}">0</b>
+					</p>
+					<p>
+						<span th:text="#{index.printPages}">Print pages</span> : <b
+							th:text="${userPapercutInfos.printPages}">0</b>
+					</p>
+
+					<div th:if="${payboxForms!=null}">
+
+						<div th:if="${canMakeTransaction}">
+
+							<div class="row my-3 card card-body bg-light">
+
+								<div id="payboxForm" class="esuppayboxForm row">
+
+									<div class="payboxFormPost col-2 my-1"
+										th:id="'payboxForm_' + ${payboxFormItem.key}"
+										th:each="payboxFormItem: ${payboxForms}"
+										th:with="payBoxForm=${payboxFormItem.value}">
+
+										<form method="POST" th:action="${payBoxForm.actionUrl}">
+
+											<input th:each="payBoxParam: ${payBoxForm.orderedParams}"
+												type="hidden" th:name="${payBoxParam.key}"
+												th:value="${payBoxParam.value}" /> 
+											<input type="hidden"
+												name="PBX_HMAC" th:value="${payBoxForm.hmac}" /> 
+											<input
+												type="submit" th:id="'pbx_credit_' + ${payboxFormItem.key}"
+												th:value="#{paybox.credit(${payBoxForm.montant})}"
+												class="btn btn-success" role="button" />
+										</form>
+
+									</div>
+
+								</div>
+
+							</div>
+
+
+							<p th:if="${!canMakeTransaction}">
+								<i th:text="#{index.nbTransactions}">Max transactions number</i>
+							</p>
+
+						</div>
+
+						<br />
+
+						<div>
+							<div th:if="${!papercutContext.cgvText.empty}">
+								<input type="checkbox" id="checkbox_cgv" aria-required="true"
+									onchange="changeCheckCgv()" /><label for="conditions"
+									th:utext="${cgvText}" /></label>
+
+
+								<script type="text/javascript">
+									window.onload = function() {
+										changeCheckCgv()
+									};
+									function changeCheckCgv() {
+										var checkBox = document.getElementById("checkbox_cgv");
+										var btn_credit = document.getElementById("pbx_credit");
+				
+										if (checkBox.checked == true) {
+											$("input[id^='pbx_credit_']").show(200);
+										} else {
+											$("input[id^='pbx_credit_']").hide(200);
+										}
+										;
+									}
+								</script>
+
+							</div>
+							<div th:utext="${papercutContext.htmlFooter}"></div>
+						</div>
+
+					</div>
+
+				</div>
+
+				<div class="col-2"></div>
+	</main>
+
+	<footer> </footer>
+
+</body>
+</html>

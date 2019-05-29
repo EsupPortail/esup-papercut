@@ -17,168 +17,84 @@
  */
 package org.esupportail.papercut.services;
 
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
-import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
-import java.security.PublicKey;
 import java.security.Signature;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.X509EncodedKeySpec;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Base64;
 import java.util.Date;
-import java.util.List;
 import java.util.TimeZone;
 
-import org.apache.commons.codec.binary.Base64;
-import org.apache.log4j.Logger;
-import org.esupportail.papercut.domain.PayBoxForm;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.scheduling.annotation.Scheduled;
+import javax.annotation.Resource;
 
+import org.esupportail.papercut.config.EsupPapercutContext;
+import org.esupportail.papercut.domain.PayBoxForm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+
+@Service
 public class PayBoxService {
 
-	private final Logger log = Logger.getLogger(getClass());
+	private final Logger log = LoggerFactory.getLogger(getClass());
 
-	private final static String retourVariables = "montant:M;reference:R;auto:A;erreur:E;idtrans:S;signature:K";
-
-	private String numCommandePrefix = "EsupPaperCut-";
+	@Resource
+	HashService hashService;
 	
-	private HashService hashService;
-
-	private String site;
-	
-	private String rang;
-	
-	private String identifiant;
-	
-	// 978 = Euro
-	private String devise;
-	
-	private List<String> payboxActionUrls;
-
-	private List<String> payboxServersIP;
-	
-	private PublicKey payboxPublicKey;
-
-	private String reponseServerUrl;
-	
-	private String forwardServerUrl;
-	
-	private String payboxActionUrlOK = null;
-	
-
-	public String getNumCommandePrefix() {
-		return numCommandePrefix;
-	}
-
-	public void setNumCommandePrefix(String numCommandePrefix) {
-		this.numCommandePrefix = numCommandePrefix;
-	}
-
-	public void setHashService(HashService hashService) {
-		this.hashService = hashService;
-	}
-
-	public void setSite(String site) {
-		this.site = site;
-	}
-
-	public void setRang(String rang) {
-		this.rang = rang;
-	}
-
-	public void setIdentifiant(String identifiant) {
-		this.identifiant = identifiant;
-	}
-
-	public void setDevise(String devise) {
-		this.devise = devise;
-	}
-
-
-	public void setPayboxActionUrls(List<String> payboxActionUrls) {
-		this.payboxActionUrls = payboxActionUrls;
-	}
-
-	public void setPayboxServersIP(List<String> payboxServersIP) {
-		this.payboxServersIP = payboxServersIP;
-	}
-	
-	public void setDerPayboxPublicKeyFile(String derPayboxPublicKeyFile) throws NoSuchAlgorithmException, InvalidKeySpecException, IOException {
-		org.springframework.core.io.Resource derPayboxPublicKeyRessource = new ClassPathResource(derPayboxPublicKeyFile);
-		InputStream fis = derPayboxPublicKeyRessource.getInputStream();
-        DataInputStream dis = new DataInputStream(fis);
-        byte[] pubKeyBytes = new byte[fis.available()];
-        dis.readFully(pubKeyBytes);
-        fis.close();
-        dis.close();
-		X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(pubKeyBytes);
-		KeyFactory kf = KeyFactory.getInstance("RSA");
-		this.payboxPublicKey =  kf.generatePublic(x509EncodedKeySpec);
-	}
-
-	public void setReponseServerUrl(String reponseServerUrl) {
-		this.reponseServerUrl = reponseServerUrl;
-	}
-
-	public void setForwardServerUrl(String forwardServerUrl) {
-		this.forwardServerUrl = forwardServerUrl;
-	}
-
 	/**
 	 * @param uid
 	 * @param montant en €
 	 * @return
 	 */
-	public PayBoxForm getPayBoxForm(String uid, String mail, double montant, String paperCutContext, String portletContextPath) {
+	public PayBoxForm getPayBoxForm(EsupPapercutContext context, String uid, String mail, double montant, String contextPath) {
+		
+		if(context.getPaybox() == null) {
+			return null;
+		}
 		
 		String montantAsCents = Integer.toString(new Double(montant * 100).intValue());
 		
 		PayBoxForm payBoxForm = new PayBoxForm();
-		payBoxForm.setActionUrl(getPayBoxActionUrl());
+		payBoxForm.setActionUrl(getPayBoxActionUrl(context));
 		payBoxForm.setClientEmail(mail);
-		payBoxForm.setCommande(getNumCommande(uid, montantAsCents, paperCutContext));
-		payBoxForm.setDevise(devise);
+		payBoxForm.setCommande(getNumCommande(context, uid, montantAsCents));
+		payBoxForm.setDevise(context.getPaybox().getDevise());
 		payBoxForm.setHash(hashService.getHash());
-		payBoxForm.setIdentifiant(identifiant);
-		payBoxForm.setRang(rang);
-		payBoxForm.setRetourVariables(retourVariables);
-		payBoxForm.setSite(site);
+		payBoxForm.setIdentifiant(context.getPaybox().getIdentifiant());
+		payBoxForm.setRang(context.getPaybox().getRang());
+		payBoxForm.setRetourVariables(context.getPaybox().getRetourVariables());
+		payBoxForm.setSite(context.getPaybox().getSite());
 		payBoxForm.setTime(getCurrentTime());
 		payBoxForm.setTotal(montantAsCents);
-		
-		String callbackUrl = reponseServerUrl + "/esup-papercut/servlet/payboxcallback";
+		String callbackUrl = String.format("%s/%s/payboxcallback", context.getPaybox().getReponseServerUrl(), context.getPaperCutContext());
 		payBoxForm.setCallbackUrl(callbackUrl);
-		
-		if(forwardServerUrl == null) {
-			forwardServerUrl = reponseServerUrl;
-		}
-		String forwardUrl = forwardServerUrl + portletContextPath;
+
+		String forwardUrl = String.format("%s/%s", context.getPaybox().getForwardServerUrl(), context.getPaperCutContext());
 		payBoxForm.setForwardAnnuleUrl(forwardUrl);
 		payBoxForm.setForwardEffectueUrl(forwardUrl);
 		payBoxForm.setForwardRefuseUrl(forwardUrl);
 		
-		String hMac = hashService.getHMac(payBoxForm.getParamsAsString());
+		String hMac = hashService.getHMac(context, payBoxForm.getParamsAsString());
 		payBoxForm.setHmac(hMac);
-		
+
 		return payBoxForm;
 	}
 
-	private String getNumCommande(String uid, String montantAsCents, String paperCutContext) {
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-S");
-		return numCommandePrefix + uid + "@" + paperCutContext + "@" + montantAsCents + "-" + df.format(new Date());
+	private String getNumCommande(EsupPapercutContext context, String uid, String montantAsCents) {
+		if(context.getPaybox() != null) {
+			DateFormat df = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-S");
+			return context.getPaybox().getNumCommandePrefix() + uid + "@" + context.getPaperCutContext() + "@" + montantAsCents + "-" + df.format(new Date());
+		}
+		return null;
 	}
 
-	protected String getPayBoxActionUrl() {
-		if(payboxActionUrlOK == null) {
-			updatePayBoxActionUrl();
+	protected String getPayBoxActionUrl(EsupPapercutContext context) {
+		if(context.getPaybox() != null && context.getPaybox().getPayboxActionUrlOK() == null) {
+			updatePayBoxActionUrl(context);
 		} 
-		return this.payboxActionUrlOK;
+		return context.getPaybox().getPayboxActionUrlOK();
 	}
 	
 	/**
@@ -192,9 +108,9 @@ public class PayBoxService {
 		return nowAsISO;
 	}
 
-	public boolean isPayboxServer(String ip) {
+	public boolean isPayboxServer(EsupPapercutContext context, String ip) {
 
-		if(ip == null || !payboxServersIP.contains(ip)) {
+		if(ip == null || !context.getPaybox().getPayboxServersIP().contains(ip)) {
 			log.info(ip + " is not a paybox server");
 			return false;
 		} else {
@@ -203,14 +119,14 @@ public class PayBoxService {
 		}
 	}
 		
-	public boolean checkPayboxSignature(String queryString, String signature) {
+	public boolean checkPayboxSignature(EsupPapercutContext context, String queryString, String signature) {
 		
 		String sData = queryString.substring(0, queryString.lastIndexOf("&"));
 		
 		try {
 			Signature sig = Signature.getInstance("SHA1WithRSA");
-			byte[] sigBytes = Base64.decodeBase64(signature.getBytes());
-			sig.initVerify(payboxPublicKey);
+			byte[] sigBytes = Base64.getDecoder().decode(signature.getBytes());
+			sig.initVerify(context.getPaybox().getPayboxPublicKey());
 			sig.update(sData.getBytes());
 	        boolean signatureOk = sig.verify(sigBytes);
 	        if(!signatureOk) {
@@ -225,26 +141,29 @@ public class PayBoxService {
 		}
 	}
 	
+	// TODO ! 
 	@Scheduled(fixedDelay=3600000)
 	public void flushPayboxActionUrlOK() {
-		updatePayBoxActionUrl();
-		log.info("Update Paybox Action Url: " + this.payboxActionUrlOK);
+		//updatePayBoxActionUrl();
+		//log.info("Update Paybox Action Url: " + context.getPaybox().getPayboxActionUrlOK());
 	}
 	
-	public void updatePayBoxActionUrl() {
-		for(String payboxActionUrl : payboxActionUrls) {
+	// TODO ! 
+	public void updatePayBoxActionUrl(EsupPapercutContext context) {
+		for(String payboxActionUrl : context.getPaybox().getPayboxActionUrls()) {
 			try {
 				// on teste la connection, pour voir si le serveur est disponible
 				URL url = new URL(payboxActionUrl);
 				URLConnection connection = url.openConnection();
 				connection.connect();
 				connection.getInputStream().read();
-				this.payboxActionUrlOK = payboxActionUrl;
+				context.getPaybox().setPayboxActionUrlOK(payboxActionUrl);
+				break;
 			} catch (Exception e) {
 				log.warn("Pb with " + payboxActionUrl, e);
 			} 
 		}
-		if(this.payboxActionUrlOK == null) {
+		if(context.getPaybox().getPayboxActionUrlOK() == null) {
 			throw new RuntimeException("No paybox action url is available at the moment !");
 		}
 	}

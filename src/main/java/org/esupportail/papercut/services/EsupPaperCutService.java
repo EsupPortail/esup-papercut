@@ -20,21 +20,35 @@ package org.esupportail.papercut.services;
 import java.util.Date;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.log4j.Logger;
+import org.esupportail.papercut.config.EsupPapercutContext;
+import org.esupportail.papercut.dao.PapercutDaoService;
+import org.esupportail.papercut.dao.PayboxPapercutTransactionLogRepository;
 import org.esupportail.papercut.domain.PayBoxForm;
 import org.esupportail.papercut.domain.PayboxPapercutTransactionLog;
 import org.esupportail.papercut.domain.UserPapercutInfos;
-import org.springframework.transaction.annotation.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
 
+@Service
 public class EsupPaperCutService {
 
-	private final Logger log = Logger.getLogger(getClass());
+	private final Logger log = LoggerFactory.getLogger(getClass());
 	
+	@Autowired
+	PayboxPapercutTransactionLogRepository txRepository;
+	
+	@Autowired
+	PapercutDaoService papercutDaoService;
+	
+	@Autowired
 	PayBoxService payBoxService;
 	
+	@Autowired
 	PapercutService papercutService;
+
 
 	public void setPayBoxService(PayBoxService payBoxService) {
 		this.payBoxService = payBoxService;
@@ -44,20 +58,20 @@ public class EsupPaperCutService {
 		this.papercutService = papercutService;
 	}
 
-	public UserPapercutInfos getUserPapercutInfos(String uid) {
-		return papercutService.getUserPapercutInfos(uid);
+	public UserPapercutInfos getUserPapercutInfos(EsupPapercutContext context, String uid) {
+		return papercutService.getUserPapercutInfos(context, uid);
 	}
 
-	public PayBoxForm getPayBoxForm(String uid, String mail, double montant, String paperCutContext, String portletContextPath) {
+	public PayBoxForm getPayBoxForm(EsupPapercutContext context, String uid, String mail, double montant, String portletContextPath) {
 		if(payBoxService != null)
-			return payBoxService.getPayBoxForm(uid, mail, montant, paperCutContext, portletContextPath);
+			return payBoxService.getPayBoxForm(context, uid, mail, montant, portletContextPath);
 		else return null;
 	}
 
 	
-	public boolean payboxCallback(String montant, String reference, String auto, String erreur, String idtrans, String signature, String queryString, String ip, String currentUserUid) {
+	public boolean payboxCallback(EsupPapercutContext context, String montant, String reference, String auto, String erreur, String idtrans, String signature, String queryString, String ip, String currentUserUid) {
 		
-		List<PayboxPapercutTransactionLog> txLogs  = PayboxPapercutTransactionLog.findPayboxPapercutTransactionLogsByIdtransEquals(idtrans, null, null).getResultList();		
+		List<PayboxPapercutTransactionLog> txLogs  = txRepository.findPayboxPapercutTransactionLogsByIdtrans(idtrans, PageRequest.of(0, Integer.MAX_VALUE));		
 		
 		boolean newTxLog = txLogs.size() == 0;
 		PayboxPapercutTransactionLog txLog = txLogs.size()>0 ? txLogs.get(0) : null;
@@ -79,18 +93,18 @@ public class EsupPaperCutService {
 		txLog.setSignature(signature);
 		txLog.setTransactionDate(new Date());
 		String uid = reference.split("@")[0];
-		uid = uid.substring(payBoxService.getNumCommandePrefix().length(), uid.length());
+		uid = uid.substring(context.getPaybox().getNumCommandePrefix().length(), uid.length());
 		txLog.setUid(uid);
 		String paperCutContext = reference.split("@")[1];
 		txLog.setPaperCutContext(paperCutContext);
 
 		// if paybox server OR connected user ok 
-		if(payBoxService.isPayboxServer(ip) || uid.equals(currentUserUid)) {
+		if(payBoxService.isPayboxServer(context, ip) || uid.equals(currentUserUid)) {
 
 			// check signature == message come from paybox
-			if(payBoxService.checkPayboxSignature(queryString, signature)) {
+			if(payBoxService.checkPayboxSignature(context, queryString, signature)) {
 
-				String papercutOldSolde =  papercutService.getUserPapercutInfos(uid).getBalance();
+				String papercutOldSolde =  papercutService.getUserPapercutInfos(context, uid).getBalance();
 				txLog.setPapercutOldSolde(papercutOldSolde);
 
 				// TODO Vérifier que le montant correspondait bien à la demande initiale ?
@@ -98,16 +112,16 @@ public class EsupPaperCutService {
 					try {
 						log.info("Transaction : " + reference + " pour un montant de " + montant + " OK !");
 						double montantEuros = new Double(montant) / 100.0;
-						papercutService.creditUserBalance(uid, montantEuros, idtrans);
+						papercutService.creditUserBalance(context, uid, montantEuros, idtrans);
 						txLog.setPapercutWsCallStatus("OK");
 						
-						String papercutNewSolde =  papercutService.getUserPapercutInfos(uid).getBalance();
+						String papercutNewSolde =  papercutService.getUserPapercutInfos(context, uid).getBalance();
 						txLog.setPapercutNewSolde(papercutNewSolde);
 
 						if(newTxLog) {
-							txLog.persist();	
+							papercutDaoService.persist(txLog);	
 						} else {
-							txLog.merge();	
+							papercutDaoService.merge(txLog);	
 						}
 						
 					} catch(Exception ex) {

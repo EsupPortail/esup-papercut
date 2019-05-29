@@ -17,23 +17,31 @@
  */
 package org.esupportail.papercut.domain;
 import java.util.Date;
-import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Version;
 
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.roo.addon.javabean.RooJavaBean;
-import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
-import org.springframework.roo.addon.tostring.RooToString;
 
-@RooJavaBean
-@RooToString
-@RooJpaActiveRecord(finders = { "findPayboxPapercutTransactionLogsByUidEqualsAndPaperCutContextEquals", "findPayboxPapercutTransactionLogsByUidEqualsAndPaperCutContextEqualsAndArchived", "findPayboxPapercutTransactionLogsByArchivedAndPaperCutContextEquals", "findPayboxPapercutTransactionLogsByPaperCutContextEquals", "findPayboxPapercutTransactionLogsByIdtransEquals" })
+@Entity
 public class PayboxPapercutTransactionLog {
 
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
+    private Long id;
+    
+    @Version
+    @Column(name = "version")
+    private Integer version;
+    
     @Temporal(TemporalType.TIMESTAMP)
     @DateTimeFormat(style = "dd/MM/yyyy-HH:mm:ss")
     private Date transactionDate;
@@ -60,57 +68,131 @@ public class PayboxPapercutTransactionLog {
 
     private String papercutOldSolde;
     
-    private Boolean archived = false;
+    private Boolean archived = false;   
     
-    public String getMontantDevise() {
+    public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Integer getVersion() {
+		return version;
+	}
+
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+
+	public Date getTransactionDate() {
+		return transactionDate;
+	}
+
+	public void setTransactionDate(Date transactionDate) {
+		this.transactionDate = transactionDate;
+	}
+
+	public String getUid() {
+		return uid;
+	}
+
+	public void setUid(String uid) {
+		this.uid = uid;
+	}
+
+	public String getPaperCutContext() {
+		return paperCutContext;
+	}
+
+	public void setPaperCutContext(String paperCutContext) {
+		this.paperCutContext = paperCutContext;
+	}
+
+	public String getPapercutWsCallStatus() {
+		return papercutWsCallStatus;
+	}
+
+	public void setPapercutWsCallStatus(String papercutWsCallStatus) {
+		this.papercutWsCallStatus = papercutWsCallStatus;
+	}
+
+	public String getReference() {
+		return reference;
+	}
+
+	public void setReference(String reference) {
+		this.reference = reference;
+	}
+
+	public String getMontant() {
+		return montant;
+	}
+
+	public void setMontant(String montant) {
+		this.montant = montant;
+	}
+
+	public String getPapercutNewSolde() {
+		return papercutNewSolde;
+	}
+
+	public void setPapercutNewSolde(String papercutNewSolde) {
+		this.papercutNewSolde = papercutNewSolde;
+	}
+
+	public String getAuto() {
+		return auto;
+	}
+
+	public void setAuto(String auto) {
+		this.auto = auto;
+	}
+
+	public String getErreur() {
+		return erreur;
+	}
+
+	public void setErreur(String erreur) {
+		this.erreur = erreur;
+	}
+
+	public String getIdtrans() {
+		return idtrans;
+	}
+
+	public void setIdtrans(String idtrans) {
+		this.idtrans = idtrans;
+	}
+
+	public String getSignature() {
+		return signature;
+	}
+
+	public void setSignature(String signature) {
+		this.signature = signature;
+	}
+
+	public String getPapercutOldSolde() {
+		return papercutOldSolde;
+	}
+
+	public void setPapercutOldSolde(String papercutOldSolde) {
+		this.papercutOldSolde = papercutOldSolde;
+	}
+
+	public Boolean getArchived() {
+		return archived;
+	}
+
+	public void setArchived(Boolean archived) {
+		this.archived = archived;
+	}
+
+	public String getMontantDevise() {
     	Double mnt = new Double(montant)/100.0;
     	return mnt.toString();
-    }
-    
-	/*
-	 * 
-	 * Requêtes pour PostgreSQL : corespondent aux préférences "requetes***" positionnées à la valeur "useOriginal"
-	Pour adapter les requêtes à un autre SGBD, changer la valeur "useOriginal" par la requête directement
-	*
-	*/
-    public static List<Object>  countNumberTranscationsBydate(String requete) {
-    	if(requete.equals("useOriginal")){
-    		requete = "SELECT date_part('year',transaction_date) as year, date_part('month',transaction_date) as month, count(*) as count FROM paybox_papercut_transaction_log GROUP BY year, month ORDER BY year,month";
-    	}
-    	EntityManager em = new PayboxPapercutTransactionLog().entityManager;
-		Query q = em.createNativeQuery(requete);
-
-        return q.getResultList();
-    }
-    
-    public static List<Object>  countMontantTranscationsBydate(String requete) {
-    	if(requete.equals("useOriginal")){
-    		requete = "SELECT date_part('year',transaction_date) as year, date_part('month',transaction_date) as month, sum(CAST(montant AS decimal)) as totalMois FROM paybox_papercut_transaction_log GROUP BY year, month ORDER BY year,month";
-    	}
-    	EntityManager em = new PayboxPapercutTransactionLog().entityManager;
-		Query q = em.createNativeQuery(requete);
-
-        return q.getResultList();
-    }
-    
-    public static List<Object>  countCumulNombreTranscationsBydate(String requete) {
-    	if(requete.equals("useOriginal")){
-    		requete = "SELECT date_part('year',transaction_date) as year, date_part('month',transaction_date) as month, sum(count(* )) OVER (PARTITION BY date_part('year',transaction_date) ORDER BY  date_part('year',transaction_date),date_part('month',transaction_date)) as cumul FROM paybox_papercut_transaction_log Where date_part('year',transaction_date) in (select distinct date_part('year',transaction_date) from paybox_papercut_transaction_log) GROUP BY year, month ORDER BY year,month";
-    	}
-    	EntityManager em = new PayboxPapercutTransactionLog().entityManager;
-		Query q = em.createNativeQuery(requete);
-
-        return q.getResultList();
-    }
-    
-    public static List<Object>  countCumulMontantTranscationsBydate(String requete) {
-    	if(requete.equals("useOriginal")){
-    		requete = "SELECT date_part('year',transaction_date) as year, date_part('month',transaction_date) as month ,sum( sum(CAST(montant AS decimal))) OVER (PARTITION BY date_part('year',transaction_date) ORDER BY  date_part('year',transaction_date),date_part('month',transaction_date)) as cumul FROM paybox_papercut_transaction_log Where date_part('year',transaction_date) in (select distinct date_part('year',transaction_date) from paybox_papercut_transaction_log) GROUP BY year, month ORDER BY year,month";
-    	} 	
-    	EntityManager em = new PayboxPapercutTransactionLog().entityManager;
-		Query q = em.createNativeQuery(requete);
-
-        return q.getResultList();
     }
 
 }

@@ -20,9 +20,6 @@ package org.esupportail.papercut.domain;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import org.springframework.roo.addon.javabean.RooJavaBean;
-
-@RooJavaBean
 public class PayBoxForm {
 
 	private String actionUrl;
@@ -61,7 +58,150 @@ public class PayBoxForm {
 	
 	private Integer nbColorSheets;
 	
-	
+	public String getActionUrl() {
+		return actionUrl;
+	}
+
+	public void setActionUrl(String actionUrl) {
+		this.actionUrl = actionUrl;
+	}
+
+	public String getSite() {
+		return site;
+	}
+
+	public void setSite(String site) {
+		this.site = site;
+	}
+
+	public String getRang() {
+		return rang;
+	}
+
+	public void setRang(String rang) {
+		this.rang = rang;
+	}
+
+	public String getIdentifiant() {
+		return identifiant;
+	}
+
+	public void setIdentifiant(String identifiant) {
+		this.identifiant = identifiant;
+	}
+
+	public String getTotal() {
+		return total;
+	}
+
+	public void setTotal(String total) {
+		this.total = total;
+	}
+
+	public String getDevise() {
+		return devise;
+	}
+
+	public void setDevise(String devise) {
+		this.devise = devise;
+	}
+
+	public String getCommande() {
+		return commande;
+	}
+
+	public void setCommande(String commande) {
+		this.commande = commande;
+	}
+
+	public String getClientEmail() {
+		return clientEmail;
+	}
+
+	public void setClientEmail(String clientEmail) {
+		this.clientEmail = clientEmail;
+	}
+
+	public String getRetourVariables() {
+		return retourVariables;
+	}
+
+	public void setRetourVariables(String retourVariables) {
+		this.retourVariables = retourVariables;
+	}
+
+	public String getHash() {
+		return hash;
+	}
+
+	public void setHash(String hash) {
+		this.hash = hash;
+	}
+
+	public String getTime() {
+		return time;
+	}
+
+	public void setTime(String time) {
+		this.time = time;
+	}
+
+	public String getCallbackUrl() {
+		return callbackUrl;
+	}
+
+	public void setCallbackUrl(String callbackUrl) {
+		this.callbackUrl = callbackUrl;
+	}
+
+	public String getForwardEffectueUrl() {
+		return forwardEffectueUrl;
+	}
+
+	public void setForwardEffectueUrl(String forwardEffectueUrl) {
+		this.forwardEffectueUrl = forwardEffectueUrl;
+	}
+
+	public String getForwardRefuseUrl() {
+		return forwardRefuseUrl;
+	}
+
+	public void setForwardRefuseUrl(String forwardRefuseUrl) {
+		this.forwardRefuseUrl = forwardRefuseUrl;
+	}
+
+	public String getForwardAnnuleUrl() {
+		return forwardAnnuleUrl;
+	}
+
+	public void setForwardAnnuleUrl(String forwardAnnuleUrl) {
+		this.forwardAnnuleUrl = forwardAnnuleUrl;
+	}
+
+	public String getHmac() {
+		return hmac;
+	}
+
+	public void setHmac(String hmac) {
+		this.hmac = hmac;
+	}
+
+	public Integer getNbSheets() {
+		return nbSheets;
+	}
+
+	public void setNbSheets(Integer nbSheets) {
+		this.nbSheets = nbSheets;
+	}
+
+	public Integer getNbColorSheets() {
+		return nbColorSheets;
+	}
+
+	public void setNbColorSheets(Integer nbColorSheets) {
+		this.nbColorSheets = nbColorSheets;
+	}
+
 	public SortedMap<String, String> getOrderedParams() {
 		SortedMap<String, String> params = new TreeMap<String, String>();
 		params.put("PBX_SITE", site);
@@ -77,10 +217,8 @@ public class PayBoxForm {
 		params.put("PBX_REPONDRE_A", callbackUrl);
 		params.put("PBX_EFFECTUE", forwardEffectueUrl);
 		params.put("PBX_REFUSE", forwardRefuseUrl);
-		params.put("PBX_ANNULE", forwardAnnuleUrl);
-		
-		// params.put("PBX_HMAC", hmac);
-		
+		params.put("PBX_ANNULE", forwardAnnuleUrl);		
+		//params.put("PBX_HMAC", hmac);	
 		return params;
 	}
 	
@@ -93,7 +231,7 @@ public class PayBoxForm {
 		 paramsAsString = paramsAsString.subSequence(0, paramsAsString.length()-1).toString();
 		 try {
 			 // paramsAsString = URLEncoder.encode(paramsAsString, "utf8");
-			 System.out.println(paramsAsString);
+			 // System.out.println(paramsAsString);
 			 return paramsAsString;
 		} catch (Exception e) {
 			throw new RuntimeException(e);

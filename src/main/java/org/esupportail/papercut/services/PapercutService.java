@@ -19,52 +19,25 @@ package org.esupportail.papercut.services;
 
 import java.util.Vector;
 
-import org.apache.log4j.Logger;
+import org.esupportail.papercut.config.EsupPapercutContext;
 import org.esupportail.papercut.domain.UserPapercutInfos;
 import org.esupportail.papercut.papercutapi.ServerCommandProxy;
-import org.springframework.beans.factory.InitializingBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
-public class PapercutService implements InitializingBean {
+@Service
+public class PapercutService {
 
-	private final Logger log = Logger.getLogger(getClass());
+	private final Logger log = LoggerFactory.getLogger(getClass());
 
-	String authToken;
-	
-	String server;
-	
-	String scheme = "http";
-	
-	int port;
-	
-	String accountName = "";
-	
-    ServerCommandProxy serverProxy;    
-
-	public void setAuthToken(String authToken) {
-		this.authToken = authToken;
-	}
-
-	public void setServer(String server) {
-		this.server = server;
-	}
-
-	public void setScheme(String scheme) {
-		this.scheme = scheme;
-	}
-
-	public void setPort(int port) {
-		this.port = port;
-	}
-
-	public void setAccountName(String accountName) {
-		this.accountName = accountName;
-	}
-
-	public void afterPropertiesSet() {
-		serverProxy = new ServerCommandProxy(server, scheme, port, authToken);
+	// TODO : optimsiation avec map en cache
+	ServerCommandProxy getServerCommandProxy(EsupPapercutContext context) {
+		return new ServerCommandProxy(context.getPapercut().getServer(), context.getPapercut().getScheme(), context.getPapercut().getPort(), context.getPapercut().getAuthToken());
 	}
     
-    public UserPapercutInfos getUserPapercutInfos(String uid) {
+    public UserPapercutInfos getUserPapercutInfos(EsupPapercutContext context, String uid) {
+    	ServerCommandProxy serverProxy = getServerCommandProxy(context);
     	if(!serverProxy.isUserExists(uid)) {
     		serverProxy.addNewUser(uid);
     	}
@@ -74,10 +47,11 @@ public class PapercutService implements InitializingBean {
     	return userPapercutInfos;
     }
     
-    public void creditUserBalance(String uid, double amount, String idtrans) {
+    public void creditUserBalance(EsupPapercutContext context, String uid, double amount, String idtrans) {
+    	ServerCommandProxy serverProxy = getServerCommandProxy(context);
     	String logMessage = "Ajout de " + amount + " à " + uid + " via l'appli Esup-Papercut - transaction paybox : " + idtrans;
     	log.info(logMessage);
-    	serverProxy.adjustUserAccountBalance(uid, amount, logMessage, accountName);
+    	serverProxy.adjustUserAccountBalance(uid, amount, logMessage, context.getPapercut().getAccountName());
     }
 
 	

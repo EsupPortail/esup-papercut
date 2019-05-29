@@ -3,11 +3,15 @@ package org.esupportail.papercut.services;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import org.esupportail.papercut.domain.PayboxPapercutTransactionLog;
+import org.esupportail.papercut.dao.PapercutDaoService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class StatsService {
+	
+	@Autowired
+	private PapercutDaoService papercutDaoService;
 
 	@SuppressWarnings("serial")
 	public  LinkedHashMap<String,Object> getStatsPapercut(final String requeteNbTransactions, final String requeteMontantTransactions, final String requeteCumulTransactions, final String requeteCumulMontants) {
@@ -58,15 +62,15 @@ public class StatsService {
     }
 
     protected List<Object>  countNumberTranscationsBydate(String requeteNbTransactions) {
-        return PayboxPapercutTransactionLog.countNumberTranscationsBydate(requeteNbTransactions);
+        return papercutDaoService.countNumberTranscationsBydate(requeteNbTransactions);
     }
     protected List<Object>  countMontantTranscationsBydate(String requeteMontantTransactions) {
-        return PayboxPapercutTransactionLog.countMontantTranscationsBydate(requeteMontantTransactions);
+        return papercutDaoService.countMontantTranscationsBydate(requeteMontantTransactions);
     }
     protected List<Object>  countCumulNombreTranscationsBydate(String requeteCumulTransactions) {
-        return PayboxPapercutTransactionLog.countCumulNombreTranscationsBydate(requeteCumulTransactions);
+        return papercutDaoService.countCumulNombreTranscationsBydate(requeteCumulTransactions);
     }
     protected List<Object>  countCumulMontantTranscationsBydate(String requeteCumulMontants) {
-        return PayboxPapercutTransactionLog.countCumulMontantTranscationsBydate(requeteCumulMontants);
+        return papercutDaoService.countCumulMontantTranscationsBydate(requeteCumulMontants);
     }
 }

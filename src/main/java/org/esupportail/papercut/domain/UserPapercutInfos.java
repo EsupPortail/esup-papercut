@@ -21,9 +21,6 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.Vector;
 
-import org.springframework.roo.addon.javabean.RooJavaBean;
-
-@RooJavaBean
 public class UserPapercutInfos {
 
 	
@@ -80,7 +77,110 @@ public class UserPapercutInfos {
 	private boolean restricted;
 	
 	private String notes;
+	
+	public static Vector<String> getPropertyNames() {
+		return propertyNames;
+	}
 
+	public static void setPropertyNames(Vector<String> propertyNames) {
+		UserPapercutInfos.propertyNames = propertyNames;
+	}
+
+	public String getUid() {
+		return uid;
+	}
+
+	public void setUid(String uid) {
+		this.uid = uid;
+	}
+
+	public String getFullName() {
+		return fullName;
+	}
+
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
+
+	public String getBalance() {
+		return balance;
+	}
+
+	public void setBalance(String balance) {
+		this.balance = balance;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(String department) {
+		this.department = department;
+	}
+
+	public String getOffice() {
+		return office;
+	}
+
+	public void setOffice(String office) {
+		this.office = office;
+	}
+
+	public String getCardNumber() {
+		return cardNumber;
+	}
+
+	public void setCardNumber(String cardNumber) {
+		this.cardNumber = cardNumber;
+	}
+
+	public String getPrintJobs() {
+		return printJobs;
+	}
+
+	public void setPrintJobs(String printJobs) {
+		this.printJobs = printJobs;
+	}
+
+	public String getPrintPages() {
+		return printPages;
+	}
+
+	public void setPrintPages(String printPages) {
+		this.printPages = printPages;
+	}
+
+	public boolean isPrintDisabled() {
+		return printDisabled;
+	}
+
+	public void setPrintDisabled(boolean printDisabled) {
+		this.printDisabled = printDisabled;
+	}
+
+	public boolean isRestricted() {
+		return restricted;
+	}
+
+	public void setRestricted(boolean restricted) {
+		this.restricted = restricted;
+	}
+
+	public String getNotes() {
+		return notes;
+	}
+
+	public void setNotes(String notes) {
+		this.notes = notes;
+	}
 
 	/**
 	 * Papercut WebService gives balance values like 1.9465000000000003 

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="esup-papercut">
+
+<title layout:title-pattern="$LAYOUT_TITLE | $CONTENT_TITLE">Crédits
+	d'impression</title>
+
+<!-- Bootstrap core CSS -->
+<link th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}"
+	rel="stylesheet" />
+<link rel="stylesheet" th:href="@{/resources/css/esup-papercut.css}" />
+
+<script th:src="@{/webjars/jquery/3.3.1-2/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/4.3.1/js/bootstrap.min.js}"></script>
+
+</head>
+
+<body>
+	<header th:replace="fragments/header :: header"> </header>
+
+	<main class="container-fluid">
+
+	<div layout:fragment="content"></div>
+
+	</main>
+
+	<footer th:replace="fragments/footer :: footer"> </footer>
+</body>
+</html>
