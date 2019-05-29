@@ -39,8 +39,7 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
 			boolean viewNameStartsWithRedirect = isViewObject && modelAndView.getViewName().startsWith(UrlBasedViewResolver.REDIRECT_URL_PREFIX);
 	
 			if (!isRedirectView && !viewNameStartsWithRedirect) {
-				String path = request.getServletPath();
-				String papercutContext = path.replaceFirst("/([^/]*).*", "$1");
+				String papercutContext = WebUtils.getContext(request);
 				modelAndView.addObject("pContext", papercutContext);
 			}
 		}

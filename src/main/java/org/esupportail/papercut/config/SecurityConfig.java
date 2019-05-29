@@ -19,6 +19,7 @@ package org.esupportail.papercut.config;
 
 import java.util.Arrays;
 
+import org.esupportail.papercut.security.ContextCasAuthenticationProvider;
 import org.jasig.cas.client.session.SingleSignOutFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -49,7 +50,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private LogoutFilter logoutFilter;
 
     @Autowired
-    public SecurityConfig(CasAuthenticationProvider casAuthenticationProvider, AuthenticationEntryPoint eP,
+    public SecurityConfig(ContextCasAuthenticationProvider casAuthenticationProvider, AuthenticationEntryPoint eP,
                           LogoutFilter lF
                           , SingleSignOutFilter ssF) {
         this.authenticationProvider = casAuthenticationProvider;

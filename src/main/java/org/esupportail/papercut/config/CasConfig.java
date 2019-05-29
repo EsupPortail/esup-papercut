@@ -19,6 +19,8 @@ package org.esupportail.papercut.config;
 
 import javax.servlet.http.HttpSessionEvent;
 
+import org.esupportail.papercut.security.ContextCasAuthenticationProvider;
+import org.esupportail.papercut.security.ContextUserDetailsService;
 import org.jasig.cas.client.session.SingleSignOutFilter;
 import org.jasig.cas.client.session.SingleSignOutHttpSessionListener;
 import org.jasig.cas.client.validation.Cas30ServiceTicketValidator;
@@ -29,7 +31,6 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.cas.ServiceProperties;
 import org.springframework.security.cas.authentication.CasAuthenticationProvider;
-import org.springframework.security.cas.userdetails.GrantedAuthorityFromAssertionAttributesUserDetailsService;
 import org.springframework.security.cas.web.CasAuthenticationEntryPoint;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
@@ -41,9 +42,9 @@ import org.springframework.stereotype.Component;
 public class CasConfig {
 
 	String url;
-	
+
 	String service;
-	
+
 	String key;
 
 	public String getUrl() {
@@ -72,60 +73,60 @@ public class CasConfig {
 
 	@Bean
 	public ServiceProperties serviceProperties() {
-	  ServiceProperties serviceProperties = new ServiceProperties();
-	  serviceProperties.setService(service);
-	  serviceProperties.setSendRenew(false);
-	  return serviceProperties;
+		ServiceProperties serviceProperties = new ServiceProperties();
+		serviceProperties.setService(service);
+		serviceProperties.setSendRenew(false);
+		return serviceProperties;
 	}
 
 	@Bean
 	@Primary
 	public AuthenticationEntryPoint authenticationEntryPoint(ServiceProperties sP) {
-	  CasAuthenticationEntryPoint entryPoint = new CasAuthenticationEntryPoint();
-	  entryPoint.setLoginUrl(url + "/login");
-	  entryPoint.setServiceProperties(sP);
-	  return entryPoint;
+		CasAuthenticationEntryPoint entryPoint = new CasAuthenticationEntryPoint();
+		entryPoint.setLoginUrl(url + "/login");
+		entryPoint.setServiceProperties(sP);
+		return entryPoint;
 	}
 
 	@Bean
 	public TicketValidator ticketValidator() {
-	  return new Cas30ServiceTicketValidator(url);
+		return new Cas30ServiceTicketValidator(url);
 	}
 
 	@Bean
-	public CasAuthenticationProvider casAuthenticationProvider() {
-	  CasAuthenticationProvider provider = new CasAuthenticationProvider();
-	  provider.setServiceProperties(serviceProperties());
-	  provider.setTicketValidator(ticketValidator());
-	  provider.setAuthenticationUserDetailsService(new GrantedAuthorityFromAssertionAttributesUserDetailsService(new String[] {"memberOf"}));
-	  provider.setKey("CAS_PROVIDER_LOCALHOST_9000");
-	  return provider;
+	public ContextCasAuthenticationProvider casAuthenticationProvider(EsupPapercutConfig config) {
+		ContextCasAuthenticationProvider provider = new ContextCasAuthenticationProvider();
+		provider.setServiceProperties(serviceProperties());
+		provider.setTicketValidator(ticketValidator());
+		provider.setAuthenticationUserDetailsService(new ContextUserDetailsService(config));
+		provider.setKey("CAS_PROVIDER_LOCALHOST_9000");
+		return provider;
 	}
 
 
 	@Bean
 	public SecurityContextLogoutHandler securityContextLogoutHandler() {
-	  return new SecurityContextLogoutHandler();
+		return new SecurityContextLogoutHandler();
 	}
 
 	@Bean
 	public LogoutFilter logoutFilter() {
-	  LogoutFilter logoutFilter = new LogoutFilter(
-			  url + "/logout", securityContextLogoutHandler());
-	  logoutFilter.setFilterProcessesUrl("/logout/cas");
-	  return logoutFilter;
+		LogoutFilter logoutFilter = new LogoutFilter(
+				url + "/logout", securityContextLogoutHandler());
+		logoutFilter.setFilterProcessesUrl("/logout/cas");
+		return logoutFilter;
 	}
 
 	@Bean
 	public SingleSignOutFilter singleSignOutFilter() {
-	  SingleSignOutFilter singleSignOutFilter = new SingleSignOutFilter();
-	  singleSignOutFilter.setCasServerUrlPrefix(url);
-	  singleSignOutFilter.setIgnoreInitConfiguration(true);
-	  return singleSignOutFilter;
+		SingleSignOutFilter singleSignOutFilter = new SingleSignOutFilter();
+		singleSignOutFilter.setCasServerUrlPrefix(url);
+		singleSignOutFilter.setIgnoreInitConfiguration(true);
+		return singleSignOutFilter;
 	}
 
 	@EventListener
 	public SingleSignOutHttpSessionListener singleSignOutHttpSessionListener(HttpSessionEvent event) {
-	  return new SingleSignOutHttpSessionListener();
+		return new SingleSignOutHttpSessionListener();
 	}
 }
