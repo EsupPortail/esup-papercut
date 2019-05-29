@@ -103,6 +103,24 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+
+                        <plugin>
+                            <groupId>com.mycila.maven-license-plugin</groupId>
+                            <artifactId>maven-license-plugin</artifactId>
+                            <version>1.9.0</version>
+                            <configuration>
+                                <header>src/etc/header.txt</header>
+                                <includes>
+                                    <include>src/main/java/**</include>
+                                    <include>src/main/resources/**</include>
+                                </includes>
+                                <excludes>
+                                    <exclude>src/main/java/org/esupportail/papercut/papercutapi/**</exclude>
+                                    <exclude>src/main/resources/static/js/Chart.min.js</exclude>
+                                </excludes>
+                            </configuration>
+                        </plugin>
+                                    
 		</plugins>
 	</build>
 
