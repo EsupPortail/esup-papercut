@@ -74,6 +74,29 @@
 						</tr>
 					</tbody>
 				</table>
+				
+				<nav th:if="${pageLogs.totalPages > 1}"
+                                        aria-label="pagination"
+                                        th:with="current=${pageLogs.number+6},                                                                                                                              
+     beginIndex=${T(java.lang.Math).max(0,current-10)},                                                                                                                                                            
+     endIndex=${T(java.lang.Math).min(beginIndex+8,pageLogs.totalPages-1)}">
+					<ul class="pagination justify-content-center">
+                                                <li class="page-item" th:if="${pageLogs.hasPrevious()}"><a
+                                                        class="page-link"
+                                                        th:href="@{(page=${pageLogs.number-1},size=${pageLogs.size})}">Previous</a>
+                                                </li>
+                                                <li class="page-item"
+                                                        th:each="i : ${#numbers.sequence(beginIndex, endIndex)}"
+                                                        th:classappend="${pageLogs.number}==${i}?'active':''"><a
+                                                        th:href="@{''(page=${i})}" th:text="${i+1}"
+                                                        class="page-link"></a></li>
+                                                <li class="page-item" th:if="${pageLogs.hasNext()}"><a
+                                                        class="page-link"
+                                                        th:href="@{(page=${pageLogs.number+1},size=${pageLogs.size})}">Next</a>
+                                                </li>
+					</ul>
+				</nav>
+				
 
 			</div>
 

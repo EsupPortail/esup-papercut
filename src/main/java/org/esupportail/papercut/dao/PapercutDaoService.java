@@ -27,9 +27,7 @@ import javax.persistence.Query;
 import org.esupportail.papercut.domain.PayboxPapercutTransactionLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort.Order;
-import org.springframework.data.util.Streamable;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -78,15 +76,15 @@ public class PapercutDaoService {
 		return txRepository.countByUidAndArchived(uid, archived);
 	}
 
-	public Page<PayboxPapercutTransactionLog> findPayboxPapercutTransactionLogsByIdtrans(String idTrans, PageRequest pageable) {
+	public Page<PayboxPapercutTransactionLog> findPayboxPapercutTransactionLogsByIdtrans(String idTrans, Pageable pageable) {
 		return txRepository.findPayboxPapercutTransactionLogsByIdtrans(idTrans, pageable);
 	}
 
-	public Page<PayboxPapercutTransactionLog> findPayboxPapercutTransactionLogsByUidAndArchived(String uid, boolean archived, PageRequest pageable) {
+	public Page<PayboxPapercutTransactionLog> findPayboxPapercutTransactionLogsByUidAndArchived(String uid, boolean archived, Pageable pageable) {
 		return txRepository.findPayboxPapercutTransactionLogsByUidAndArchived(uid, archived, pageable);
 	}
 
-	public Page<PayboxPapercutTransactionLog> findPayboxPapercutTransactionLogsByUid(String uid, PageRequest pageable) {
+	public Page<PayboxPapercutTransactionLog> findPayboxPapercutTransactionLogsByUid(String uid, Pageable pageable) {
 		return txRepository.findPayboxPapercutTransactionLogsByUid(uid, pageable);
 	}
 
@@ -94,7 +92,7 @@ public class PapercutDaoService {
 		return txRepository.findById(id);
 	}
 
-	public Page<PayboxPapercutTransactionLog> findAllPayboxPapercutTransactionLogs(PageRequest pageable) {
+	public Page<PayboxPapercutTransactionLog> findAllPayboxPapercutTransactionLogs(Pageable pageable) {
 		return txRepository.findAll(pageable);
 	}
     

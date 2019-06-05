@@ -25,8 +25,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -54,22 +56,16 @@ public class AdminController {
 
     
     @GetMapping(produces = "text/html")
-    public String historyList(@RequestParam(value = "page", required = false, defaultValue="0") Integer page, 
-    		@RequestParam(value = "size", required = false, defaultValue="10") Integer size, 
-    		@RequestParam(value = "sortFieldName", required = false, defaultValue="transactionDate") String sortFieldName,
-    		@RequestParam(value = "sortOrder", required = false, defaultValue="DESC") Direction sortOrder,
+    public String historyList(@PageableDefault(size = 10, direction = Direction.DESC, sort = "transactionDate") Pageable pageable, 
     		Model uiModel) {
     	
-        uiModel.addAttribute("pageLogs", papercutDaoService.findAllPayboxPapercutTransactionLogs(PageRequest.of(page, size, Sort.by(sortOrder, sortFieldName))));
+        uiModel.addAttribute("pageLogs", papercutDaoService.findAllPayboxPapercutTransactionLogs(pageable));
         
         uiModel.addAttribute("isAdmin", WebUtils.isAdmin());
         uiModel.addAttribute("isManager", WebUtils.isManager());
         uiModel.addAttribute("active", "history");
     	
-        uiModel.addAttribute("sortFieldName", sortFieldName);
-        uiModel.addAttribute("sortOrder", sortOrder);
-    	
-        uiModel.addAttribute("active", "logs"); 	
+        uiModel.addAttribute("active", "admin"); 	
         return "user/history";
     }
 	

@@ -67,7 +67,7 @@ public class EsupPaperCutService {
 	
 	public boolean payboxCallback(EsupPapercutContext context, String montant, String reference, String auto, String erreur, String idtrans, String signature, String queryString, String ip, String currentUserUid) {
 		
-		List<PayboxPapercutTransactionLog> txLogs  = papercutDaoService.findPayboxPapercutTransactionLogsByIdtrans(idtrans, PageRequest.of(0, Integer.MAX_VALUE));		
+		List<PayboxPapercutTransactionLog> txLogs  = papercutDaoService.findPayboxPapercutTransactionLogsByIdtrans(idtrans, PageRequest.of(0, Integer.MAX_VALUE)).getContent();		
 		
 		boolean newTxLog = txLogs.size() == 0;
 		PayboxPapercutTransactionLog txLog = txLogs.size()>0 ? txLogs.get(0) : null;
