@@ -27,13 +27,15 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.esupportail.papercut.config.EsupPapercutConfig;
 import org.esupportail.papercut.config.EsupPapercutContext;
-import org.esupportail.papercut.dao.PayboxPapercutTransactionLogRepository;
+import org.esupportail.papercut.dao.PapercutDaoService;
 import org.esupportail.papercut.domain.PayBoxForm;
 import org.esupportail.papercut.domain.PayboxPapercutTransactionLog;
 import org.esupportail.papercut.domain.UserPapercutInfos;
+import org.esupportail.papercut.security.ContextHelper;
 import org.esupportail.papercut.services.EsupPaperCutService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -59,15 +61,13 @@ public class UserController {
 	@Resource
 	EsupPapercutConfig config;
 	
-	@Resource
-	PayboxPapercutTransactionLogRepository repository;
+	@Autowired
+	PapercutDaoService papercutDaoService;
 	   
 	@GetMapping(produces = "text/html")
-    public String userView(@PathVariable String papercutContext, HttpServletRequest request, Model uiModel) {	
+    public String userView(HttpServletRequest request, Model uiModel) {	
 
-		EsupPapercutContext context = config.getContext(papercutContext);
-		
-    	uiModel.addAttribute("papercutContext", config.getContext(papercutContext));
+		EsupPapercutContext context = config.getContext(ContextHelper.getCurrentContext());
     	
     	double papercutSheetCost = Double.parseDouble(context.getPapercutSheetCost());
     	double papercutColorSheetCost = Double.parseDouble(context.getPapercutColorSheetCost());
@@ -82,7 +82,7 @@ public class UserController {
 	
         // constraints via transactionNbMax
     	if(transactionNbMax>-1) {
-    		long nbTransactionsNotArchived = repository.countByUidAndPaperCutContextAndArchived(uid, papercutContext, false);   			
+    		long nbTransactionsNotArchived = papercutDaoService.countByUidAndArchived(uid, false);   			
     		if(transactionNbMax<=nbTransactionsNotArchived) {
     			canMakeTransaction = false;
     		}
@@ -93,7 +93,7 @@ public class UserController {
     	BigDecimal payboxMontantStep  = new BigDecimal(context.getPayboxMontantStep());	
         // constraints on the slider via transactionMontantMax
         if(canMakeTransaction && transactionMontantMax.intValue() > -1) {  	
-			List<PayboxPapercutTransactionLog> transactionsNotArchived = repository.findPayboxPapercutTransactionLogsByUidAndPaperCutContextAndArchived(uid, papercutContext, false, PageRequest.of(0, Integer.MAX_VALUE));
+			List<PayboxPapercutTransactionLog> transactionsNotArchived = papercutDaoService.findPayboxPapercutTransactionLogsByUidAndArchived(uid, false, PageRequest.of(0, Integer.MAX_VALUE));
 			BigDecimal montantTotalTransactionsNotArchived = new BigDecimal("0");
 			for(PayboxPapercutTransactionLog txLog: transactionsNotArchived) {
 				montantTotalTransactionsNotArchived = montantTotalTransactionsNotArchived.add(new BigDecimal(txLog.getMontant()));
@@ -140,12 +140,15 @@ public class UserController {
     	uiModel.addAttribute("isAdmin", isAdmin);
     	uiModel.addAttribute("isManager", isManager);
     	uiModel.addAttribute("active", "home");
+    	
+    	uiModel.addAttribute("papercutContext", context);
+    	
     	return "user/index";
     }
 
     
     @GetMapping(value = "/logs", produces = "text/html")
-    public String myhistoryList(@PathVariable String papercutContext, @RequestParam(value = "page", required = false, defaultValue="0") Integer page, 
+    public String myhistoryList(@RequestParam(value = "page", required = false, defaultValue="0") Integer page, 
     		@RequestParam(value = "size", required = false, defaultValue="10") Integer size, 
     		@RequestParam(value = "sortFieldName", required = false, defaultValue="transactionDate") String sortFieldName,
     		@RequestParam(value = "sortOrder", required = false, defaultValue="DESC") Direction sortOrder,
@@ -153,8 +156,8 @@ public class UserController {
     	
         String uid = getUid();
   
-        uiModel.addAttribute("payboxpapercuttransactionlogs", repository.findPayboxPapercutTransactionLogsByUidAndPaperCutContext(uid, papercutContext, PageRequest.of(page, size, Sort.by(sortOrder, sortFieldName))));
-        float nrOfPages = (float) repository.countByUidAndPaperCutContext(uid, papercutContext) / size;
+        uiModel.addAttribute("payboxpapercuttransactionlogs", papercutDaoService.findPayboxPapercutTransactionLogsByUid(uid, PageRequest.of(page, size, Sort.by(sortOrder, sortFieldName))));
+        float nrOfPages = (float) papercutDaoService.countByUid(uid) / size;
         uiModel.addAttribute("maxPages", (int) ((nrOfPages > (int) nrOfPages || nrOfPages == 0.0) ? nrOfPages + 1 : nrOfPages));
 
         
@@ -172,7 +175,7 @@ public class UserController {
     
     @GetMapping(value = "/logs/{i}", produces = "text/html")
     public String viewTransactionLog(@PathVariable("id") Long id, Model uiModel) {
-    	uiModel.addAttribute("payboxpapercuttransactionlog", repository.findById(id).get());
+    	uiModel.addAttribute("payboxpapercuttransactionlog", papercutDaoService.findById(id).get());
     	uiModel.addAttribute("itemId", id);
     	uiModel.addAttribute("isAdmin", isAdmin());
     	uiModel.addAttribute("isManager", isManager());

@@ -45,9 +45,13 @@ public class EsupPapercutContext {
 	
 	String requeteCumulMontants = "useOriginal";
 	
-	String esupPapercutAdminRoleName = "ROLE_ADMIN";
+	String memberCasAttributeName = "memberOf"; 
 	
-	String esupPapercutManagerRoleName = "ROLE_MANAGER";
+	String esupPapercutAdminAttributeValue = "ROLE_ADMIN";
+	
+	String esupPapercutManagerAttributeValue = "ROLE_MANAGER";
+	
+	String esupPapercutUserAttributeValue = "ROLE_USER";
 
 	String htmlHeader = "";
 	
@@ -137,20 +141,28 @@ public class EsupPapercutContext {
 		this.requeteCumulMontants = requeteCumulMontants;
 	}
 
-	public String getEsupPapercutAdminRoleName() {
-		return esupPapercutAdminRoleName;
+	public String getEsupPapercutAdminAttributeValue() {
+		return esupPapercutAdminAttributeValue;
 	}
 
-	public void setEsupPapercutAdminRoleName(String esupPapercutAdminRoleName) {
-		this.esupPapercutAdminRoleName = esupPapercutAdminRoleName;
+	public void setEsupPapercutAdminAttributeValue(String esupPapercutAdminAttributeValue) {
+		this.esupPapercutAdminAttributeValue = esupPapercutAdminAttributeValue;
 	}
 
-	public String getEsupPapercutManagerRoleName() {
-		return esupPapercutManagerRoleName;
+	public String getEsupPapercutManagerAttributeValue() {
+		return esupPapercutManagerAttributeValue;
 	}
 
-	public void setEsupPapercutManagerRoleName(String esupPapercutManagerRoleName) {
-		this.esupPapercutManagerRoleName = esupPapercutManagerRoleName;
+	public void setEsupPapercutManagerAttributeValue(String esupPapercutManagerAttributeValue) {
+		this.esupPapercutManagerAttributeValue = esupPapercutManagerAttributeValue;
+	}
+
+	public String getEsupPapercutUserAttributeValue() {
+		return esupPapercutUserAttributeValue;
+	}
+
+	public void setEsupPapercutUserAttributeValue(String esupPapercutUserAttributeValue) {
+		this.esupPapercutUserAttributeValue = esupPapercutUserAttributeValue;
 	}
 
 	public String getHtmlHeader() {

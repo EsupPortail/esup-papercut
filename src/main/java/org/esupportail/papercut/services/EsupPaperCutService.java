@@ -22,7 +22,6 @@ import java.util.List;
 
 import org.esupportail.papercut.config.EsupPapercutContext;
 import org.esupportail.papercut.dao.PapercutDaoService;
-import org.esupportail.papercut.dao.PayboxPapercutTransactionLogRepository;
 import org.esupportail.papercut.domain.PayBoxForm;
 import org.esupportail.papercut.domain.PayboxPapercutTransactionLog;
 import org.esupportail.papercut.domain.UserPapercutInfos;
@@ -36,9 +35,6 @@ import org.springframework.stereotype.Service;
 public class EsupPaperCutService {
 
 	private final Logger log = LoggerFactory.getLogger(getClass());
-	
-	@Autowired
-	PayboxPapercutTransactionLogRepository txRepository;
 	
 	@Autowired
 	PapercutDaoService papercutDaoService;
@@ -71,7 +67,7 @@ public class EsupPaperCutService {
 	
 	public boolean payboxCallback(EsupPapercutContext context, String montant, String reference, String auto, String erreur, String idtrans, String signature, String queryString, String ip, String currentUserUid) {
 		
-		List<PayboxPapercutTransactionLog> txLogs  = txRepository.findPayboxPapercutTransactionLogsByIdtrans(idtrans, PageRequest.of(0, Integer.MAX_VALUE));		
+		List<PayboxPapercutTransactionLog> txLogs  = papercutDaoService.findPayboxPapercutTransactionLogsByIdtrans(idtrans, PageRequest.of(0, Integer.MAX_VALUE));		
 		
 		boolean newTxLog = txLogs.size() == 0;
 		PayboxPapercutTransactionLog txLog = txLogs.size()>0 ? txLogs.get(0) : null;

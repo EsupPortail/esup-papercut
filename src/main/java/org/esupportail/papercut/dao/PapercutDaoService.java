@@ -18,6 +18,7 @@
 package org.esupportail.papercut.dao;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -25,6 +26,9 @@ import javax.persistence.Query;
 
 import org.esupportail.papercut.domain.PayboxPapercutTransactionLog;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Order;
+import org.springframework.data.util.Streamable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,7 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class PapercutDaoService {
 	
 	@PersistenceContext
-	private EntityManager em;
+	public EntityManager entityManager;
 	
 	@Autowired
 	private PayboxPapercutTransactionLogRepository txRepository;
@@ -44,30 +48,55 @@ public class PapercutDaoService {
     
     @Transactional
     public void remove(PayboxPapercutTransactionLog txLog) {       
-        if (em.contains(txLog)) {
-            em.remove(txLog);
+        if (entityManager.contains(txLog)) {
+            entityManager.remove(txLog);
         } else {
             PayboxPapercutTransactionLog attached = txRepository.findById(txLog.getId()).get();
-            em.remove(attached);
+            entityManager.remove(attached);
         }
     }
     
     @Transactional
     public void flush() {       
-        em.flush();
+        entityManager.flush();
     }
     
     @Transactional
     public void clear() {        
-        em.clear();
+        entityManager.clear();
     }
     
     @Transactional
     public PayboxPapercutTransactionLog merge(PayboxPapercutTransactionLog txLog) {        
-        PayboxPapercutTransactionLog merged = em.merge(txLog);
-        em.flush();
+        PayboxPapercutTransactionLog merged = entityManager.merge(txLog);
+        entityManager.flush();
         return merged;
     }
+    
+	public Long countByUidAndArchived(String uid, boolean archived) {
+		return txRepository.countByUidAndArchived(uid, archived);
+	}
+
+	public List<PayboxPapercutTransactionLog> findPayboxPapercutTransactionLogsByIdtrans(String idTrans, PageRequest pageable) {
+		return txRepository.findPayboxPapercutTransactionLogsByIdtrans(idTrans, pageable);
+	}
+
+	public List<PayboxPapercutTransactionLog> findPayboxPapercutTransactionLogsByUidAndArchived(String uid, boolean archived, PageRequest pageable) {
+		return txRepository.findPayboxPapercutTransactionLogsByUidAndArchived(uid, archived, pageable);
+	}
+
+	public List<PayboxPapercutTransactionLog> findPayboxPapercutTransactionLogsByUid(String uid, PageRequest pageable) {
+		return txRepository.findPayboxPapercutTransactionLogsByUid(uid, pageable);
+	}
+
+	public Long countByUid(String uid) {
+		return txRepository.countByUid(uid);
+	}
+
+	public Optional<PayboxPapercutTransactionLog> findById(Long id) {
+		return txRepository.findById(id);
+	}
+
     
 	/*
 	 * 
@@ -80,7 +109,7 @@ public class PapercutDaoService {
     		requete = "SELECT date_part('year',transaction_date) as year, date_part('month',transaction_date) as month, count(*) as count FROM paybox_papercut_transaction_log GROUP BY year, month ORDER BY year,month";
     	}
 
-		Query q = em.createNativeQuery(requete);
+		Query q = entityManager.createNativeQuery(requete);
 
         return q.getResultList();
     }
@@ -90,7 +119,7 @@ public class PapercutDaoService {
     		requete = "SELECT date_part('year',transaction_date) as year, date_part('month',transaction_date) as month, sum(CAST(montant AS decimal)) as totalMois FROM paybox_papercut_transaction_log GROUP BY year, month ORDER BY year,month";
     	}
 
-		Query q = em.createNativeQuery(requete);
+		Query q = entityManager.createNativeQuery(requete);
 
         return q.getResultList();
     }
@@ -100,7 +129,7 @@ public class PapercutDaoService {
     		requete = "SELECT date_part('year',transaction_date) as year, date_part('month',transaction_date) as month, sum(count(* )) OVER (PARTITION BY date_part('year',transaction_date) ORDER BY  date_part('year',transaction_date),date_part('month',transaction_date)) as cumul FROM paybox_papercut_transaction_log Where date_part('year',transaction_date) in (select distinct date_part('year',transaction_date) from paybox_papercut_transaction_log) GROUP BY year, month ORDER BY year,month";
     	}
 
-		Query q = em.createNativeQuery(requete);
+		Query q = entityManager.createNativeQuery(requete);
 
         return q.getResultList();
     }
@@ -110,10 +139,11 @@ public class PapercutDaoService {
     		requete = "SELECT date_part('year',transaction_date) as year, date_part('month',transaction_date) as month ,sum( sum(CAST(montant AS decimal))) OVER (PARTITION BY date_part('year',transaction_date) ORDER BY  date_part('year',transaction_date),date_part('month',transaction_date)) as cumul FROM paybox_papercut_transaction_log Where date_part('year',transaction_date) in (select distinct date_part('year',transaction_date) from paybox_papercut_transaction_log) GROUP BY year, month ORDER BY year,month";
     	} 	
 
-		Query q = em.createNativeQuery(requete);
+		Query q = entityManager.createNativeQuery(requete);
 
         return q.getResultList();
     }
+
 
     
 }

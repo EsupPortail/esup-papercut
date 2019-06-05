@@ -32,8 +32,14 @@ public class ContextUserDetailsService extends AbstractCasAssertionUserDetailsSe
 		for(String contextKey : config.getContexts().keySet()) {
 			EsupPapercutContext context = config.getContext(contextKey);
 			Set<GrantedAuthority> authorities = new HashSet<GrantedAuthority>();
-			if(groups.contains(context.getEsupPapercutAdminRoleName())) {
+			if(groups.contains(context.getEsupPapercutAdminAttributeValue())) {
 				authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+			}
+			if(groups.contains(context.getEsupPapercutManagerAttributeValue())) {
+				authorities.add(new SimpleGrantedAuthority("ROLE_MANAGER"));
+			}
+			if(groups.contains(context.getEsupPapercutUserAttributeValue())) {
+				authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 			}
 			contextAuthorities.put(contextKey, authorities);
 		}

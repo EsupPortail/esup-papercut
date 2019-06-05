@@ -20,6 +20,7 @@ package org.esupportail.papercut.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.esupportail.papercut.security.ContextHelper;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import org.springframework.web.servlet.view.RedirectView;
@@ -31,6 +32,9 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
 			ModelAndView modelAndView) throws Exception {
 
+		String context = WebUtils.getContext(request);
+		ContextHelper.setCurrentContext(context);
+		
 		super.postHandle(request, response, handler, modelAndView);
 
 		if(modelAndView != null) {
@@ -39,8 +43,7 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
 			boolean viewNameStartsWithRedirect = isViewObject && modelAndView.getViewName().startsWith(UrlBasedViewResolver.REDIRECT_URL_PREFIX);
 	
 			if (!isRedirectView && !viewNameStartsWithRedirect) {
-				String papercutContext = WebUtils.getContext(request);
-				modelAndView.addObject("pContext", papercutContext);
+				modelAndView.addObject("pContext", ContextHelper.getCurrentContext());
 			}
 		}
 

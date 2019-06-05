@@ -74,7 +74,7 @@ public class CasConfig {
 	@Bean
 	public ServiceProperties serviceProperties() {
 		ServiceProperties serviceProperties = new ServiceProperties();
-		serviceProperties.setService(service);
+		serviceProperties.setService(service + "/login/cas");
 		serviceProperties.setSendRenew(false);
 		return serviceProperties;
 	}
@@ -112,8 +112,8 @@ public class CasConfig {
 	@Bean
 	public LogoutFilter logoutFilter() {
 		LogoutFilter logoutFilter = new LogoutFilter(
-				url + "/logout", securityContextLogoutHandler());
-		logoutFilter.setFilterProcessesUrl("/logout/cas");
+				url + "/logout?service=" + service, securityContextLogoutHandler());
+		logoutFilter.setFilterProcessesUrl("/logout");
 		return logoutFilter;
 	}
 

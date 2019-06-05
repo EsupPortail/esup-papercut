@@ -27,10 +27,15 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
 
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.ParamDef;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
-public class PayboxPapercutTransactionLog {
+@FilterDef(name = "contextFilter", parameters = {@ParamDef(name = "paperCutContext", type = "string")})
+@Filter(name = "contextFilter", condition = "paper_cut_context = :paperCutContext")
+public class PayboxPapercutTransactionLog implements ContextSupport {
 
     
     @Id

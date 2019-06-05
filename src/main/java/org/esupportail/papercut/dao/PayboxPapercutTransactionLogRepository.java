@@ -29,22 +29,22 @@ public interface PayboxPapercutTransactionLogRepository extends JpaRepository<Pa
 
 	Long countByIdtrans(String idTrans);
 	
-	Long countByArchivedAndPaperCutContext(Boolean archived, String paperCutContext);
+	Long countByArchived(Boolean archived);
 
 	Long countByPaperCutContext(String paperCutContext);
 
-	Long countByUidAndPaperCutContext(String uid, String paperCutContext);
+	Long countByUid(String uid);
 
-	Long countByUidAndPaperCutContextAndArchived(String uid, String paperCutContext, Boolean archived);
+	Long countByUidAndArchived(String uid,  Boolean archived);
 	
 	List<PayboxPapercutTransactionLog> findPayboxPapercutTransactionLogsByIdtrans(String idTrans, Pageable pageable);
 
-	List<PayboxPapercutTransactionLog> findPayboxPapercutTransactionLogsByArchivedAndPaperCutContext(Boolean archived, String paperCutContext, Pageable pageable);
+	List<PayboxPapercutTransactionLog> findPayboxPapercutTransactionLogsByArchived(Boolean archived,  Pageable pageable);
 	
-	List<PayboxPapercutTransactionLog> findPayboxPapercutTransactionLogsByPaperCutContext(String paperCutContext, Pageable pageable);
+	List<PayboxPapercutTransactionLog> findPayboxPapercutTransactionLogsByPaperCutContext( Pageable pageable);
 
-	List<PayboxPapercutTransactionLog> findPayboxPapercutTransactionLogsByUidAndPaperCutContext(String uid, String paperCutContext, Pageable pageable);
+	List<PayboxPapercutTransactionLog> findPayboxPapercutTransactionLogsByUid(String uid,  Pageable pageable);
 
-	List<PayboxPapercutTransactionLog> findPayboxPapercutTransactionLogsByUidAndPaperCutContextAndArchived(String uid, String paperCutContext, Boolean archived, Pageable pageable);
+	List<PayboxPapercutTransactionLog> findPayboxPapercutTransactionLogsByUidAndArchived(String uid,  Boolean archived, Pageable pageable);
 
 }
