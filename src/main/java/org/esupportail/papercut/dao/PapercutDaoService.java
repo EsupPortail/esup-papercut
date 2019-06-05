@@ -26,6 +26,7 @@ import javax.persistence.Query;
 
 import org.esupportail.papercut.domain.PayboxPapercutTransactionLog;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.util.Streamable;
@@ -77,26 +78,25 @@ public class PapercutDaoService {
 		return txRepository.countByUidAndArchived(uid, archived);
 	}
 
-	public List<PayboxPapercutTransactionLog> findPayboxPapercutTransactionLogsByIdtrans(String idTrans, PageRequest pageable) {
+	public Page<PayboxPapercutTransactionLog> findPayboxPapercutTransactionLogsByIdtrans(String idTrans, PageRequest pageable) {
 		return txRepository.findPayboxPapercutTransactionLogsByIdtrans(idTrans, pageable);
 	}
 
-	public List<PayboxPapercutTransactionLog> findPayboxPapercutTransactionLogsByUidAndArchived(String uid, boolean archived, PageRequest pageable) {
+	public Page<PayboxPapercutTransactionLog> findPayboxPapercutTransactionLogsByUidAndArchived(String uid, boolean archived, PageRequest pageable) {
 		return txRepository.findPayboxPapercutTransactionLogsByUidAndArchived(uid, archived, pageable);
 	}
 
-	public List<PayboxPapercutTransactionLog> findPayboxPapercutTransactionLogsByUid(String uid, PageRequest pageable) {
+	public Page<PayboxPapercutTransactionLog> findPayboxPapercutTransactionLogsByUid(String uid, PageRequest pageable) {
 		return txRepository.findPayboxPapercutTransactionLogsByUid(uid, pageable);
-	}
-
-	public Long countByUid(String uid) {
-		return txRepository.countByUid(uid);
 	}
 
 	public Optional<PayboxPapercutTransactionLog> findById(Long id) {
 		return txRepository.findById(id);
 	}
 
+	public Page<PayboxPapercutTransactionLog> findAllPayboxPapercutTransactionLogs(PageRequest pageable) {
+		return txRepository.findAll(pageable);
+	}
     
 	/*
 	 * 
@@ -143,7 +143,6 @@ public class PapercutDaoService {
 
         return q.getResultList();
     }
-
 
     
 }

@@ -36,9 +36,11 @@ import org.esupportail.papercut.services.EsupPaperCutService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -50,6 +52,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/{papercutContext}/user")
+@PreAuthorize("hasRole('ROLE_USER')")
 public class UserController {
 	
 
@@ -68,6 +71,9 @@ public class UserController {
     public String userView(HttpServletRequest request, Model uiModel) {	
 
 		EsupPapercutContext context = config.getContext(ContextHelper.getCurrentContext());
+		if(context == null) {
+			return "redirect:/";
+		}
     	
     	double papercutSheetCost = Double.parseDouble(context.getPapercutSheetCost());
     	double papercutColorSheetCost = Double.parseDouble(context.getPapercutColorSheetCost());
@@ -93,9 +99,9 @@ public class UserController {
     	BigDecimal payboxMontantStep  = new BigDecimal(context.getPayboxMontantStep());	
         // constraints on the slider via transactionMontantMax
         if(canMakeTransaction && transactionMontantMax.intValue() > -1) {  	
-			List<PayboxPapercutTransactionLog> transactionsNotArchived = papercutDaoService.findPayboxPapercutTransactionLogsByUidAndArchived(uid, false, PageRequest.of(0, Integer.MAX_VALUE));
+			Page<PayboxPapercutTransactionLog> transactionsNotArchived = papercutDaoService.findPayboxPapercutTransactionLogsByUidAndArchived(uid, false, PageRequest.of(0, Integer.MAX_VALUE));
 			BigDecimal montantTotalTransactionsNotArchived = new BigDecimal("0");
-			for(PayboxPapercutTransactionLog txLog: transactionsNotArchived) {
+			for(PayboxPapercutTransactionLog txLog: transactionsNotArchived.getContent()) {
 				montantTotalTransactionsNotArchived = montantTotalTransactionsNotArchived.add(new BigDecimal(txLog.getMontant()));
 			}
 			transactionMontantMax = transactionMontantMax.multiply(new BigDecimal("100")).subtract(montantTotalTransactionsNotArchived);
@@ -135,10 +141,8 @@ public class UserController {
     	UserPapercutInfos userPapercutInfos = esupPaperCutService.getUserPapercutInfos(context, uid);   		
 		uiModel.addAttribute("userPapercutInfos", userPapercutInfos);
 
-		boolean isAdmin = isAdmin();
-		boolean isManager = isManager();
-    	uiModel.addAttribute("isAdmin", isAdmin);
-    	uiModel.addAttribute("isManager", isManager);
+    	uiModel.addAttribute("isAdmin", WebUtils.isAdmin());
+    	uiModel.addAttribute("isManager", WebUtils.isManager());
     	uiModel.addAttribute("active", "home");
     	
     	uiModel.addAttribute("papercutContext", context);
@@ -156,13 +160,10 @@ public class UserController {
     	
         String uid = getUid();
   
-        uiModel.addAttribute("payboxpapercuttransactionlogs", papercutDaoService.findPayboxPapercutTransactionLogsByUid(uid, PageRequest.of(page, size, Sort.by(sortOrder, sortFieldName))));
-        float nrOfPages = (float) papercutDaoService.countByUid(uid) / size;
-        uiModel.addAttribute("maxPages", (int) ((nrOfPages > (int) nrOfPages || nrOfPages == 0.0) ? nrOfPages + 1 : nrOfPages));
-
-        
-        uiModel.addAttribute("isAdmin", isAdmin());
-        uiModel.addAttribute("isManager", isManager());
+        uiModel.addAttribute("pageLogs", papercutDaoService.findPayboxPapercutTransactionLogsByUid(uid, PageRequest.of(page, size, Sort.by(sortOrder, sortFieldName))));
+       
+        uiModel.addAttribute("isAdmin", WebUtils.isAdmin());
+        uiModel.addAttribute("isManager", WebUtils.isManager());
         uiModel.addAttribute("active", "history");
     	
         uiModel.addAttribute("sortFieldName", sortFieldName);
@@ -177,8 +178,8 @@ public class UserController {
     public String viewTransactionLog(@PathVariable("id") Long id, Model uiModel) {
     	uiModel.addAttribute("payboxpapercuttransactionlog", papercutDaoService.findById(id).get());
     	uiModel.addAttribute("itemId", id);
-    	uiModel.addAttribute("isAdmin", isAdmin());
-    	uiModel.addAttribute("isManager", isManager());
+    	uiModel.addAttribute("isAdmin", WebUtils.isAdmin());
+    	uiModel.addAttribute("isManager", WebUtils.isManager());
     	uiModel.addAttribute("active", "logs"); 	
         return "user/show-transactionlog";
     }
@@ -196,19 +197,7 @@ public class UserController {
 		// TODO
 		return "toto@univ-ville.fr";
 	}
-	
-	private boolean isAdmin() {
-		// String adminRoleName = request.getPreferences().getValue(PREF_ROLE_NAME_ADMIN, "esupPapercutAdmin");
-		//return request.isUserInRole(adminRoleName);
-		// TODO
-		return true;
-	}
-	private boolean isManager() {
-		// String managerRoleName = request.getPreferences().getValue(PREF_ROLE_NAME_MANAGER, "esupPapercutManager");
-		// return request.isUserInRole(managerRoleName);
-		// TODO
-		return true;
-	}
+
 		
     /**
      * When user is redirected on esup-papercut after the paybox process, 

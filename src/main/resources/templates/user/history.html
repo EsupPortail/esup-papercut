@@ -59,7 +59,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr th:each="log : ${payboxpapercuttransactionlogs}">
+						<tr th:each="log : ${pageLogs.content}">
 							<td th:text="${log.transactionDate}">transactionDate</td>
 							<td th:text="${log.uid}">uid</td>
 							<td th:text="${log.reference}">reference</td>
