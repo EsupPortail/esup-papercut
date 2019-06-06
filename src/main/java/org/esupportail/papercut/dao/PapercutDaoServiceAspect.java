@@ -21,7 +21,6 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.esupportail.papercut.security.ContextHelper;
-import org.esupportail.papercut.services.EsupPaperCutService;
 import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +32,7 @@ public class PapercutDaoServiceAspect {
 
 	private final Logger log = LoggerFactory.getLogger(getClass());
 	
-	  @Before("execution(* org.esupportail.papercut.dao.PapercutDaoService.*(..)) && !execution(* org.esupportail.papercut.dao.PapercutDaoService.run(..)) && target(papercutDaoService)")
+	  @Before("execution(* org.esupportail.papercut.dao.PapercutDaoService.*(..)) && target(papercutDaoService)")
 	  public void aroundExecution(JoinPoint pjp, PapercutDaoService papercutDaoService) throws Throwable {
 	    org.hibernate.Filter filter = papercutDaoService.entityManager.unwrap(Session.class).enableFilter("contextFilter");
 	    filter.setParameter("paperCutContext", ContextHelper.getCurrentContext());

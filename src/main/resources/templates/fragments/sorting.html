@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="fr"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+	<head>
+	</head>
+	<body>
+	
+		<th scope="col" th:fragment="sorting(page, sortName, sortLabel)" aria-label="sorting">
+			<a th:href="@{''(sort=${page?.sort?.getOrderFor(sortName)?.ascending} ? ${sortName} + ',desc' : ${sortName} + ',asc')}">
+				<span th:text="${sortLabel}">Label</span>
+	        	<img th:if="${page?.sort?.getOrderFor(sortName) != null}"
+	             th:src="${page?.sort?.getOrderFor(sortName)?.ascending} ? @{/resources/images/chevron-up.svg} : @{/resources/images/chevron-down.svg}" />
+	    	</a>
+	    </th>
+	                             		
+	</body>
+</html>

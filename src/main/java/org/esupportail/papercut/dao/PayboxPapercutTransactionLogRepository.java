@@ -26,16 +26,16 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PayboxPapercutTransactionLogRepository extends JpaRepository<PayboxPapercutTransactionLog, Long>{
 
-	Long countByUidAndArchived(String uid,  Boolean archived);
-	
+	Long countByUidAndArchived(String uid, Boolean archived);
+
 	Page<PayboxPapercutTransactionLog> findPayboxPapercutTransactionLogsByIdtrans(String idTrans, Pageable pageable);
 
-	Page<PayboxPapercutTransactionLog> findPayboxPapercutTransactionLogsByArchived(Boolean archived,  Pageable pageable);
-	
-	Page<PayboxPapercutTransactionLog> findPayboxPapercutTransactionLogsByPaperCutContext( Pageable pageable);
+	Page<PayboxPapercutTransactionLog> findPayboxPapercutTransactionLogsByArchived(Boolean archived, Pageable pageable);
 
-	Page<PayboxPapercutTransactionLog> findPayboxPapercutTransactionLogsByUid(String uid,  Pageable pageable);
+	Page<PayboxPapercutTransactionLog> findPayboxPapercutTransactionLogsByPaperCutContext(Pageable pageable);
 
-	Page<PayboxPapercutTransactionLog> findPayboxPapercutTransactionLogsByUidAndArchived(String uid,  Boolean archived, Pageable pageable);
+	Page<PayboxPapercutTransactionLog> findPayboxPapercutTransactionLogsByUid(String uid, Pageable pageable);
+
+	Page<PayboxPapercutTransactionLog> findPayboxPapercutTransactionLogsByUidAndArchived(String uid, Boolean archived, Pageable pageable);
 
 }

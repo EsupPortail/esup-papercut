@@ -48,8 +48,14 @@
 				<table class="table table-hover table-striped table-bordered">
 					<thead>
 						<tr>
-							<th scope="col">Date</th>
-							<th scope="col">Identifiant</th>
+							<th scope="col">
+								<a th:href="@{''(sort=${pageLogs?.sort?.getOrderFor('transactionDate')?.ascending} ? 'transactionDate,desc' : 'transactionDate,asc')}">
+									Date
+                                	<img th:if="${pageLogs?.sort?.getOrderFor('transactionDate') != null}"
+                                         th:src="${pageLogs?.sort?.getOrderFor('transactionDate')?.ascending} ? @{/resources/images/chevron-up.svg} : @{/resources/images/chevron-down.svg}" />
+                             	</a>
+							</th>
+							<th scope="col" th:replace="fragments/sorting :: sorting(${pageLogs}, 'uid', 'Identifiant')">Identifiant</th>
 							<th scope="col">Référence</th>
 							<th scope="col">Montant (€)</th>
 							<th scope="col">Status</th>
@@ -75,28 +81,8 @@
 					</tbody>
 				</table>
 				
-				<nav th:if="${pageLogs.totalPages > 1}"
-                                        aria-label="pagination"
-                                        th:with="current=${pageLogs.number+6},                                                                                                                              
-     beginIndex=${T(java.lang.Math).max(0,current-10)},                                                                                                                                                            
-     endIndex=${T(java.lang.Math).min(beginIndex+8,pageLogs.totalPages-1)}">
-					<ul class="pagination justify-content-center">
-                                                <li class="page-item" th:if="${pageLogs.hasPrevious()}"><a
-                                                        class="page-link"
-                                                        th:href="@{(page=${pageLogs.number-1},size=${pageLogs.size})}">Previous</a>
-                                                </li>
-                                                <li class="page-item"
-                                                        th:each="i : ${#numbers.sequence(beginIndex, endIndex)}"
-                                                        th:classappend="${pageLogs.number}==${i}?'active':''"><a
-                                                        th:href="@{''(page=${i})}" th:text="${i+1}"
-                                                        class="page-link"></a></li>
-                                                <li class="page-item" th:if="${pageLogs.hasNext()}"><a
-                                                        class="page-link"
-                                                        th:href="@{(page=${pageLogs.number+1},size=${pageLogs.size})}">Next</a>
-                                                </li>
-					</ul>
-				</nav>
-				
+				<nav th:replace="fragments/paging :: paging(${pageLogs})">
+                </nav>
 
 			</div>
 
