@@ -163,8 +163,8 @@ public class UserController {
     }
 	
     
-    @GetMapping(value = "/logs/{i}", produces = "text/html")
-    public String viewTransactionLog(@PathVariable("id") Long id, Model uiModel) {
+    @GetMapping(value = "/logs", produces = "text/html", params = {"id"})
+    public String viewTransactionLog(@RequestParam Long id, Model uiModel) {
     	uiModel.addAttribute("payboxpapercuttransactionlog", papercutDaoService.findById(id).get());
     	uiModel.addAttribute("itemId", id);
     	uiModel.addAttribute("active", "logs"); 	

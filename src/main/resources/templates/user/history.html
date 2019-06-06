@@ -48,13 +48,7 @@
 				<table class="table table-hover table-striped table-bordered">
 					<thead>
 						<tr>
-							<th scope="col">
-								<a th:href="@{''(sort=${pageLogs?.sort?.getOrderFor('transactionDate')?.ascending} ? 'transactionDate,desc' : 'transactionDate,asc')}">
-									Date
-                                	<img th:if="${pageLogs?.sort?.getOrderFor('transactionDate') != null}"
-                                         th:src="${pageLogs?.sort?.getOrderFor('transactionDate')?.ascending} ? @{/resources/images/chevron-up.svg} : @{/resources/images/chevron-down.svg}" />
-                             	</a>
-							</th>
+							<th scope="col" th:replace="fragments/sorting :: sorting(${pageLogs}, 'transactionDate', 'Date')">Date</th>
 							<th scope="col" th:replace="fragments/sorting :: sorting(${pageLogs}, 'uid', 'Identifiant')">Identifiant</th>
 							<th scope="col">Référence</th>
 							<th scope="col">Montant (€)</th>
@@ -73,8 +67,8 @@
 							<td th:text="${log.papercutWsCallStatus}">papercutWsCallStatus</td>
 							<td th:text="${log.papercutNewSolde}">papercutNewSolde</td>
 							<td th:text="${log.archived}">archived</td>
-							<td class="utilbox"><a class="btn btn-success"
-								title="Voir état" alt="Détail" th:href="@{/logs/${etat.id}}"><img
+							<td class="utilbox"><a class="btn btn-success" 
+								title="Voir" alt="Détail" th:href="@{~{id}(id=${log.id})}"><img
 									title="Voir" th:src="@{/resources/images/show.png}"
 									class="image" alt="Voir"></a></td>
 						</tr>
