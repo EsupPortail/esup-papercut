@@ -77,7 +77,7 @@ public class AdminController {
     		Model uiModel) { 	
         uiModel.addAttribute("pageLogs", papercutDaoService.findAllPayboxPapercutTransactionLogs(pageable));
         uiModel.addAttribute("active", "admin"); 	
-        return "user/history";
+        return "history";
     }
 	
     
@@ -86,7 +86,7 @@ public class AdminController {
     	uiModel.addAttribute("payboxpapercuttransactionlog", papercutDaoService.findById(id).get());
     	uiModel.addAttribute("itemId", id);
     	uiModel.addAttribute("active", "logs"); 	
-        return "user/show-transactionlog";
+        return "show-transactionlog";
     }
 
     @RequestMapping("/csv")

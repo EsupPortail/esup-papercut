@@ -145,7 +145,7 @@ public class UserController {
     	
     	uiModel.addAttribute("papercutContext", context);
     	
-    	return "user/index";
+    	return "index";
     }
 
     
@@ -159,7 +159,7 @@ public class UserController {
         uiModel.addAttribute("active", "history");
     	
         uiModel.addAttribute("active", "logs"); 	
-        return "user/history";
+        return "history";
     }
 	
     
@@ -168,7 +168,7 @@ public class UserController {
     	uiModel.addAttribute("payboxpapercuttransactionlog", papercutDaoService.findById(id).get());
     	uiModel.addAttribute("itemId", id);
     	uiModel.addAttribute("active", "logs"); 	
-        return "user/show-transactionlog";
+        return "show-transactionlog";
     }
 
     private String getUid() {
