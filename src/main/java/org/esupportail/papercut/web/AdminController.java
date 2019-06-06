@@ -52,12 +52,8 @@ public class AdminController {
     @GetMapping(produces = "text/html")
     public String historyList(@PageableDefault(size = 10, direction = Direction.DESC, sort = "transactionDate") Pageable pageable, 
     		Model uiModel) { 	
-    	String a = null;
-    	if(a.equals("toto")) {
-
         uiModel.addAttribute("pageLogs", papercutDaoService.findAllPayboxPapercutTransactionLogs(pageable));
         uiModel.addAttribute("active", "admin"); 	
-    	}
         return "user/history";
     }
 	
