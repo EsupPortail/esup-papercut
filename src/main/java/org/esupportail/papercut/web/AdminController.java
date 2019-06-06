@@ -48,6 +48,8 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StopWatch;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -83,11 +85,22 @@ public class AdminController {
     
     @GetMapping(produces = "text/html", params = {"id"})
     public String viewTransactionLog(@RequestParam Long id, Model uiModel) {
-    	uiModel.addAttribute("payboxpapercuttransactionlog", papercutDaoService.findById(id).get());
+    	uiModel.addAttribute("plog", papercutDaoService.findById(id).get());
     	uiModel.addAttribute("itemId", id);
     	uiModel.addAttribute("active", "logs"); 	
         return "show-transactionlog";
     }
+    
+    @Transactional
+    @PostMapping(value = "archive")                                                                                                                                          
+    public String archive(@RequestParam Long id, @PathVariable String papercutContext) {
+
+        PayboxPapercutTransactionLog txLog =  papercutDaoService.findById(id).get();
+        txLog.setArchived(true);
+       
+        return "redirect:/" + papercutContext + "/admin?id=" + id;
+    }
+
 
     @RequestMapping("/csv")
     @Transactional

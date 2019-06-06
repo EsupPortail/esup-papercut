@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout}">
+
+<head>
+<title>Crédits d'impression</title>
+</head>
+<body>
+	<header> </header>
+
+	<main class="container-fluid">
+
+	<div layout:fragment="content">
+
+		<div class="row my-5">
+			<div class="col-md text-center">
+				<h1 th:text="#{home.h1}">Détails</h1>
+			</div>
+		</div>
+
+		<div th:if="${isAdmin and !plog.archived}">
+			<form method="post" th:action="@{admin/archive}">
+				<input type="hidden" name="id" th:value="${plog.id}" /> 
+				<input type="submit" value="Archiver ce log" class="btn btn-info" />
+			</form>
+		</div>
+
+		<div class="row">
+
+			<div class="col-1"></div>
+
+			<div class="col-10">
+
+				<dl>
+					<dt>reference</dt>
+					<dd th:text="${plog.reference}"></dd>
+					<dt>montantDevise</dt>
+					<dd th:text="${plog.montantDevise}"></dd>
+					<dt>auto</dt>
+					<dd th:text="${plog.auto}"></dd>
+					<dt>erreur</dt>
+					<dd th:text="${plog.erreur}"></dd>
+					<dt>idtrans</dt>
+					<dd th:text="${plog.idtrans}"></dd>
+					<dt>signature</dt>
+					<dd th:text="${plog.signature}"></dd>
+					<dt>uid</dt>
+					<dd th:text="${plog.uid}"></dd>
+					<dt>papercutWsCallStatus</dt>
+					<dd th:text="${plog.papercutWsCallStatus}"></dd>
+					<dt>transactionDate</dt>
+					<dd th:text="${plog.transactionDate}"></dd>
+					<dt>papercutOldSolde</dt>
+					<dd th:text="${plog.papercutOldSolde}"></dd>
+					<dt>papercutNewSolde</dt>
+					<dd th:text="${plog.papercutNewSolde}"></dd>
+					<dt>archived</dt>
+					<dd th:text="${plog.archived}"></dd>
+				</dl>
+
+			</div>
+
+		</div>
+
+	</div>
+
+	</main>
+
+</body>
+
+</html>
+
