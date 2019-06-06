@@ -37,9 +37,6 @@ $(document).ready(function() {
 	    $.ajax({
 	        url: statsPapercut,
 	        type: 'GET',
-	        data : {
-            	key : sessionId
-            },
 	        dataType : 'json',
 	        success : function(data) {
 	         	//Date	         	

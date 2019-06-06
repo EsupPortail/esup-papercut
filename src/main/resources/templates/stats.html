@@ -1,70 +1,78 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<div class="esuppapercut"
-	xmlns:portlet="http://java.sun.com/portlet_2_0" 
-	xmlns:jsp="http://java.sun.com/JSP/Page" 
-	xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" 
-	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:spring="http://www.springframework.org/tags"
-	xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
-    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
-    <jsp:output omit-xml-declaration="yes"/>
-	<spring:url value="/servlet/statsPapercut?sharedSessionId=${sharedSessionId}"
-		var="statsPapercut" /> 
-	<spring:url value="/servlet/resources/js/Chart.min.js"
-		var="chartUrl" /> 
-	<spring:url value="/servlet/resources/js/esupPapercut.js"
-		var="mainJsUrl" /> 
-	<spring:url value="/servlet/resources/js/jquery-1.9.0.min.js"
-		var="jqueryUrl" />
-	<spring:url value="/servlet/resources/css/esup-papercut.css"
-		var="esupPapercutCssUrl" />
-	
-	<script type="text/javascript">
-		var statsPapercut = '${statsPapercut}';
-		var sessionId = '${sessionId}';
-	</script>
-	<script src="${jqueryUrl}"><!-- --></script>
-	<script type="text/javascript" src="${chartUrl}"><!-- --></script>
-	<script type="text/javascript" src="${mainJsUrl}"><!-- --></script>
-	<link rel="stylesheet" href="${esupPapercutCssUrl}" />
-	
-	<portlet:renderURL portletMode="VIEW" var="homeUrl"/>
-	<portlet:renderURL portletMode="VIEW" var="historyUrl">
-		<portlet:param name="action" value="myhistory" />
-		<portlet:param name="sortFieldName" value="transactionDate" />
-		<portlet:param name="sortOrder" value="desc" />
-	</portlet:renderURL>
-	<portlet:renderURL portletMode="VIEW" var="adminUrl">
-		<portlet:param name="action" value="admin" />
-		<portlet:param name="sortFieldName" value="transactionDate" />
-		<portlet:param name="sortOrder" value="desc" />
-	</portlet:renderURL>	
-	<portlet:renderURL portletMode="VIEW" var="statsUrl">
-		<portlet:param name="action" value="stats" />
-	</portlet:renderURL>	
-	
-	<h3 class="portlet-section-header" role="header">
-		<a href="${homeUrl}"><spring:message code="menu.home"/></a> | 
-		<a href="${historyUrl}" class="${active == 'history' ? 'active' : 'nonActive'}"><spring:message code="menu.myhistory"/></a>
-		<c:if test="${isAdmin or isManager}">
-			| <a href="${adminUrl}" class="${active == 'admin' ? 'active' : 'nonActive'}"><spring:message code="menu.admin"/></a>
-			| <a href="${statsUrl}" class="${active == 'stats' ? 'active' : 'nonActive'}"><spring:message code="menu.stats"/></a>
-		</c:if>
-	</h3>
-	<div class="charts">
-	    <h3><spring:message code="stats.transactions" /></h3>
-		<canvas id="transactionsNombreChart">&amp;nbsp;</canvas>
+<!--
+
+    Licensed to EsupPortail under one or more contributor license
+    agreements. See the NOTICE file distributed with this work for
+    additional information regarding copyright ownership.
+
+    EsupPortail licenses this file to you under the Apache License,
+    Version 2.0 (the "License"); you may not use this file except in
+    compliance with the License. You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout}">
+
+<head>
+<title>Crédits d'impression</title>
+</head>
+<body>
+	<header> </header>
+
+	<main class="container-fluid">
+
+	<div layout:fragment="content">
+
+		<div class="row my-5">
+			<div class="col-md text-center">
+				<h1 th:text="#{home.h1}">Crédits d'impression</h1>
+			</div>
+		</div>
+
+		<div class="row">
+
+			<script type="text/javascript">
+					var statsPapercut = 'statsPapercut';
+				</script>
+
+			<script th:src="@{/webjars/chartjs/2.7.3/Chart.min.js}"></script>
+			<script th:src="@{/resources/js/esupPapercut.js}"></script>
+
+
+			<div class="charts col-md">
+				<canvas id="transactionsNombreChart">&amp;nbsp;</canvas>
+				<h3>Nombre de transactions</h3>
+			</div>
+
+			<div class="charts col-md">
+				<canvas id="transactionsMontantChart">&amp;nbsp;</canvas>
+				<h3>Montants</h3>
+			</div>
+			<div class="charts col-md">
+				<canvas id="transactionsCumulTransactionsChart">&amp;nbsp;</canvas>
+				<h3>Cumul du nombre de transactions</h3>
+			</div>
+			<div class="charts col-md">
+				<canvas id="transactionsCumulMontantChart">&amp;nbsp;</canvas>
+				<h3>Cumul des montants</h3>
+			</div>
+
+		</div>
+
 	</div>
-	<div class="charts">
-		<h3><spring:message code="stats.montants" /></h3>
-		<canvas id="transactionsMontantChart">&amp;nbsp;</canvas>
-	</div>
-	<div class="charts">
-		<h3><spring:message code="stats.transactions.cumul" /></h3>
-		<canvas id="transactionsCumulTransactionsChart">&amp;nbsp;</canvas>
-	</div>
-	<div class="charts">
-		<h3><spring:message code="stats.montants.cumul" /></h3>
-		<canvas id="transactionsCumulMontantChart">&amp;nbsp;</canvas>
-	</div>	
-</div>
+
+	</main>
+
+</body>
+
+</html>

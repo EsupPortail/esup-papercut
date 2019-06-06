@@ -23,6 +23,11 @@ body {
 	margin-bottom: 20px;
 }
 
+.charts h3 {
+	text-align: center;
+	font-size: smaller;
+}
+
 .bd-placeholder-img {
 	font-size: 1.125rem;
 	text-anchor: middle;
@@ -38,70 +43,3 @@ body {
 	}
 }
 
-.esuppapercut .esupslider {
-	width: 200px;
-	float: left;
-	clear: left;
-	margin: 18px;
-}
-
-.esuppapercut .esuppayboxForm {
-	margin-left: 250px;
-}
-
-
-.esuppapercut .sorting {
-	padding-right: 20px;
-	background: url("images/sort_both.png") no-repeat center right;
-}
-
-.esuppapercut .sorting_asc {
-	padding-right: 20px;
-	background: url("images/sort_asc.png") no-repeat center right;
-}
-
-.esuppapercut .sorting_desc {
-	padding-right: 20px;
-	background: url("images/sort_desc.png") no-repeat center right;
-}
-
-.esuppapercut table th, .esuppapercut table td {
-	border: 1px solid !important;
-}
-
-.esuppapercut .active {
-	font-weight: bold;
-}
-
-.esuppapercut .box {
-	text-indent: 10px;
-}
-
-.esuppapercut .canvas {
-	width: 450px;
-	height: 300px;
-}
-
-.esuppapercut .charts {
-	float: left;
-	margin-left: 10px;
-	margin-bottom: 10px;
-	border: 1px solid #ccc;
-	padding: 15px;
-}
-
-.esuppapercut .charts canvas {
-	min-height: 176px;
-	min-width: 353px;
-}
-
-.esuppapercut #checkbox_cgv {
-	vertical-align: bottom;
-	margin-right: 7px;
-}
-
-.esuppapercut input[type='checkbox'] {
-	float: left;
-	width: 20px;
-	margin-top: -5px;
-}

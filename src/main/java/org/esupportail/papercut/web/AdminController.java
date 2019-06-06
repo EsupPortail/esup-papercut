@@ -145,9 +145,13 @@ public class AdminController {
     	writer.close();
     }
 
-
     @RequestMapping(value="/stats")
-    public void getStats(HttpServletResponse response) throws IOException, ServletRequestBindingException {
+    public String getStats() {
+    	return "stats";
+    }
+
+    @RequestMapping(value="/statsPapercut")
+    public void getStatsInfos(HttpServletResponse response) throws IOException, ServletRequestBindingException {
 		
     	String flexJsonString = "Aucune statistique à récupérer";
     	
