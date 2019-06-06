@@ -32,6 +32,7 @@ public class PapercutDaoServiceAspect {
 
 	private final Logger log = LoggerFactory.getLogger(getClass());
 	
+	  // Attention, ne fonctionne pas sur les native query ...
 	  @Before("execution(* org.esupportail.papercut.dao.PapercutDaoService.*(..)) && target(papercutDaoService)")
 	  public void aroundExecution(JoinPoint pjp, PapercutDaoService papercutDaoService) throws Throwable {
 	    org.hibernate.Filter filter = papercutDaoService.entityManager.unwrap(Session.class).enableFilter("contextFilter");

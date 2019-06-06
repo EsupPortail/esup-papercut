@@ -25,6 +25,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import org.esupportail.papercut.domain.PayboxPapercutTransactionLog;
+import org.esupportail.papercut.security.ContextHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -103,42 +104,62 @@ public class PapercutDaoService {
 	*/
 	
     public List<Object>  countNumberTranscationsBydate(String sqlQuery) {
+    	
+    	String papercutContext = ContextHelper.getCurrentContext();
+    	
     	if("useOriginal".equals(sqlQuery)){
-    		sqlQuery = "SELECT date_part('year',transaction_date) as year, date_part('month',transaction_date) as month, count(*) as count FROM paybox_papercut_transaction_log GROUP BY year, month ORDER BY year,month";
+    		sqlQuery = "SELECT date_part('year',transaction_date) as year, date_part('month',transaction_date) as month, count(*) as count FROM paybox_papercut_transaction_log WHERE paper_cut_context=:papercutContext GROUP BY year, month ORDER BY year,month";
     	}
 
 		Query q = entityManager.createNativeQuery(sqlQuery);
+		
+		q.setParameter("papercutContext", papercutContext);
 
         return q.getResultList();
     }
     
     public List<Object>  countMontantTranscationsBydate(String sqlQuery) {
+    	
+    	String papercutContext = ContextHelper.getCurrentContext();
+    	
     	if("useOriginal".equals(sqlQuery)){
-    		sqlQuery = "SELECT date_part('year',transaction_date) as year, date_part('month',transaction_date) as month, sum(CAST(montant AS decimal)) as totalMois FROM paybox_papercut_transaction_log GROUP BY year, month ORDER BY year,month";
+    		sqlQuery = "SELECT date_part('year',transaction_date) as year, date_part('month',transaction_date) as month, sum(CAST(montant AS decimal)) as totalMois FROM paybox_papercut_transaction_log WHERE paper_cut_context=:papercutContext GROUP BY year, month ORDER BY year,month";
     	}
 
 		Query q = entityManager.createNativeQuery(sqlQuery);
+		
+		q.setParameter("papercutContext", papercutContext);
 
         return q.getResultList();
     }
     
     public List<Object>  countCumulNombreTranscationsBydate(String sqlQuery) {
+    	
+    	String papercutContext = ContextHelper.getCurrentContext();
+    	
     	if("useOriginal".equals(sqlQuery)){
-    		sqlQuery = "SELECT date_part('year',transaction_date) as year, date_part('month',transaction_date) as month, sum(count(* )) OVER (PARTITION BY date_part('year',transaction_date) ORDER BY  date_part('year',transaction_date),date_part('month',transaction_date)) as cumul FROM paybox_papercut_transaction_log Where date_part('year',transaction_date) in (select distinct date_part('year',transaction_date) from paybox_papercut_transaction_log) GROUP BY year, month ORDER BY year,month";
+    		sqlQuery = "SELECT date_part('year',transaction_date) as year, date_part('month',transaction_date) as month, sum(count(* )) OVER (PARTITION BY date_part('year',transaction_date) ORDER BY  date_part('year',transaction_date),date_part('month',transaction_date)) as cumul FROM paybox_papercut_transaction_log WHERE date_part('year',transaction_date) in (select distinct date_part('year',transaction_date) from paybox_papercut_transaction_log) and paper_cut_context=:papercutContext GROUP BY year, month ORDER BY year,month";
     	}
 
 		Query q = entityManager.createNativeQuery(sqlQuery);
+		
+		q.setParameter("papercutContext", papercutContext);
 
         return q.getResultList();
     }
     
     public List<Object>  countCumulMontantTranscationsBydate(String sqlQuery) {
+    	
+    	String papercutContext = ContextHelper.getCurrentContext();
+    	
     	if("useOriginal".equals(sqlQuery)){
-    		sqlQuery = "SELECT date_part('year',transaction_date) as year, date_part('month',transaction_date) as month ,sum( sum(CAST(montant AS decimal))) OVER (PARTITION BY date_part('year',transaction_date) ORDER BY  date_part('year',transaction_date),date_part('month',transaction_date)) as cumul FROM paybox_papercut_transaction_log Where date_part('year',transaction_date) in (select distinct date_part('year',transaction_date) from paybox_papercut_transaction_log) GROUP BY year, month ORDER BY year,month";
+    		sqlQuery = "SELECT date_part('year',transaction_date) as year, date_part('month',transaction_date) as month ,sum( sum(CAST(montant AS decimal))) OVER (PARTITION BY date_part('year',transaction_date) ORDER BY  date_part('year',transaction_date),date_part('month',transaction_date)) as cumul FROM paybox_papercut_transaction_log WHERE date_part('year',transaction_date) in (select distinct date_part('year',transaction_date) from paybox_papercut_transaction_log) and paper_cut_context=:papercutContext GROUP BY year, month ORDER BY year,month";
     	} 	
 
 		Query q = entityManager.createNativeQuery(sqlQuery);
 
+		q.setParameter("papercutContext", papercutContext);
+		
         return q.getResultList();
     }
 
