@@ -17,8 +17,10 @@
  */
 package org.esupportail.papercut.config;
 
+import java.util.List;
 import java.util.Map;
 
+import org.esupportail.papercut.web.WebUtils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
@@ -45,11 +47,15 @@ public class EsupPapercutConfig {
 	}
 
 	public String getDefaultContext() {
-		if(defaultContext != null) {
-			return defaultContext;
-		} else {
-			return contexts.keySet().iterator().next();
+		List<String> availableContexts = WebUtils.availableContexts();
+		if(!availableContexts.isEmpty()) {
+			if(defaultContext != null && availableContexts.contains(defaultContext)) {
+				return defaultContext;
+			} else {
+				return availableContexts.get(0);
+			}
 		}
+		return null;
 	}
 
 	public EsupPapercutContext getContext(String contextKey) {
