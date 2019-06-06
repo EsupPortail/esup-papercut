@@ -44,9 +44,12 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
 	
 			if (!isRedirectView && !viewNameStartsWithRedirect) {
 				modelAndView.addObject("pContext", ContextHelper.getCurrentContext());
+				modelAndView.addObject("isAdmin", WebUtils.isAdmin());
+				modelAndView.addObject("isManager", WebUtils.isManager());
 			}
 		}
 
 	}
 
 }
+

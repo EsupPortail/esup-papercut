@@ -18,6 +18,8 @@
 package org.esupportail.papercut.config;  
 
 import org.esupportail.papercut.web.WebInterceptor;
+import org.springframework.boot.autoconfigure.web.ErrorProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -38,6 +40,9 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new WebInterceptor());
     }
-    
+    @Bean
+    public ErrorProperties errorProperties() throws Exception {
+      return new ErrorProperties();
+    }
     
 } 

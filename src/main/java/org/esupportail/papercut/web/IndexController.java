@@ -45,5 +45,7 @@ public class IndexController {
     public String papercutContext(@PathVariable String papercutContext) {	
     	return "redirect:/" + papercutContext + "/user";
     }
+	
+	
 
 }

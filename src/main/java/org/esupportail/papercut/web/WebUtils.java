@@ -1,5 +1,6 @@
 package org.esupportail.papercut.web;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.security.core.Authentication;
@@ -10,6 +11,9 @@ public class WebUtils {
 
 	public static String getContext(HttpServletRequest request) {
 		String path = request.getServletPath();
+		if("/error".equals(path)) {
+			path = (String)request.getAttribute(RequestDispatcher.FORWARD_REQUEST_URI);
+		}
 		String papercutContext = path.replaceFirst("/([^/]*).*", "$1");
 		return papercutContext;
 	}

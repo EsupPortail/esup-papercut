@@ -51,14 +51,8 @@ public class AdminController {
 
     @GetMapping(produces = "text/html")
     public String historyList(@PageableDefault(size = 10, direction = Direction.DESC, sort = "transactionDate") Pageable pageable, 
-    		Model uiModel) {
-    	
+    		Model uiModel) { 	
         uiModel.addAttribute("pageLogs", papercutDaoService.findAllPayboxPapercutTransactionLogs(pageable));
-        
-        uiModel.addAttribute("isAdmin", WebUtils.isAdmin());
-        uiModel.addAttribute("isManager", WebUtils.isManager());
-        uiModel.addAttribute("active", "history");
-    	
         uiModel.addAttribute("active", "admin"); 	
         return "user/history";
     }
@@ -68,8 +62,6 @@ public class AdminController {
     public String viewTransactionLog(@PathVariable("id") Long id, Model uiModel) {
     	uiModel.addAttribute("payboxpapercuttransactionlog", papercutDaoService.findById(id).get());
     	uiModel.addAttribute("itemId", id);
-    	uiModel.addAttribute("isAdmin", WebUtils.isAdmin());
-    	uiModel.addAttribute("isManager", WebUtils.isManager());
     	uiModel.addAttribute("active", "logs"); 	
         return "user/show-transactionlog";
     }

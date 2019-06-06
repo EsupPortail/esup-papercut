@@ -156,9 +156,6 @@ public class UserController {
         String uid = getUid();
   
         uiModel.addAttribute("pageLogs", papercutDaoService.findPayboxPapercutTransactionLogsByUid(uid, pageable));
-       
-        uiModel.addAttribute("isAdmin", WebUtils.isAdmin());
-        uiModel.addAttribute("isManager", WebUtils.isManager());
         uiModel.addAttribute("active", "history");
     	
         uiModel.addAttribute("active", "logs"); 	
@@ -170,8 +167,6 @@ public class UserController {
     public String viewTransactionLog(@PathVariable("id") Long id, Model uiModel) {
     	uiModel.addAttribute("payboxpapercuttransactionlog", papercutDaoService.findById(id).get());
     	uiModel.addAttribute("itemId", id);
-    	uiModel.addAttribute("isAdmin", WebUtils.isAdmin());
-    	uiModel.addAttribute("isManager", WebUtils.isManager());
     	uiModel.addAttribute("active", "logs"); 	
         return "user/show-transactionlog";
     }
