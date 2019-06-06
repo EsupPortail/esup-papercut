@@ -20,19 +20,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.util.List;
 
 import javax.annotation.Resource;
-import javax.persistence.TypedQuery;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
-import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.apache.commons.io.IOUtils;
 import org.esupportail.papercut.config.EsupPapercutConfig;
+import org.esupportail.papercut.config.EsupPapercutContext;
 import org.esupportail.papercut.dao.PapercutDaoService;
-import org.esupportail.papercut.domain.EsupPapercutSessionObject;
 import org.esupportail.papercut.domain.PayboxPapercutTransactionLog;
+import org.esupportail.papercut.security.ContextHelper;
 import org.esupportail.papercut.services.EsupPaperCutService;
 import org.esupportail.papercut.services.StatsService;
 import org.slf4j.Logger;
@@ -51,9 +48,10 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StopWatch;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import flexjson.JSONSerializer;
 
 @Controller
 @RequestMapping("/{papercutContext}/admin")
@@ -93,7 +91,7 @@ public class AdminController {
 
     @RequestMapping("/csv")
     @Transactional
-    public void getCsv(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void getCsv(HttpServletResponse response) throws IOException {
 
     	StopWatch stopWatch = new StopWatch("Stream - build CSV and send it");
     	stopWatch.start();
@@ -134,43 +132,32 @@ public class AdminController {
     	writer.close();
     }
 
-    /*
-	@RequestMapping(value="/statsPapercut")
-	public void getStats(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletRequestBindingException {
-	
-		HttpSession session = request.getSession();
+
+    @RequestMapping(value="/stats")
+    public void getStats(HttpServletResponse response) throws IOException, ServletRequestBindingException {
 		
-		String sharedSessionId = request.getParameter("sharedSessionId");
-		if(sharedSessionId != null) {
-			EsupPapercutSessionObject objectShared  = (EsupPapercutSessionObject) session.getAttribute(sharedSessionId);
-			String requeteNbTransactions = objectShared.getRequeteNbTransactions();
-			String requeteMontantTransactions = objectShared.getRequeteMontantTransactions();
-			String requeteCumulTransactions = objectShared.getRequeteCumulTransactions();
-			String requeteCumulMontants =objectShared.getRequeteCumulMontants();
-			
-			if(objectShared.isIsAdmin()) {
-				String flexJsonString = "Aucune statistique à récupérer";
-				try {
-					
-					JSONSerializer serializer = new JSONSerializer();
-					flexJsonString = serializer.deepSerialize(statsService.getStatsPapercut(requeteNbTransactions, requeteMontantTransactions, requeteCumulTransactions, requeteCumulMontants));
-					
-				} catch (Exception e) {
-					log.warn("Impossible de récupérer les statistiques", e);
-				}
-				
-		        InputStream jsonStream = IOUtils.toInputStream(flexJsonString, "utf-8");
-		        
-		        response.setContentType("application/json");
-		        response.setCharacterEncoding("utf-8");   
-		        
-		        FileCopyUtils.copy(jsonStream, response.getOutputStream());
-			}
+    	String flexJsonString = "Aucune statistique à récupérer";
+    	
+    	EsupPapercutContext context = config.getContext(ContextHelper.getCurrentContext());
+		
+    	try {
 
-		}
-	}    
-	*/
+    		JSONSerializer serializer = new JSONSerializer();
+    		flexJsonString = serializer.deepSerialize(statsService.getStatsPapercut(context));
 
-    
-} 
+    	} catch (Exception e) {
+    		log.warn("Impossible de récupérer les statistiques", e);
+    	}
+
+    	InputStream jsonStream = IOUtils.toInputStream(flexJsonString, "utf-8");
+
+    	response.setContentType("application/json");
+    	response.setCharacterEncoding("utf-8");   
+
+    	FileCopyUtils.copy(jsonStream, response.getOutputStream());
+    }
+
+}    
+
+
 

@@ -20,7 +20,9 @@ package org.esupportail.papercut.services;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import org.esupportail.papercut.config.EsupPapercutContext;
 import org.esupportail.papercut.dao.PapercutDaoService;
+import org.esupportail.papercut.security.ContextHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,15 +33,17 @@ public class StatsService {
 	private PapercutDaoService papercutDaoService;
 
 	@SuppressWarnings("serial")
-	public  LinkedHashMap<String,Object> getStatsPapercut(final String requeteNbTransactions, final String requeteMontantTransactions, final String requeteCumulTransactions, final String requeteCumulMontants) {
+	public  LinkedHashMap<String,Object> getStatsPapercut(EsupPapercutContext context) {
     	
+		ContextHelper.getCurrentContext();
+		
 		//on remplit le futur json
 		LinkedHashMap<String, Object> results = new LinkedHashMap<String, Object>() {
 	        {
-	            put("nombre", mapField(countNumberTranscationsBydate(requeteNbTransactions),3));
-	            put("montants", mapField(countMontantTranscationsBydate(requeteMontantTransactions),3));
-	            put("cumulTransac", mapField(countCumulNombreTranscationsBydate(requeteCumulTransactions),3));
-	            put("cumulMontant", mapField(countCumulMontantTranscationsBydate(requeteCumulMontants),3));
+	            put("nombre", mapField(countNumberTranscationsBydate(context.getRequeteNbTransactions()),3));
+	            put("montants", mapField(countMontantTranscationsBydate(context.getRequeteMontantTransactions()),3));
+	            put("cumulTransac", mapField(countCumulNombreTranscationsBydate(context.getRequeteCumulTransactions()),3));
+	            put("cumulMontant", mapField(countCumulMontantTranscationsBydate(context.getRequeteCumulMontants()),3));
 	        }
 	    };	
 		return results;
