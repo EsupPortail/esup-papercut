@@ -64,8 +64,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
       http
         .authorizeRequests()
-        .regexMatchers("/[^/]*/user(/.*|/?)", "/login")
+        .regexMatchers("/login")
         .authenticated()
+        .and()
+        .authorizeRequests()
+        .regexMatchers("/[^/]*/user(/.*|/?)")
+        .hasRole("USER")
+        .and()
+        .authorizeRequests()
+        .regexMatchers("/[^/]*/admin(/.*|/?)")
+        .hasAnyRole("ADMIN", "MANAGER")
         .and()
         .authorizeRequests()
         .regexMatchers("/")
