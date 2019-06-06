@@ -1,5 +1,6 @@
 package org.esupportail.papercut.security;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -26,6 +27,7 @@ public class ContextUserDetailsService extends AbstractCasAssertionUserDetailsSe
 	protected UserDetails loadUserDetails(Assertion assertion) {
 		
 		Map<String, Set<GrantedAuthority>> contextAuthorities = new HashMap<String, Set<GrantedAuthority>>();
+		List<String> availableContexts = new ArrayList<String>(); 
 		
 		List<String> groups = (List<String>) assertion.getPrincipal().getAttributes().get("memberOf");
 		
@@ -41,11 +43,14 @@ public class ContextUserDetailsService extends AbstractCasAssertionUserDetailsSe
 			if(groups.contains(context.getEsupPapercutUserAttributeValue())) {
 				authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 			}
+			if(!authorities.isEmpty()) {
+				availableContexts.add(contextKey);
+			}
 			contextAuthorities.put(contextKey, authorities);
 		}
 		
 		ContextUserDetails contextUserDetails =
-                new ContextUserDetails(assertion.getPrincipal().getName(), contextAuthorities);
+                new ContextUserDetails(assertion.getPrincipal().getName(), contextAuthorities, availableContexts);
 
 		return contextUserDetails;
 	}

@@ -27,10 +27,13 @@ public class ContextUserDetails implements UserDetails {
 	Map<String, Set<GrantedAuthority>> contextAuthorities = new HashMap<String, Set<GrantedAuthority>>(); 
 	
 	final List<GrantedAuthority> defaultAuthorities = Arrays.asList(new GrantedAuthority[] {new SimpleGrantedAuthority("ROLE_NONE")});
+	
+	List<String> availableContexts;
 
-	public ContextUserDetails(String username, Map<String, Set<GrantedAuthority>> contextAuthorities) {
+	public ContextUserDetails(String username, Map<String, Set<GrantedAuthority>> contextAuthorities, List<String> availableContexts) {
 		this.username = username;
 		this.contextAuthorities = contextAuthorities;
+		this.availableContexts = availableContexts;
 	}
 
 	@Override
@@ -74,6 +77,10 @@ public class ContextUserDetails implements UserDetails {
 	@Override
 	public boolean isEnabled() {
 		return true;
+	}
+
+	public List<String> getAvailableContexts() {
+		return availableContexts;
 	}
 
 }

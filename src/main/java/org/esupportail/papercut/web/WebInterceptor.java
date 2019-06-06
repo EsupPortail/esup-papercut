@@ -46,6 +46,7 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
 				modelAndView.addObject("pContext", ContextHelper.getCurrentContext());
 				modelAndView.addObject("isAdmin", WebUtils.isAdmin());
 				modelAndView.addObject("isManager", WebUtils.isManager());
+				modelAndView.addObject("availableContexts", WebUtils.availableContexts());
 			}
 		}
 

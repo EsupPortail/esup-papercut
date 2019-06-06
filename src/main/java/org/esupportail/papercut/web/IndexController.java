@@ -26,6 +26,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class IndexController {
@@ -34,18 +35,18 @@ public class IndexController {
 	EsupPapercutConfig config;
 
 	@GetMapping("/")
-	public String index(Model model) {
+	public String index(@RequestParam(required = false) String papercutContext, Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		model.addAttribute("auth", auth);
-		String defaultContext = config.getDefaultContext();
-		return "redirect:/" + defaultContext;
+		if(papercutContext == null) {
+			papercutContext = config.getDefaultContext();
+		}
+		return "redirect:/" + papercutContext;
 	}
 	
 	@GetMapping("/{papercutContext}")
     public String papercutContext(@PathVariable String papercutContext) {	
     	return "redirect:/" + papercutContext + "/user";
     }
-	
-	
 
 }

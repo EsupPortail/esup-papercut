@@ -48,6 +48,12 @@
 			    	</li>
 			    </ul>
 			    
+			    <form th:if="${availableContexts.size() > 1}" th:action="@{/}">
+			    	<select name="papercutContext" onchange="this.form.submit()">
+			    		<option th:each="c : ${availableContexts}" th:text="${c}" th:selected="${c==pContext}"></option>
+			    	</select>
+			    </form>
+			    
 			    <a sec:authorize="not isAuthenticated()" class="btn btn-outline-info my-2 my-sm-0" th:href="@{/user}" role="button" th:text="#{navbar.button.login}">Connexion</a>
 			    <!--<a sec:authorize="not isAuthenticated()" class="btn btn-outline-info my-2 my-sm-0" th:href="@{/user-nocas}" role="button" th:text="#{navbar.button.login.nocas}">Connexion (nocas)</a>-->
 			    

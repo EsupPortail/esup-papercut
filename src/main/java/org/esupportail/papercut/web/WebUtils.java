@@ -1,8 +1,11 @@
 package org.esupportail.papercut.web;
 
+import java.util.List;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 
+import org.esupportail.papercut.security.ContextUserDetails;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,6 +19,12 @@ public class WebUtils {
 		}
 		String papercutContext = path.replaceFirst("/([^/]*).*", "$1");
 		return papercutContext;
+	}
+	
+	public static List<String> availableContexts() {
+		 Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		 ContextUserDetails userDetails = (ContextUserDetails)auth.getPrincipal();
+		 return userDetails.getAvailableContexts();
 	}
 
 	public static boolean isUser() {
