@@ -48,8 +48,8 @@
 				<dd th:text="${error}"></dd>
 				<dt>Message</dt>
 				<dd th:text="${message}"></dd>
-				<dt>Trace</dt>
-				<dd th:text="${trace}"></dd>
+				<dt th:if="${trace}">Trace</dt>
+				<dd th:if="${trace}" th:text="${trace}"></dd>
 			</dl>
 		</div>
 
