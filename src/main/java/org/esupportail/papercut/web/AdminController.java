@@ -100,7 +100,25 @@ public class AdminController {
        
         return "redirect:/" + papercutContext + "/admin?id=" + id;
     }
+    
+    @Transactional
+    @PostMapping(value = "archiveAll")                                                                                                                                          
+    public String archiveAll(@PathVariable String papercutContext) {
 
+    	Page<PayboxPapercutTransactionLog> txLogsPage = papercutDaoService.findAllPayboxPapercutTransactionLogs(PageRequest.of(0, 1000));
+    	while(true) {
+    		for(PayboxPapercutTransactionLog txLog : txLogsPage.getContent()) {
+    			txLog.setArchived(true);
+    		}
+    		if(txLogsPage.hasNext()) {
+    			Pageable pageable = txLogsPage.nextPageable();
+    			txLogsPage = papercutDaoService.findAllPayboxPapercutTransactionLogs(pageable);
+    		} else {
+    			break;
+    		}
+    	}
+        return "redirect:/" + papercutContext + "/admin";
+    }
 
     @RequestMapping("/csv")
     @Transactional

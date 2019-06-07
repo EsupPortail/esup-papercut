@@ -8,7 +8,7 @@
 
 	<div layout:fragment="content">
 
-		<div th:if="${isAdmin and !plog.archived}">
+		<div th:if="${isAdmin and !plog.archived and active=='admin'}">
 			<form method="post" th:action="@{admin/archive}">
 				<input type="hidden" name="id" th:value="${plog.id}" /> <input
 					type="submit" value="Archiver ce log" class="btn btn-info" />

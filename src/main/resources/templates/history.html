@@ -27,6 +27,13 @@
 
 	<div layout:fragment="content">
 
+		<div th:if="${isAdmin and active=='admin'}">
+			<form method="post" th:action="@{admin/archiveAll}">
+				<input
+					type="submit" value="Archiver l'ensemble des logs" class="btn btn-info" />
+			</form>
+		</div>
+
 		<table class="table table-hover table-striped table-bordered">
 			<thead>
 				<tr>
@@ -36,9 +43,11 @@
 						th:replace="fragments/sorting :: sorting(${pageLogs}, 'uid', 'Identifiant')">Identifiant</th>
 					<th scope="col">Référence</th>
 					<th scope="col">Montant (€)</th>
-					<th scope="col">Status</th>
+					<th scope="col"
+						th:replace="fragments/sorting :: sorting(${pageLogs}, 'papercutWsCallStatus', 'Status')">Status</th>
 					<th scope="col">Nouveau solde (€)</th>
-					<th scope="col">Archivé</th>
+					<th scope="col"
+						th:replace="fragments/sorting :: sorting(${pageLogs}, 'archived', 'Archivé')">Archivé</th>
 					<th scope="col">Détail</th>
 				</tr>
 			</thead>
