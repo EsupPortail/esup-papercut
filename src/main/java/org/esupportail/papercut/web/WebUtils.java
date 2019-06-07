@@ -1,5 +1,6 @@
 package org.esupportail.papercut.web;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -23,8 +24,12 @@ public class WebUtils {
 	
 	public static List<String> availableContexts() {
 		 Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		 ContextUserDetails userDetails = (ContextUserDetails)auth.getPrincipal();
-		 return userDetails.getAvailableContexts();
+		 if(auth.getPrincipal() instanceof ContextUserDetails) {
+			 ContextUserDetails userDetails = (ContextUserDetails)auth.getPrincipal();
+			 return userDetails.getAvailableContexts();
+		 } else {
+			 return new ArrayList<String>();
+		 }
 	}
 
 	public static boolean isUser() {

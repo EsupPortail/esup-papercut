@@ -37,7 +37,6 @@ public class IndexController {
 	@GetMapping("/")
 	public String index(@RequestParam(required = false) String papercutContext, Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		model.addAttribute("auth", auth);
 		if(papercutContext == null) {
 			papercutContext = config.getDefaultContext();
 		}

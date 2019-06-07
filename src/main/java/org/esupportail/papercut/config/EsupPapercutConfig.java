@@ -55,7 +55,7 @@ public class EsupPapercutConfig {
 				return availableContexts.get(0);
 			}
 		}
-		return null;
+		return defaultContext;
 	}
 
 	public EsupPapercutContext getContext(String contextKey) {
