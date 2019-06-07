@@ -48,8 +48,8 @@
 			    	</li>
 			    </ul>
 			    
-			    <form th:if="${availableContexts.size() > 1}" th:action="@{/}">
-			    	<select name="papercutContext" onchange="this.form.submit()">
+			    <form class="papercutContextForm" th:if="${availableContexts.size() > 1}" th:action="@{/}">
+			    	<select name="papercutContext" onchange="this.form.submit()" class="form-control">
 			    		<option th:each="c : ${availableContexts}" th:text="${c}" th:selected="${c==pContext}"></option>
 			    	</select>
 			    </form>
