@@ -55,7 +55,7 @@ public class EsupPapercutContext {
 
 	String title = "Gestion des crédits d'impression";
 	
-	String htmlFooter = "<a class=\"navbar-brand\" href=\"https://www.esup-portail.org/wiki/display/EsupPapercut\">esup-papercut</a>";
+	String htmlFooter = "<a href=\"https://www.esup-portail.org/wiki/display/EsupPapercut\">esup-papercut</a>";
 	
 	String htmlUserHeader = "";
 	
