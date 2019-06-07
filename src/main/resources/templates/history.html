@@ -27,11 +27,25 @@
 
 	<div layout:fragment="content">
 
-		<div th:if="${isAdmin and active=='admin'}">
-			<form method="post" th:action="@{admin/archiveAll}">
-				<input
-					type="submit" value="Archiver l'ensemble des logs" class="btn btn-info" />
-			</form>
+		<div th:if="${isAdmin and active=='admin'}" class="row">
+				
+			<div class="col-7">
+				<form method="post" th:action="@{admin/archiveAll}">
+					<input
+						type="submit" value="Archiver l'ensemble des logs" class="btn btn-info" />
+				</form>
+			</div>
+			
+			<div class="col-2 alert alert-primary text-center">
+				<b th:text="${pageLogs.totalElements}">.</b> logs.
+			</div>
+			
+			<div class="col-2"></div>
+			
+			<div class="col-1">
+				<a th:href="@{admin/csv}" data-role="button"><img th:src="@{/resources/images/csv_text.png}" alt="CSV"/></a>
+			</div>
+			
 		</div>
 
 		<table class="table table-hover table-striped table-bordered">

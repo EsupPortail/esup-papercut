@@ -10,6 +10,9 @@
 			th:with="current=${page.number+6}, beginIndex=${T(java.lang.Math).max(0,current-10)}, endIndex=${T(java.lang.Math).min(beginIndex+8,page.totalPages-1)}, order=${page.sort.iterator().next()}, sort=${order.property + ',' + order.direction}">
 			<ul class="pagination justify-content-center">
 				<li class="page-item" th:if="${page.hasPrevious()}"><a class="page-link" 
+					th:href="@{''(page=0,size=${page.size},sort=${sort})}">Premier</a>
+				</li>
+				<li class="page-item" th:if="${page.hasPrevious()}"><a class="page-link" 
 					th:href="@{''(page=${page.number-1},size=${page.size},sort=${sort})}">Précédent</a>
 				</li>
 				<li class="page-item" 
@@ -19,6 +22,9 @@
 				</li>
 				<li class="page-item" th:if="${page.hasNext()}"><a class="page-link"
 					th:href="@{''(page=${page.number+1},size=${page.size},sort=${sort})}">Suivant</a>
+				</li>
+				<li class="page-item" th:if="${page.hasNext()}"><a class="page-link"
+					th:href="@{''(page=${page.totalPages-1},size=${page.size},sort=${sort})}">Dernier</a>
 				</li>
 			</ul>
 		</nav>
