@@ -87,7 +87,7 @@ public class AdminController {
     public String viewTransactionLog(@RequestParam Long id, Model uiModel) {
     	uiModel.addAttribute("plog", papercutDaoService.findById(id).get());
     	uiModel.addAttribute("itemId", id);
-    	uiModel.addAttribute("active", "logs"); 	
+    	uiModel.addAttribute("active", "admin"); 	
         return "show-transactionlog";
     }
     
@@ -146,7 +146,8 @@ public class AdminController {
     }
 
     @RequestMapping(value="/stats")
-    public String getStats() {
+    public String getStats(Model uiModel) {
+    	uiModel.addAttribute("active", "stats"); 
     	return "stats";
     }
 

@@ -22,45 +22,22 @@
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{layout}">
-
-<head>
-<title>Crédits d'impression</title>
-</head>
 <body>
-	<header> </header>
-
-	<main class="container-fluid">
-
 	<div layout:fragment="content">
 
 		<div class="row my-5">
 			<div class="col-md text-center">
-				<h1>Une erreur est survenue !</h1>
+				<h2>Une erreur est survenue !</h2>
 			</div>
 		</div>
-
-		<div class="col-2"></div>
-
-		<div class="col-8">
-
-			<dl>
-				<dt>Erreur</dt>
-				<dd th:text="${error}"></dd>
-				<dt>Message</dt>
-				<dd th:text="${message}"></dd>
-				<dt th:if="${trace}">Trace</dt>
-				<dd th:if="${trace}" th:text="${trace}"></dd>
-			</dl>
-		</div>
-
+		<dl>
+			<dt>Erreur</dt>
+			<dd th:text="${error}"></dd>
+			<dt>Message</dt>
+			<dd th:text="${message}"></dd>
+			<dt th:if="${trace}">Trace</dt>
+			<dd th:if="${trace}" th:text="${trace}"></dd>
+		</dl>
 	</div>
-
-	<div class="col-2"></div>
-
-
-	</main>
-
-	<footer> </footer>
-
 </body>
 </html>

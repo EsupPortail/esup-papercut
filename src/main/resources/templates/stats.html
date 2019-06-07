@@ -23,55 +23,38 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{layout}">
 
-<head>
-<title>Crédits d'impression</title>
-</head>
 <body>
-	<header> </header>
-
-	<main class="container-fluid">
 
 	<div layout:fragment="content">
 
-		<div class="row my-5">
-			<div class="col-md text-center">
-				<h1 th:text="#{home.h1}">Crédits d'impression</h1>
-			</div>
-		</div>
-
-		<div class="row">
-
-			<script type="text/javascript">
+		<script type="text/javascript">
 					var statsPapercut = 'statsPapercut';
 				</script>
 
-			<script th:src="@{/webjars/chartjs/2.7.3/Chart.min.js}"></script>
-			<script th:src="@{/resources/js/esupPapercut.js}"></script>
+		<script th:src="@{/webjars/chartjs/2.7.3/Chart.min.js}"></script>
+		<script th:src="@{/resources/js/esupPapercut.js}"></script>
 
 
-			<div class="charts col-md">
-				<canvas id="transactionsNombreChart">&amp;nbsp;</canvas>
-				<h3>Nombre de transactions</h3>
-			</div>
+		<div class="charts col-md">
+			<canvas id="transactionsNombreChart">&amp;nbsp;</canvas>
+			<h3>Nombre de transactions</h3>
+		</div>
 
-			<div class="charts col-md">
-				<canvas id="transactionsMontantChart">&amp;nbsp;</canvas>
-				<h3>Montants</h3>
-			</div>
-			<div class="charts col-md">
-				<canvas id="transactionsCumulTransactionsChart">&amp;nbsp;</canvas>
-				<h3>Cumul du nombre de transactions</h3>
-			</div>
-			<div class="charts col-md">
-				<canvas id="transactionsCumulMontantChart">&amp;nbsp;</canvas>
-				<h3>Cumul des montants</h3>
-			</div>
-
+		<div class="charts col-md">
+			<canvas id="transactionsMontantChart">&amp;nbsp;</canvas>
+			<h3>Montants</h3>
+		</div>
+		<div class="charts col-md">
+			<canvas id="transactionsCumulTransactionsChart">&amp;nbsp;</canvas>
+			<h3>Cumul du nombre de transactions</h3>
+		</div>
+		<div class="charts col-md">
+			<canvas id="transactionsCumulMontantChart">&amp;nbsp;</canvas>
+			<h3>Cumul des montants</h3>
 		</div>
 
 	</div>
 
-	</main>
 
 </body>
 

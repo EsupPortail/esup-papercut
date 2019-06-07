@@ -23,69 +23,45 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{layout}">
 
-<head>
-<title>Crédits d'impression</title>
-</head>
 <body>
-	<header> </header>
-
-	<main class="container-fluid">
 
 	<div layout:fragment="content">
 
-		<div class="row my-5">
-			<div class="col-md text-center">
-				<h1 th:text="#{home.h1}">Crédits d'impression</h1>
-			</div>
-		</div>
+		<table class="table table-hover table-striped table-bordered">
+			<thead>
+				<tr>
+					<th scope="col"
+						th:replace="fragments/sorting :: sorting(${pageLogs}, 'transactionDate', 'Date')">Date</th>
+					<th scope="col"
+						th:replace="fragments/sorting :: sorting(${pageLogs}, 'uid', 'Identifiant')">Identifiant</th>
+					<th scope="col">Référence</th>
+					<th scope="col">Montant (€)</th>
+					<th scope="col">Status</th>
+					<th scope="col">Nouveau solde (€)</th>
+					<th scope="col">Archivé</th>
+					<th scope="col">Détail</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="log : ${pageLogs.content}">
+					<td th:text="${log.transactionDate}">transactionDate</td>
+					<td th:text="${log.uid}">uid</td>
+					<td th:text="${log.reference}">reference</td>
+					<td th:text="${log.montantDevise}">montantDevise</td>
+					<td th:text="${log.papercutWsCallStatus}">papercutWsCallStatus</td>
+					<td th:text="${log.papercutNewSolde}">papercutNewSolde</td>
+					<td th:text="${log.archived}">archived</td>
+					<td class="utilbox"><a class="btn btn-success" title="Voir"
+						alt="Détail" th:href="@{~{id}(id=${log.id})}"><img
+							title="Voir" th:src="@{/resources/images/show.png}" class="image"
+							alt="Voir"></a></td>
+				</tr>
+			</tbody>
+		</table>
 
-		<div class="row">
+		<nav th:replace="fragments/paging :: paging(${pageLogs})"></nav>
 
-			<div class="col-1"></div>
-
-			<div class="col-10">
-
-				<table class="table table-hover table-striped table-bordered">
-					<thead>
-						<tr>
-							<th scope="col" th:replace="fragments/sorting :: sorting(${pageLogs}, 'transactionDate', 'Date')">Date</th>
-							<th scope="col" th:replace="fragments/sorting :: sorting(${pageLogs}, 'uid', 'Identifiant')">Identifiant</th>
-							<th scope="col">Référence</th>
-							<th scope="col">Montant (€)</th>
-							<th scope="col">Status</th>
-							<th scope="col">Nouveau solde (€)</th>
-							<th scope="col">Archivé</th>
-							<th scope="col">Détail</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr th:each="log : ${pageLogs.content}">
-							<td th:text="${log.transactionDate}">transactionDate</td>
-							<td th:text="${log.uid}">uid</td>
-							<td th:text="${log.reference}">reference</td>
-							<td th:text="${log.montantDevise}">montantDevise</td>
-							<td th:text="${log.papercutWsCallStatus}">papercutWsCallStatus</td>
-							<td th:text="${log.papercutNewSolde}">papercutNewSolde</td>
-							<td th:text="${log.archived}">archived</td>
-							<td class="utilbox"><a class="btn btn-success" 
-								title="Voir" alt="Détail" th:href="@{~{id}(id=${log.id})}"><img
-									title="Voir" th:src="@{/resources/images/show.png}"
-									class="image" alt="Voir"></a></td>
-						</tr>
-					</tbody>
-				</table>
-				
-				<nav th:replace="fragments/paging :: paging(${pageLogs})">
-                </nav>
-
-			</div>
-
-			<div class="col-1"></div>
-
-		</div>
-	</main>
-
-	<footer> </footer>
+	</div>
 
 </body>
 </html>

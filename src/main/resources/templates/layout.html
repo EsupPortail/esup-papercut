@@ -27,8 +27,7 @@
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="description" content="esup-papercut">
 
-<title layout:title-pattern="$LAYOUT_TITLE | $CONTENT_TITLE">Crédits
-	d'impression</title>
+<title th:text="${title}">Crédits d'impression</title>
 
 <!-- Bootstrap core CSS -->
 <link th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}"
@@ -45,10 +44,29 @@
 
 	<main class="container-fluid">
 
-	<div layout:fragment="content"></div>
+	<div class="row my-5">
+		<div class="col-md text-center">
+			<h1 th:text="${title}">Gestion des crédits d'impression</h1>
+		</div>
+	</div>
+
+		<div class="row">
+
+			<div class="col-2"></div>
+
+			<div class="col-8">
+			
+				<div layout:fragment="content"></div>
+			
+			</div>
+			
+			<div class="col-2"></div>
+			
+		</div>
 
 	</main>
 
 	<footer th:replace="fragments/footer :: footer"> </footer>
 </body>
 </html>
+

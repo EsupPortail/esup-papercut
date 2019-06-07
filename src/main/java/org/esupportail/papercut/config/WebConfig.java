@@ -36,10 +36,16 @@ public class WebConfig implements WebMvcConfigurer {
             .addResourceLocations("/webjars/");
     }
     
+    @Bean
+    public WebInterceptor webInterceptor() {
+        return new WebInterceptor();
+    }
+    
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new WebInterceptor());
+        registry.addInterceptor(webInterceptor());
     }
+    
     @Bean
     public ErrorProperties errorProperties() throws Exception {
       return new ErrorProperties();

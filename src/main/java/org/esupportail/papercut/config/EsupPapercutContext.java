@@ -53,9 +53,13 @@ public class EsupPapercutContext {
 	
 	String esupPapercutUserAttributeValue = "ROLE_USER";
 
-	String htmlHeader = "";
+	String title = "Gestion des crédits d'impression";
 	
-	String htmlFooter = "";
+	String htmlFooter = "<a class=\"navbar-brand\" href=\"https://www.esup-portail.org/wiki/display/EsupPapercut\">esup-papercut</a>";
+	
+	String htmlUserHeader = "";
+	
+	String htmlUserFooter = "";
 	
 	String payboxMontantMin = "0.5";
 	
@@ -165,12 +169,12 @@ public class EsupPapercutContext {
 		this.esupPapercutUserAttributeValue = esupPapercutUserAttributeValue;
 	}
 
-	public String getHtmlHeader() {
-		return htmlHeader;
+	public String getTitle() {
+		return title;
 	}
 
-	public void setHtmlHeader(String htmlHeader) {
-		this.htmlHeader = htmlHeader;
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	public String getHtmlFooter() {
@@ -179,6 +183,22 @@ public class EsupPapercutContext {
 
 	public void setHtmlFooter(String htmlFooter) {
 		this.htmlFooter = htmlFooter;
+	}
+
+	public String getHtmlUserHeader() {
+		return htmlUserHeader;
+	}
+
+	public void setHtmlUserHeader(String htmlUserHeader) {
+		this.htmlUserHeader = htmlUserHeader;
+	}
+
+	public String getHtmlUserFooter() {
+		return htmlUserFooter;
+	}
+
+	public void setHtmlUserFooter(String htmlUserFooter) {
+		this.htmlUserFooter = htmlUserFooter;
 	}
 
 	public String getPayboxMontantMin() {
