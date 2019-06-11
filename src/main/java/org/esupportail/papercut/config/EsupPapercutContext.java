@@ -17,15 +17,8 @@
  */
 package org.esupportail.papercut.config;
 
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.X509EncodedKeySpec;
-
-import org.springframework.core.io.ClassPathResource;
+import java.util.HashMap;
+import java.util.Map;
 
 public class EsupPapercutContext {
 
@@ -45,13 +38,11 @@ public class EsupPapercutContext {
 	
 	String requeteCumulMontants = "useOriginal";
 	
-	String memberCasAttributeName = "memberOf"; 
+	Map<String, String> esupPapercutCasAttributeRuleAdmin = new HashMap<String, String>();
 	
-	String esupPapercutAdminAttributeValue = "ROLE_ADMIN";
+	Map<String, String> esupPapercutCasAttributeRuleManager = new HashMap<String, String>();
 	
-	String esupPapercutManagerAttributeValue = "ROLE_MANAGER";
-	
-	String esupPapercutUserAttributeValue = "ROLE_USER";
+	Map<String, String> esupPapercutCasAttributeRuleUser = new HashMap<String, String>();
 
 	String title = "Gestion des crédits d'impression";
 	
@@ -145,28 +136,28 @@ public class EsupPapercutContext {
 		this.requeteCumulMontants = requeteCumulMontants;
 	}
 
-	public String getEsupPapercutAdminAttributeValue() {
-		return esupPapercutAdminAttributeValue;
+	public Map<String, String> getEsupPapercutCasAttributeRuleAdmin() {
+		return esupPapercutCasAttributeRuleAdmin;
 	}
 
-	public void setEsupPapercutAdminAttributeValue(String esupPapercutAdminAttributeValue) {
-		this.esupPapercutAdminAttributeValue = esupPapercutAdminAttributeValue;
+	public void setEsupPapercutCasAttributeRuleAdmin(Map<String, String> esupPapercutCasAttributeRuleAdmin) {
+		this.esupPapercutCasAttributeRuleAdmin = esupPapercutCasAttributeRuleAdmin;
 	}
 
-	public String getEsupPapercutManagerAttributeValue() {
-		return esupPapercutManagerAttributeValue;
+	public Map<String, String> getEsupPapercutCasAttributeRuleManager() {
+		return esupPapercutCasAttributeRuleManager;
 	}
 
-	public void setEsupPapercutManagerAttributeValue(String esupPapercutManagerAttributeValue) {
-		this.esupPapercutManagerAttributeValue = esupPapercutManagerAttributeValue;
+	public void setEsupPapercutCasAttributeRuleManager(Map<String, String> esupPapercutCasAttributeRuleManager) {
+		this.esupPapercutCasAttributeRuleManager = esupPapercutCasAttributeRuleManager;
 	}
 
-	public String getEsupPapercutUserAttributeValue() {
-		return esupPapercutUserAttributeValue;
+	public Map<String, String> getEsupPapercutCasAttributeRuleUser() {
+		return esupPapercutCasAttributeRuleUser;
 	}
 
-	public void setEsupPapercutUserAttributeValue(String esupPapercutUserAttributeValue) {
-		this.esupPapercutUserAttributeValue = esupPapercutUserAttributeValue;
+	public void setEsupPapercutCasAttributeRuleUser(Map<String, String> esupPapercutCasAttributeRuleUser) {
+		this.esupPapercutCasAttributeRuleUser = esupPapercutCasAttributeRuleUser;
 	}
 
 	public String getTitle() {

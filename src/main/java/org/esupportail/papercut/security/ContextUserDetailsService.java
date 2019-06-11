@@ -29,20 +29,41 @@ public class ContextUserDetailsService extends AbstractCasAssertionUserDetailsSe
 		Map<String, Set<GrantedAuthority>> contextAuthorities = new HashMap<String, Set<GrantedAuthority>>();
 		List<String> availableContexts = new ArrayList<String>(); 
 		
-		List<String> groups = (List<String>) assertion.getPrincipal().getAttributes().get("memberOf");
-		
 		for(String contextKey : config.getContexts().keySet()) {
+			
 			EsupPapercutContext context = config.getContext(contextKey);
 			Set<GrantedAuthority> authorities = new HashSet<GrantedAuthority>();
-			if(groups.contains(context.getEsupPapercutAdminAttributeValue())) {
-				authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+			
+			for(String adminRuleKey : context.getEsupPapercutCasAttributeRuleAdmin().keySet()) {
+				for(String attributeValue : getAttrValuesAsList(assertion.getPrincipal().getAttributes().get(adminRuleKey))) {
+					String adminRuleRegex =  context.getEsupPapercutCasAttributeRuleAdmin().get(adminRuleKey);
+					if(attributeValue.matches(adminRuleRegex)) {
+						authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+						break;
+					}
+				}
 			}
-			if(groups.contains(context.getEsupPapercutManagerAttributeValue())) {
-				authorities.add(new SimpleGrantedAuthority("ROLE_MANAGER"));
+			
+			for(String managerRuleKey : context.getEsupPapercutCasAttributeRuleManager().keySet()) {
+				for(String attributeValue : getAttrValuesAsList(assertion.getPrincipal().getAttributes().get(managerRuleKey))) {
+					String managerRuleRegex =  context.getEsupPapercutCasAttributeRuleManager().get(managerRuleKey);
+					if(attributeValue.matches(managerRuleRegex)) {
+						authorities.add(new SimpleGrantedAuthority("ROLE_MANAGER"));
+						break;
+					}
+				}
 			}
-			if(groups.contains(context.getEsupPapercutUserAttributeValue())) {
-				authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+
+			for(String userRuleKey : context.getEsupPapercutCasAttributeRuleUser().keySet()) {
+				for(String attributeValue : getAttrValuesAsList(assertion.getPrincipal().getAttributes().get(userRuleKey))) {
+					String userRuleRegex =  context.getEsupPapercutCasAttributeRuleUser().get(userRuleKey);
+					if(attributeValue.matches(userRuleRegex)) {
+						authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+						break;
+					}
+				}
 			}
+			
 			if(!authorities.isEmpty()) {
 				availableContexts.add(contextKey);
 			}
@@ -55,4 +76,18 @@ public class ContextUserDetailsService extends AbstractCasAssertionUserDetailsSe
 		return contextUserDetails;
 	}
 
+	private List<String> getAttrValuesAsList(Object attrValues) {
+		if(attrValues == null) {
+			return new ArrayList<String>(); 
+		} else if(attrValues instanceof List) {
+			return (List<String>)attrValues;
+		} else {
+			List<String> attrs = new ArrayList<String>();
+			attrs.add((String) attrValues);
+			return attrs;
+		} 
+	}
+
 }
+
+
