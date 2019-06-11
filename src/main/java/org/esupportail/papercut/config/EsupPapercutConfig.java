@@ -27,7 +27,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @ConfigurationProperties(prefix="esup")
-@PropertySource(value = "esup-papercut.properties", encoding = "UTF-8")
+@PropertySource(value = "classpath:/esup-papercut.properties", encoding = "UTF-8")
 public class EsupPapercutConfig {
 
 	String defaultContext = null;
