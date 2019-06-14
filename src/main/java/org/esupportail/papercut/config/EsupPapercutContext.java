@@ -22,7 +22,7 @@ import java.util.Map;
 
 public class EsupPapercutContext {
 
-	String paperCutContext = "univ-ville";
+	String papercutContext = "univ-ville";
 	
 	String papercutUserUidAttr = "uid";
 	
@@ -52,32 +52,34 @@ public class EsupPapercutContext {
 	
 	String htmlUserFooter = "";
 	
-	String payboxMontantMin = "0.5";
+	Integer montantMin = 50;
 	
 	String cgvText = "";
 	
-	String payboxMontantMax = "5.0";
+	Integer montantMax = 500;
 	
-	String payboxMontantStep = "0.5";	
+	Integer montantStep = 50;	
 	
-	String papercutSheetCost = "-1";
+	Integer papercutSheetCost = -1;
 	
-	String papercutColorSheetCost = "-1";
+	Integer papercutColorSheetCost = -1;
 	
-	String transactionNbMax = "-1";
+	Integer transactionNbMax = -1;
 	
-	String transactionMontantMax = "-1";
+	Integer transactionMontantMax = -1;
 	
 	PapercutConfig papercut;
 	
 	PayboxConfig paybox;
 	
-	public String getPaperCutContext() {
-		return paperCutContext;
+	IzlyPayConfig izlypay;
+	
+	public String getPapercutContext() {
+		return papercutContext;
 	}
 
-	public void setPaperCutContext(String paperCutContext) {
-		this.paperCutContext = paperCutContext;
+	public void setPapercutContext(String papercutContext) {
+		this.papercutContext = papercutContext;
 	}
 
 	public String getPapercutUserUidAttr() {
@@ -192,14 +194,6 @@ public class EsupPapercutContext {
 		this.htmlUserFooter = htmlUserFooter;
 	}
 
-	public String getPayboxMontantMin() {
-		return payboxMontantMin;
-	}
-
-	public void setPayboxMontantMin(String payboxMontantMin) {
-		this.payboxMontantMin = payboxMontantMin;
-	}
-
 	public String getCgvText() {
 		return cgvText;
 	}
@@ -208,51 +202,59 @@ public class EsupPapercutContext {
 		this.cgvText = cgvText;
 	}
 
-	public String getPayboxMontantMax() {
-		return payboxMontantMax;
+	public Integer getMontantMin() {
+		return montantMin;
 	}
 
-	public void setPayboxMontantMax(String payboxMontantMax) {
-		this.payboxMontantMax = payboxMontantMax;
+	public void setMontantMin(Integer montantMin) {
+		this.montantMin = montantMin;
 	}
 
-	public String getPayboxMontantStep() {
-		return payboxMontantStep;
+	public Integer getMontantMax() {
+		return montantMax;
 	}
 
-	public void setPayboxMontantStep(String payboxMontantStep) {
-		this.payboxMontantStep = payboxMontantStep;
+	public void setMontantMax(Integer montantMax) {
+		this.montantMax = montantMax;
 	}
 
-	public String getPapercutSheetCost() {
+	public Integer getMontantStep() {
+		return montantStep;
+	}
+
+	public void setMontantStep(Integer montantStep) {
+		this.montantStep = montantStep;
+	}
+
+	public Integer getPapercutSheetCost() {
 		return papercutSheetCost;
 	}
 
-	public void setPapercutSheetCost(String papercutSheetCost) {
+	public void setPapercutSheetCost(Integer papercutSheetCost) {
 		this.papercutSheetCost = papercutSheetCost;
 	}
 
-	public String getPapercutColorSheetCost() {
+	public Integer getPapercutColorSheetCost() {
 		return papercutColorSheetCost;
 	}
 
-	public void setPapercutColorSheetCost(String papercutColorSheetCost) {
+	public void setPapercutColorSheetCost(Integer papercutColorSheetCost) {
 		this.papercutColorSheetCost = papercutColorSheetCost;
 	}
 
-	public String getTransactionNbMax() {
+	public Integer getTransactionNbMax() {
 		return transactionNbMax;
 	}
 
-	public void setTransactionNbMax(String transactionNbMax) {
+	public void setTransactionNbMax(Integer transactionNbMax) {
 		this.transactionNbMax = transactionNbMax;
 	}
 
-	public String getTransactionMontantMax() {
+	public Integer getTransactionMontantMax() {
 		return transactionMontantMax;
 	}
 
-	public void setTransactionMontantMax(String transactionMontantMax) {
+	public void setTransactionMontantMax(Integer transactionMontantMax) {
 		this.transactionMontantMax = transactionMontantMax;
 	}
 
@@ -270,6 +272,14 @@ public class EsupPapercutContext {
 
 	public void setPaybox(PayboxConfig paybox) {
 		this.paybox = paybox;
+	}
+
+	public IzlyPayConfig getIzlypay() {
+		return izlypay;
+	}
+
+	public void setIzlypay(IzlyPayConfig izlypay) {
+		this.izlypay = izlypay;
 	}
 	
 }

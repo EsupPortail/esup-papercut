@@ -28,7 +28,7 @@ import org.apache.commons.io.IOUtils;
 import org.esupportail.papercut.config.EsupPapercutConfig;
 import org.esupportail.papercut.config.EsupPapercutContext;
 import org.esupportail.papercut.dao.PapercutDaoService;
-import org.esupportail.papercut.domain.PayboxPapercutTransactionLog;
+import org.esupportail.papercut.domain.PayPapercutTransactionLog;
 import org.esupportail.papercut.security.ContextHelper;
 import org.esupportail.papercut.services.EsupPaperCutService;
 import org.esupportail.papercut.services.StatsService;
@@ -77,7 +77,7 @@ public class AdminController {
     @GetMapping(produces = "text/html")
     public String historyList(@PageableDefault(size = 10, direction = Direction.DESC, sort = "transactionDate") Pageable pageable, 
     		Model uiModel) { 	
-        uiModel.addAttribute("pageLogs", papercutDaoService.findAllPayboxPapercutTransactionLogs(pageable));
+        uiModel.addAttribute("pageLogs", papercutDaoService.findAllPayPapercutTransactionLogs(pageable));
         uiModel.addAttribute("active", "admin"); 	
         return "history";
     }
@@ -95,7 +95,7 @@ public class AdminController {
     @PostMapping(value = "archive")                                                                                                                                          
     public String archive(@RequestParam Long id, @PathVariable String papercutContext) {
 
-        PayboxPapercutTransactionLog txLog =  papercutDaoService.findById(id).get();
+        PayPapercutTransactionLog txLog =  papercutDaoService.findById(id).get();
         txLog.setArchived(true);
        
         return "redirect:/" + papercutContext + "/admin?id=" + id;
@@ -105,14 +105,14 @@ public class AdminController {
     @PostMapping(value = "archiveAll")                                                                                                                                          
     public String archiveAll(@PathVariable String papercutContext) {
 
-    	Page<PayboxPapercutTransactionLog> txLogsPage = papercutDaoService.findAllPayboxPapercutTransactionLogs(PageRequest.of(0, 1000));
+    	Page<PayPapercutTransactionLog> txLogsPage = papercutDaoService.findAllPayPapercutTransactionLogs(PageRequest.of(0, 1000));
     	while(true) {
-    		for(PayboxPapercutTransactionLog txLog : txLogsPage.getContent()) {
+    		for(PayPapercutTransactionLog txLog : txLogsPage.getContent()) {
     			txLog.setArchived(true);
     		}
     		if(txLogsPage.hasNext()) {
     			Pageable pageable = txLogsPage.nextPageable();
-    			txLogsPage = papercutDaoService.findAllPayboxPapercutTransactionLogs(pageable);
+    			txLogsPage = papercutDaoService.findAllPayPapercutTransactionLogs(pageable);
     		} else {
     			break;
     		}
@@ -129,30 +129,32 @@ public class AdminController {
 
     	response.setContentType("text/csv");
     	response.setCharacterEncoding("utf-8");   
-    	response.setHeader("Content-Disposition","attachment; filename=\"paybox_papercut_transaction_log.csv\"");
+    	response.setHeader("Content-Disposition","attachment; filename=\"pay_papercut_transaction_log.csv\"");
 
     	Writer writer = new OutputStreamWriter(response.getOutputStream(), "UTF8");
 
-    	String csv = "Date transaction,uid,montant,ID transaction paybox";
+    	String csv = "Date transaction,uid,montant,ID transaction,context,payMode";
     	writer.write(csv);
 
-    	Page<PayboxPapercutTransactionLog> txLogsPage = papercutDaoService.findAllPayboxPapercutTransactionLogs(PageRequest.of(0, 1000, Sort.by("transactionDate").ascending()));
+    	Page<PayPapercutTransactionLog> txLogsPage = papercutDaoService.findAllPayPapercutTransactionLogs(PageRequest.of(0, 1000, Sort.by("transactionDate").ascending()));
 
     	int nbLine = 0;
     	while(true) {
-    		for(PayboxPapercutTransactionLog txLog : txLogsPage.getContent()) {
+    		for(PayPapercutTransactionLog txLog : txLogsPage.getContent()) {
     			csv = "";
     			csv = csv + "\r\n";
     			csv = csv + txLog.getTransactionDate() + ",";
     			csv = csv + txLog.getUid() + ",";
     			csv = csv + txLog.getMontant() + ",";
-    			csv = csv + txLog.getIdtrans();
+    			csv = csv + txLog.getIdtrans() + ",";
+    			csv = csv + txLog.getPapercutContext() + ",";
+    			csv = csv + txLog.getPayMode();
     			writer.write(csv);
     			nbLine++;
     		} 
     		if(txLogsPage.hasNext()) {
     			Pageable pageable = txLogsPage.nextPageable();
-    			txLogsPage = papercutDaoService.findAllPayboxPapercutTransactionLogs(pageable);
+    			txLogsPage = papercutDaoService.findAllPayPapercutTransactionLogs(pageable);
     		} else {
     			break;
     		}	

@@ -21,6 +21,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.esupportail.papercut.config.EsupPapercutConfig;
+import org.esupportail.papercut.domain.izlypay.IzlyPayCallBack;
+import org.esupportail.papercut.domain.izlypay.IzlyPayError;
 import org.esupportail.papercut.services.EsupPaperCutService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,14 +30,14 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-@RequestMapping("/{papercutContext}/payboxcallback")
-public class PayBoxCallbackController {
+@RequestMapping("/{papercutContext}/izlypaycallback")
+public class IzlyPayCallbackController {
 
 	private final Logger log = LoggerFactory.getLogger(getClass());
 	
@@ -46,29 +48,25 @@ public class PayBoxCallbackController {
 	EsupPapercutConfig config;
 	
     /** 
-     * Manage callback response from paybox - url like :  
+     * Manage callback response from izlypay :  
      * 
-     * /payboxcallback?montant=200&reference=bonamvin@univrouen@200-2013-08-23-17-08-18-394&auto=XXXXXX&erreur=00000&idtrans=3608021&signature=CPqq18Un24NL0llB3E3G9kbKI4ztlkoL%2BSRTnMMrWlPBTVNTsn%2B%2FxA0YMSQOGGnU0wm45HYh%2F2RHoZGG3THzj7xKSY6upNJcnKrfFmzfTgA5FTFA3dyM27RgKmLcCeH48FRNoZPjVsKk0G2npvaP%2FY5pkSvn%2BQUl34DkmJkTejs%3D
+     * POST on /izlypaycallback
      *
      * @param uiModel
      * @return empty page
      */
-	@GetMapping
-    public ResponseEntity<String> payboxcallback(@PathVariable String papercutContext, @RequestParam Integer montant, @RequestParam String reference, @RequestParam(required=false) String auto, 
-    		@RequestParam String erreur, @RequestParam String idtrans, @RequestParam String signature, 
-    		HttpServletRequest request) {
+	@PostMapping
+    public ResponseEntity<String> izlypaycallback(@PathVariable String papercutContext, IzlyPayCallBack izlyPayCallBack, HttpServletRequest request) {
 		
-		String ip = request.getRemoteAddr();
-		String queryString = request.getQueryString();
-		
-		if(esupPaperCutService.payboxCallback(config.getContext(papercutContext), montant, reference, auto, erreur, idtrans, signature, queryString, ip, null)) {
+		if(esupPaperCutService.izlypayCallback(config.getContext(papercutContext), izlyPayCallBack)) {
     		HttpHeaders headers = new HttpHeaders();
-    		headers.add("Content-Type", "text/html; charset=utf-8");
     		return new ResponseEntity<String>("", headers, HttpStatus.OK);
 		} else {
     		HttpHeaders headers = new HttpHeaders();
-    		headers.add("Content-Type", "text/html; charset=utf-8");
-    		return new ResponseEntity<String>("", headers, HttpStatus.FORBIDDEN);
+    		IzlyPayError izlyPayError = new IzlyPayError();
+    		izlyPayError.setCode(500);
+    		izlyPayError.setMessage("Erreur lors du traitement du calbback IzlyPay sur esup-papercut");
+    		return new ResponseEntity<>("", headers, HttpStatus.OK);
 		}
     }
 }

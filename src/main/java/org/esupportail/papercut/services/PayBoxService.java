@@ -36,7 +36,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Service
-public class PayBoxService {
+public class PayBoxService extends PayService {
 
 	private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -48,18 +48,16 @@ public class PayBoxService {
 	 * @param montant en €
 	 * @return
 	 */
-	public PayBoxForm getPayBoxForm(EsupPapercutContext context, String uid, String mail, double montant, String contextPath) {
+	public PayBoxForm getPayBoxForm(EsupPapercutContext context, String uid, String mail, Integer montant, String contextPath) {
 		
 		if(context.getPaybox() == null) {
 			return null;
 		}
 		
-		String montantAsCents = Integer.toString(new Double(montant * 100).intValue());
-		
 		PayBoxForm payBoxForm = new PayBoxForm();
 		payBoxForm.setActionUrl(getPayBoxActionUrl(context));
 		payBoxForm.setClientEmail(mail);
-		payBoxForm.setCommande(getNumCommande(context, uid, montantAsCents));
+		payBoxForm.setCommande(getNumCommande(context, uid, montant));
 		payBoxForm.setDevise(context.getPaybox().getDevise());
 		payBoxForm.setHash(hashService.getHash());
 		payBoxForm.setIdentifiant(context.getPaybox().getIdentifiant());
@@ -67,11 +65,11 @@ public class PayBoxService {
 		payBoxForm.setRetourVariables(context.getPaybox().getRetourVariables());
 		payBoxForm.setSite(context.getPaybox().getSite());
 		payBoxForm.setTime(getCurrentTime());
-		payBoxForm.setTotal(montantAsCents);
-		String callbackUrl = String.format("%s/%s/payboxcallback", context.getPaybox().getReponseServerUrl(), context.getPaperCutContext());
+		payBoxForm.setTotal(montant.toString());
+		String callbackUrl = String.format("%s/%s/payboxcallback", context.getPaybox().getReponseServerUrl(), context.getPapercutContext());
 		payBoxForm.setCallbackUrl(callbackUrl);
 
-		String forwardUrl = String.format("%s/%s", context.getPaybox().getForwardServerUrl(), context.getPaperCutContext());
+		String forwardUrl = String.format("%s/%s", context.getPaybox().getForwardServerUrl(), context.getPapercutContext());
 		payBoxForm.setForwardAnnuleUrl(forwardUrl);
 		payBoxForm.setForwardEffectueUrl(forwardUrl);
 		payBoxForm.setForwardRefuseUrl(forwardUrl);
@@ -80,14 +78,6 @@ public class PayBoxService {
 		payBoxForm.setHmac(hMac);
 
 		return payBoxForm;
-	}
-
-	private String getNumCommande(EsupPapercutContext context, String uid, String montantAsCents) {
-		if(context.getPaybox() != null) {
-			DateFormat df = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-S");
-			return context.getPaybox().getNumCommandePrefix() + uid + "@" + context.getPaperCutContext() + "@" + montantAsCents + "-" + df.format(new Date());
-		}
-		return null;
 	}
 
 	protected String getPayBoxActionUrl(EsupPapercutContext context) {

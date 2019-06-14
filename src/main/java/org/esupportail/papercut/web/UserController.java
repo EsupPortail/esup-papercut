@@ -16,8 +16,9 @@
  * limitations under the License.
  */
 package org.esupportail.papercut.web;
-import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -28,7 +29,8 @@ import org.esupportail.papercut.config.EsupPapercutConfig;
 import org.esupportail.papercut.config.EsupPapercutContext;
 import org.esupportail.papercut.dao.PapercutDaoService;
 import org.esupportail.papercut.domain.PayBoxForm;
-import org.esupportail.papercut.domain.PayboxPapercutTransactionLog;
+import org.esupportail.papercut.domain.PayPapercutTransactionLog;
+import org.esupportail.papercut.domain.PayPapercutTransactionLog.PayMode;
 import org.esupportail.papercut.domain.UserPapercutInfos;
 import org.esupportail.papercut.security.ContextHelper;
 import org.esupportail.papercut.services.EsupPaperCutService;
@@ -46,8 +48,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping("/{papercutContext}/user")
@@ -73,15 +77,15 @@ public class UserController {
 			return "redirect:/";
 		}
     	
-    	double papercutSheetCost = Double.parseDouble(context.getPapercutSheetCost());
-    	double papercutColorSheetCost = Double.parseDouble(context.getPapercutColorSheetCost());
+    	int papercutSheetCost = context.getPapercutSheetCost();
+    	int papercutColorSheetCost = context.getPapercutColorSheetCost();
         
         String uid = getUid();
         String userMail = getUserMail();
         
         // check if the user can make a transaction
-        int transactionNbMax = Integer.parseInt(context.getTransactionNbMax());
-        BigDecimal transactionMontantMax  = new BigDecimal(context.getTransactionMontantMax());
+        int transactionNbMax = context.getTransactionNbMax();
+        int transactionMontantMax  = context.getTransactionMontantMax();
         boolean canMakeTransaction = true;
 	
         // constraints via transactionNbMax
@@ -92,51 +96,59 @@ public class UserController {
     		}
     	}		
         
-    	BigDecimal payboxMontantMin = new BigDecimal(context.getPayboxMontantMin());
-    	BigDecimal payboxMontantMax  = new BigDecimal(context.getPayboxMontantMax());
-    	BigDecimal payboxMontantStep  = new BigDecimal(context.getPayboxMontantStep());	
-        // constraints on the slider via transactionMontantMax
-        if(canMakeTransaction && transactionMontantMax.intValue() > -1) {  	
-			Page<PayboxPapercutTransactionLog> transactionsNotArchived = papercutDaoService.findPayboxPapercutTransactionLogsByUidAndArchived(uid, false, PageRequest.of(0, Integer.MAX_VALUE));
-			BigDecimal montantTotalTransactionsNotArchived = new BigDecimal("0");
-			for(PayboxPapercutTransactionLog txLog: transactionsNotArchived.getContent()) {
-				montantTotalTransactionsNotArchived = montantTotalTransactionsNotArchived.add(new BigDecimal(txLog.getMontant()));
+    	Integer montantMin = context.getMontantMin();
+    	Integer montantMax  = context.getMontantMax();
+    	Integer montantStep  = context.getMontantStep();	
+    	
+        // constraints via transactionMontantMax
+        if(canMakeTransaction && transactionMontantMax > -1) {  	
+			Page<PayPapercutTransactionLog> transactionsNotArchived = papercutDaoService.findPayPapercutTransactionLogsByUidAndArchived(uid, false, PageRequest.of(0, Integer.MAX_VALUE));
+			Integer montantTotalTransactionsNotArchived = 0;
+			for(PayPapercutTransactionLog txLog: transactionsNotArchived.getContent()) {
+				montantTotalTransactionsNotArchived = montantTotalTransactionsNotArchived + txLog.getMontant();
 			}
-			transactionMontantMax = transactionMontantMax.multiply(new BigDecimal("100")).subtract(montantTotalTransactionsNotArchived);
-        	if(transactionMontantMax.doubleValue() < payboxMontantMax.doubleValue()*100) {
-        		payboxMontantMax = transactionMontantMax.divide(payboxMontantStep).multiply(payboxMontantStep);
-        		payboxMontantMax = payboxMontantMax.divide(new BigDecimal("100"));
-        		if(payboxMontantMax.compareTo(payboxMontantMin) == -1) {
+			transactionMontantMax = transactionMontantMax - montantTotalTransactionsNotArchived;
+        	if(transactionMontantMax < montantMax) {
+        		montantMax = transactionMontantMax;
+        		if(montantMax.compareTo(montantMin) == -1) {
         			canMakeTransaction = false;
         		}
-            	uiModel.addAttribute("payboxMontantMax", payboxMontantMax.doubleValue());
+            	uiModel.addAttribute("payboxMontantMax", montantMax.doubleValue());
         	}
         }
 	       
         // generation de l'ensemble des payboxForm :  payboxMontantMin -> payboxMontantMax par pas de payboxMontantStep
         String contextPath = request.getContextPath();
-        Map<Integer, PayBoxForm> payboxForms = new HashMap<Integer, PayBoxForm>(); 
-        for(BigDecimal montant=payboxMontantMin; montant.compareTo(payboxMontantMax)<=0; montant = montant.add(payboxMontantStep)) {
-        	PayBoxForm payBoxForm = esupPaperCutService.getPayBoxForm(context, uid, userMail, montant.doubleValue(), contextPath);
-        	if(payBoxForm != null) {
-	        	if(papercutSheetCost > 0) {
-	        		int nbSheets = (int)(montant.doubleValue()/papercutSheetCost);
-	        		payBoxForm.setNbSheets(nbSheets);
-	        	}
-	        	if(papercutColorSheetCost > 0) {
-	        		int nbColorSheets = (int)(montant.doubleValue()/papercutColorSheetCost);
-	        		payBoxForm.setNbColorSheets(nbColorSheets);
-	        	}
-	        	payboxForms.put(montant.multiply(new BigDecimal(100)).intValue(), payBoxForm);
-        	}
-        }
-        Map<Integer, PayBoxForm> sortedMap = new TreeMap<Integer, PayBoxForm>(payboxForms);
         
-        uiModel.addAttribute("payboxForms", sortedMap);
+        if(esupPaperCutService.getPayModes(context).contains(PayMode.PAYBOX)) {
+	        Map<Integer, PayBoxForm> payboxForms = new TreeMap<Integer, PayBoxForm>(); 
+	        for(Integer montant=montantMin; montant.compareTo(montantMax)<=0; montant = montant + montantStep) {
+	        	PayBoxForm payBoxForm = esupPaperCutService.getPayBoxForm(context, uid, userMail, montant, contextPath);
+		        if(papercutSheetCost > 0) {
+		        	int nbSheets = (int)(montant/papercutSheetCost);
+		        	payBoxForm.setNbSheets(nbSheets);
+		        }
+		        if(papercutColorSheetCost > 0) {
+		        	int nbColorSheets = (int)(montant/papercutColorSheetCost);
+		        	payBoxForm.setNbColorSheets(nbColorSheets);
+		        }
+		        payboxForms.put(montant, payBoxForm);
+	        }    
+	        uiModel.addAttribute("payboxForms", payboxForms);
+        }
+        
+        if(esupPaperCutService.getPayModes(context).contains(PayMode.IZLYPAY)) {
+	        Map<Integer, String> izlypayForms = new TreeMap<Integer, String>(); 
+	        for(Integer montant=montantMin; montant.compareTo(montantMax)<=0; montant = montant + montantStep) {
+		        izlypayForms.put(montant, new Double(new Double(montant)/100.0).toString());
+	        }        
+	        uiModel.addAttribute("izlypayForms", izlypayForms);
+        }
+        
         
         uiModel.addAttribute("canMakeTransaction", canMakeTransaction);
 
-    	UserPapercutInfos userPapercutInfos = esupPaperCutService.getUserPapercutInfos(context, uid);   		
+    	UserPapercutInfos userPapercutInfos = esupPaperCutService.getUserPapercutInfos(context, uid);
 		uiModel.addAttribute("userPapercutInfos", userPapercutInfos);
 
     	uiModel.addAttribute("isAdmin", WebUtils.isAdmin());
@@ -147,6 +159,24 @@ public class UserController {
     	
     	return "index";
     }
+	
+	
+	@PostMapping(value = "izlypay", produces = "text/html")
+	public ModelAndView izlypayForm(@RequestParam Integer montant) {	
+
+		EsupPapercutContext context = config.getContext(ContextHelper.getCurrentContext());
+		if(context == null) {
+			new ModelAndView("redirect:/");
+		}
+		
+		String uid = getUid();
+		String userMail = getUserMail();
+		
+		String izlyPayUrl = esupPaperCutService.getIzlyPayUrl(context, uid, userMail, montant, ContextHelper.getCurrentContext());
+
+		return new ModelAndView("redirect:" + izlyPayUrl);
+	}
+	
 
     
     @GetMapping(value = "/logs", produces = "text/html")
@@ -155,7 +185,7 @@ public class UserController {
     	
         String uid = getUid();
   
-        uiModel.addAttribute("pageLogs", papercutDaoService.findPayboxPapercutTransactionLogsByUid(uid, pageable));
+        uiModel.addAttribute("pageLogs", papercutDaoService.findPayPapercutTransactionLogsByUid(uid, pageable));
         uiModel.addAttribute("active", "history");
     	
         uiModel.addAttribute("active", "logs"); 	
@@ -194,7 +224,7 @@ public class UserController {
      * so we can do that even if we can consider it "less" secure than the direct call of paybox) 
      */
     @RequestMapping(params="signature")
-    public String renderViewAfterPaybox(@PathVariable String papercutContext, @RequestParam(required=false) String montant, @RequestParam String reference, @RequestParam(required=false) String auto, 
+    public String renderViewAfterPaybox(@PathVariable String papercutContext, @RequestParam(required=false) Integer montant, @RequestParam String reference, @RequestParam(required=false) String auto, 
     		@RequestParam String erreur, @RequestParam String idtrans, @RequestParam String signature) {	
     	
     	EsupPapercutContext context = config.getContext(papercutContext);
@@ -205,7 +235,6 @@ public class UserController {
 
 	    	log.debug(queryString);
 	    	
-	    	// TODO ajouter context.paperCutContext dans payboxCallback
 	    	esupPaperCutService.payboxCallback(context, montant, reference, auto, erreur, idtrans, signature, queryString, null, uid);
     	}
     	
@@ -213,7 +242,7 @@ public class UserController {
     }
 
 
-    private static String getQueryString(String montant, String reference,
+    private static String getQueryString(Integer montant, String reference,
     		String auto, String erreur, String idtrans, String signature) {
     	StringBuilder sb = new StringBuilder();
 

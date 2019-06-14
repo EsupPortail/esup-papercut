@@ -57,9 +57,8 @@
 						th:replace="fragments/sorting :: sorting(${pageLogs}, 'uid', 'Identifiant')">Identifiant</th>
 					<th scope="col">Référence</th>
 					<th scope="col">Montant (€)</th>
-					<th scope="col"
-						th:replace="fragments/sorting :: sorting(${pageLogs}, 'papercutWsCallStatus', 'Status')">Status</th>
 					<th scope="col">Nouveau solde (€)</th>
+					<th scope="col">PayMode</th>
 					<th scope="col"
 						th:replace="fragments/sorting :: sorting(${pageLogs}, 'archived', 'Archivé')">Archivé</th>
 					<th scope="col">Détail</th>
@@ -71,8 +70,8 @@
 					<td th:text="${log.uid}">uid</td>
 					<td th:text="${log.reference}">reference</td>
 					<td th:text="${log.montantDevise}">montantDevise</td>
-					<td th:text="${log.papercutWsCallStatus}">papercutWsCallStatus</td>
 					<td th:text="${log.papercutNewSolde}">papercutNewSolde</td>
+					<td th:text="${log.payMode}">payMode</td>
 					<td th:text="${log.archived}">archived</td>
 					<td class="utilbox"><a class="btn btn-success" title="Voir"
 						alt="Détail" th:href="@{~{id}(id=${log.id})}"><img

@@ -17,25 +17,22 @@
  */
 package org.esupportail.papercut.dao;
 
-import org.esupportail.papercut.domain.PayboxPapercutTransactionLog;
+import org.esupportail.papercut.domain.PayPapercutTransactionLog;
+import org.esupportail.papercut.domain.PayPapercutTransactionLog.PayMode;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PayboxPapercutTransactionLogRepository extends JpaRepository<PayboxPapercutTransactionLog, Long>{
+public interface PayPapercutTransactionLogRepository extends JpaRepository<PayPapercutTransactionLog, Long>{
 
 	Long countByUidAndArchived(String uid, Boolean archived);
 
-	Page<PayboxPapercutTransactionLog> findPayboxPapercutTransactionLogsByIdtrans(String idTrans, Pageable pageable);
+	Page<PayPapercutTransactionLog> findPayPapercutTransactionLogsByIdtransAndPayMode(String idTrans, PayMode payMode, Pageable pageable);
 
-	Page<PayboxPapercutTransactionLog> findPayboxPapercutTransactionLogsByArchived(Boolean archived, Pageable pageable);
+	Page<PayPapercutTransactionLog> findPayPapercutTransactionLogsByUid(String uid, Pageable pageable);
 
-	Page<PayboxPapercutTransactionLog> findPayboxPapercutTransactionLogsByPaperCutContext(Pageable pageable);
-
-	Page<PayboxPapercutTransactionLog> findPayboxPapercutTransactionLogsByUid(String uid, Pageable pageable);
-
-	Page<PayboxPapercutTransactionLog> findPayboxPapercutTransactionLogsByUidAndArchived(String uid, Boolean archived, Pageable pageable);
+	Page<PayPapercutTransactionLog> findPayPapercutTransactionLogsByUidAndArchived(String uid, Boolean archived, Pageable pageable);
 
 }

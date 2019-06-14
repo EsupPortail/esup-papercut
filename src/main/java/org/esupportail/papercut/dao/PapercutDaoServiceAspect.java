@@ -36,7 +36,7 @@ public class PapercutDaoServiceAspect {
 	  @Before("execution(* org.esupportail.papercut.dao.PapercutDaoService.*(..)) && target(papercutDaoService)")
 	  public void aroundExecution(JoinPoint pjp, PapercutDaoService papercutDaoService) throws Throwable {
 	    org.hibernate.Filter filter = papercutDaoService.entityManager.unwrap(Session.class).enableFilter("contextFilter");
-	    filter.setParameter("paperCutContext", ContextHelper.getCurrentContext());
+	    filter.setParameter("papercutContext", ContextHelper.getCurrentContext());
 	    filter.validate();
 	  }
 	

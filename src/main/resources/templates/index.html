@@ -46,33 +46,73 @@
 					th:text="${userPapercutInfos.printPages}">0</b>
 			</p>
 
-			<div th:if="${payboxForms!=null}">
-
 				<div th:if="${canMakeTransaction}">
 
-					<div class="row my-3 card card-body bg-light">
-
-						<div id="payboxForm" class="esuppayboxForm row">
-
-							<div class="payboxFormPost col-2 my-1"
-								th:id="'payboxForm_' + ${payboxFormItem.key}"
-								th:each="payboxFormItem: ${payboxForms}"
-								th:with="payBoxForm=${payboxFormItem.value}">
-
-								<form method="POST" th:action="${payBoxForm.actionUrl}">
-
-									<input th:each="payBoxParam: ${payBoxForm.orderedParams}"
-										type="hidden" th:name="${payBoxParam.key}"
-										th:value="${payBoxParam.value}" /> <input type="hidden"
-										name="PBX_HMAC" th:value="${payBoxForm.hmac}" /> <input
-										type="submit" th:id="'pbx_credit_' + ${payboxFormItem.key}"
-										th:value="#{paybox.credit(${payBoxForm.montant})}"
-										class="btn btn-success" role="button" />
-								</form>
-
+					<div th:if="${payboxForms!=null}" class="esuppayboxForm" id="payboxForm">
+							
+						<hr/>
+							
+						<fieldset class="border p-2 bg-light">
+						
+   							<legend  class="w-auto">Paiement par carte bancaire via Paybox</legend>
+   							
+   							<div class="row">
+   							
+								<div class="payboxFormPost col-2"
+									th:id="'payboxForm_' + ${payboxFormItem.key}"
+									th:each="payboxFormItem: ${payboxForms}"
+									th:with="payBoxForm=${payboxFormItem.value}">
+	
+									<form method="POST" th:action="${payBoxForm.actionUrl}">
+	
+										<input th:each="payBoxParam: ${payBoxForm.orderedParams}"
+											type="hidden" th:name="${payBoxParam.key}"
+											th:value="${payBoxParam.value}" /> <input type="hidden"
+											name="PBX_HMAC" th:value="${payBoxForm.hmac}" /> <input
+											type="submit" th:id="'pbx_credit_' + ${payboxFormItem.key}"
+											th:value="#{paybox.credit(${payBoxForm.montant})}"
+											class="btn btn-success" role="button" />
+									</form>
+	
+								</div>
+								
 							</div>
+							
+						</fieldset>
 
-						</div>
+					</div>
+					
+					<div th:if="${izlypayForms!=null}" class="izlypayForm" id="izlypayForm">
+
+						<hr/>
+
+						<fieldset class="border p-2 bg-light">
+   							
+   							<legend  class="w-auto">Paiement web via IZLY (CROUS)</legend>
+   							
+   							<div class="row">
+   							
+								<div class="izlypayFormPost col-2"
+									th:id="'izlypayForm_' + ${izlypayForm.key}"
+									th:each="izlypayForm: ${izlypayForms}">
+	
+									<form method="POST" th:action="@{'user/izlypay'}">
+	
+										<input 
+											type="hidden" 
+											name="montant"
+											th:value="${izlypayForm.key}" /> 
+										<input
+											type="submit" th:id="'pbx_credit_' + ${izlypayForm.key}"
+											th:value="#{paybox.credit(${izlypayForm.value})}"
+											class="btn btn-success" role="button" />
+									</form>
+	
+								</div>
+							
+							</div>
+							
+						</fieldset>
 
 					</div>
 
@@ -114,8 +154,6 @@
 					</div>
 					<div th:utext="${papercutContext.htmlUserFooter}"></div>
 				</div>
-
-			</div>
 
 		</div>
 

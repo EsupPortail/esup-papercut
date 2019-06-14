@@ -20,12 +20,13 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Version;
 
 import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
@@ -33,43 +34,37 @@ import org.hibernate.annotations.ParamDef;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
-@FilterDef(name = "contextFilter", parameters = {@ParamDef(name = "paperCutContext", type = "string")})
-@Filter(name = "contextFilter", condition = "paper_cut_context = :paperCutContext")
-public class PayboxPapercutTransactionLog implements ContextSupport {
+@FilterDef(name = "contextFilter", parameters = {@ParamDef(name = "papercutContext", type = "string")})
+@Filter(name = "contextFilter", condition = "papercut_context = :papercutContext")
+public class PayPapercutTransactionLog implements ContextSupport {
 
+	public static enum PayMode {
+		IZLYPAY, PAYBOX
+	}
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private Long id;
     
-    @Version
-    @Column(name = "version")
-    private Integer version;
-    
     @Temporal(TemporalType.TIMESTAMP)
     @DateTimeFormat(style = "dd/MM/yyyy-HH:mm:ss")
     private Date transactionDate;
+    
+    @Enumerated(EnumType.STRING)
+    private PayMode payMode;
 
     private String uid;
 
-    private String paperCutContext;
-
-    private String papercutWsCallStatus;
+    private String papercutContext;
 
     private String reference;
 
-    private String montant;
+    private Integer montant;
 
     private String papercutNewSolde;
 
-    private String auto;
-
-    private String erreur;
-
     private String idtrans;
-
-    private String signature;
 
     private String papercutOldSolde;
     
@@ -81,14 +76,6 @@ public class PayboxPapercutTransactionLog implements ContextSupport {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public Integer getVersion() {
-		return version;
-	}
-
-	public void setVersion(Integer version) {
-		this.version = version;
 	}
 
 	public Date getTransactionDate() {
@@ -107,20 +94,20 @@ public class PayboxPapercutTransactionLog implements ContextSupport {
 		this.uid = uid;
 	}
 
-	public String getPaperCutContext() {
-		return paperCutContext;
+	public String getPapercutContext() {
+		return papercutContext;
 	}
 
-	public void setPaperCutContext(String paperCutContext) {
-		this.paperCutContext = paperCutContext;
+	public void setPapercutContext(String papercutContext) {
+		this.papercutContext = papercutContext;
 	}
 
-	public String getPapercutWsCallStatus() {
-		return papercutWsCallStatus;
+	public PayMode getPayMode() {
+		return payMode;
 	}
 
-	public void setPapercutWsCallStatus(String papercutWsCallStatus) {
-		this.papercutWsCallStatus = papercutWsCallStatus;
+	public void setPayMode(PayMode payMode) {
+		this.payMode = payMode;
 	}
 
 	public String getReference() {
@@ -131,11 +118,11 @@ public class PayboxPapercutTransactionLog implements ContextSupport {
 		this.reference = reference;
 	}
 
-	public String getMontant() {
+	public Integer getMontant() {
 		return montant;
 	}
 
-	public void setMontant(String montant) {
+	public void setMontant(Integer montant) {
 		this.montant = montant;
 	}
 
@@ -147,36 +134,12 @@ public class PayboxPapercutTransactionLog implements ContextSupport {
 		this.papercutNewSolde = papercutNewSolde;
 	}
 
-	public String getAuto() {
-		return auto;
-	}
-
-	public void setAuto(String auto) {
-		this.auto = auto;
-	}
-
-	public String getErreur() {
-		return erreur;
-	}
-
-	public void setErreur(String erreur) {
-		this.erreur = erreur;
-	}
-
 	public String getIdtrans() {
 		return idtrans;
 	}
 
 	public void setIdtrans(String idtrans) {
 		this.idtrans = idtrans;
-	}
-
-	public String getSignature() {
-		return signature;
-	}
-
-	public void setSignature(String signature) {
-		this.signature = signature;
 	}
 
 	public String getPapercutOldSolde() {

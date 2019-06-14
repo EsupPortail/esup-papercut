@@ -2,8 +2,8 @@ package org.esupportail.papercut.domain;
 
 public interface ContextSupport {
 	
-	public String getPaperCutContext();
+	public String getPapercutContext();
 
-	public void setPaperCutContext(String paperCutContext);
+	public void setPapercutContext(String papercutContext);
 
 }
