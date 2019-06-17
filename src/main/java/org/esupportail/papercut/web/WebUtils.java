@@ -46,6 +46,6 @@ public class WebUtils {
 	
 	private static boolean hasRole(String roleName) {
 		 Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		 return auth.getAuthorities().contains(new SimpleGrantedAuthority(roleName));
+		 return auth!=null && auth.getAuthorities() != null && auth.getAuthorities().contains(new SimpleGrantedAuthority(roleName));
 	}
 }
