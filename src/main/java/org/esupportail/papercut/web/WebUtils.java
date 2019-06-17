@@ -24,7 +24,7 @@ public class WebUtils {
 	
 	public static List<String> availableContexts() {
 		 Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		 if(auth.getPrincipal() instanceof ContextUserDetails) {
+		 if(auth != null && auth.getPrincipal() instanceof ContextUserDetails) {
 			 ContextUserDetails userDetails = (ContextUserDetails)auth.getPrincipal();
 			 return userDetails.getAvailableContexts();
 		 } else {
