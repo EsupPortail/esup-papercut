@@ -51,16 +51,19 @@
 		<table class="table table-hover table-striped table-bordered">
 			<thead>
 				<tr>
-					<th scope="col"
-						th:replace="fragments/sorting :: sorting(${pageLogs}, 'transactionDate', 'Date')">Date</th>
-					<th scope="col"
-						th:replace="fragments/sorting :: sorting(${pageLogs}, 'uid', 'Identifiant')">Identifiant</th>
+					<th scope="col">
+						<a class="sorted" sd:pagination-sort="transactionDate">Date</a>
+					</th>
+					<th scope="col">
+						<a class="sorted" sd:pagination-sort="uid">Identifiant</a>
+					</th>
 					<th scope="col">Référence</th>
 					<th scope="col">Montant (€)</th>
 					<th scope="col">Nouveau solde (€)</th>
 					<th scope="col">PayMode</th>
-					<th scope="col"
-						th:replace="fragments/sorting :: sorting(${pageLogs}, 'archived', 'Archivé')">Archivé</th>
+					<th scope="col">
+						<a class="sorted" sd:pagination-sort="archived">Archivé</a>
+					</th>
 					<th scope="col">Détail</th>
 				</tr>
 			</thead>
@@ -81,7 +84,7 @@
 			</tbody>
 		</table>
 
-		<nav th:replace="fragments/paging :: paging(${pageLogs})"></nav>
+		<nav th:replace="fragments/pagination :: pagination"></nav>
 
 	</div>
 

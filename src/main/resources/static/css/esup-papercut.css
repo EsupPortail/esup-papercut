@@ -56,3 +56,14 @@ nav.navbar .active>.nav-link {
 	}
 }
 
+.sorted-desc::after, .sorted-asc::after {
+    float: right;
+}
+
+.sorted-desc::after{
+    content:"\25BC";
+}
+
+.sorted-asc::after{
+    content: "\25B2";
+}

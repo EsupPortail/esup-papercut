@@ -24,6 +24,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.thymeleaf.dialect.springdata.SpringDataDialect;
 
 @Configuration  
 public class WebConfig implements WebMvcConfigurer {  
@@ -49,6 +50,11 @@ public class WebConfig implements WebMvcConfigurer {
     @Bean
     public ErrorProperties errorProperties() throws Exception {
       return new ErrorProperties();
+    }
+    
+    @Bean
+    public SpringDataDialect springDataDialect() {
+        return new SpringDataDialect();
     }
     
 } 
