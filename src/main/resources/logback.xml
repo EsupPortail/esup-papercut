@@ -25,7 +25,7 @@
 	<include resource="org/springframework/boot/logging/logback/base.xml"/>
 
 	<appender name="FILE" class="ch.qos.logback.core.FileAppender">
-	    <file>logs/esup-papercut.log.log</file>
+	    <file>logs/esup-papercut.log</file>
 	    <append>true</append>
 	    <immediateFlush>true</immediateFlush>
 	    <encoder>
@@ -54,7 +54,7 @@
         <appender-ref ref="EMAIL"/>
     </logger>
     
-    <logger name="org.esupportail.papercut" level="debug" additivity="false">
+    <logger name="org.esupportail.papercut" level="info" additivity="false">
         <appender-ref ref="FILE"/>
     </logger>
 
