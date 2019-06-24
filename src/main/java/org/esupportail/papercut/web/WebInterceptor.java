@@ -51,9 +51,11 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
 	
 			if (!isRedirectView && !viewNameStartsWithRedirect && context!=null) {
 				EsupPapercutContext configContext = config.getContext(context);
-				modelAndView.addObject("title", configContext.getTitle());;
-				modelAndView.addObject("htmlFooter", configContext.getHtmlFooter());;
-				modelAndView.addObject("pContext", context);
+				if(configContext != null) {
+					modelAndView.addObject("title", configContext.getTitle());
+					modelAndView.addObject("htmlFooter", configContext.getHtmlFooter());
+					modelAndView.addObject("pContext", context);
+				}
 				modelAndView.addObject("isAdmin", WebUtils.isAdmin());
 				modelAndView.addObject("isManager", WebUtils.isManager());
 				modelAndView.addObject("availableContexts", WebUtils.availableContexts());
