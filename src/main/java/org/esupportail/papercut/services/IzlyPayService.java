@@ -29,6 +29,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -37,11 +38,14 @@ public class IzlyPayService extends PayService implements InitializingBean {
 
 	private final Logger log = LoggerFactory.getLogger(getClass());
 
-	private RestTemplate restTemplate = new RestTemplate();
+	private RestTemplate restTemplate;
 	
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
+		SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
+		requestFactory.setOutputStreaming(false);
+		restTemplate = new RestTemplate(requestFactory);
 		restTemplate.setInterceptors(Collections.singletonList(new RequestResponseLoggingInterceptor()));
 	}
 
