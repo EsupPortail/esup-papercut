@@ -54,7 +54,7 @@
         <appender-ref ref="EMAIL"/>
     </logger>
     
-    <logger name="org.esupportail.papercut" level="info" additivity="false">
+    <logger name="org.esupportail.papercut" level="debug" additivity="false">
         <appender-ref ref="FILE"/>
     </logger>
 

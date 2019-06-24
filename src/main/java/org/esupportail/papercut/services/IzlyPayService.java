@@ -17,12 +17,15 @@
  */
 package org.esupportail.papercut.services;
 
+import java.util.Collections;
+
 import org.esupportail.papercut.config.EsupPapercutContext;
 import org.esupportail.papercut.config.IzlyPayConfig;
 import org.esupportail.papercut.domain.izlypay.IzlyPayment;
 import org.esupportail.papercut.domain.izlypay.IzlyPaymentResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -30,11 +33,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service
-public class IzlyPayService extends PayService {
+public class IzlyPayService extends PayService implements InitializingBean {
 
 	private final Logger log = LoggerFactory.getLogger(getClass());
 
 	private RestTemplate restTemplate = new RestTemplate();
+	
+
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		restTemplate.setInterceptors(Collections.singletonList(new RequestResponseLoggingInterceptor()));
+	}
 
 	public String getIzlyPayUrl(EsupPapercutContext context, String uid, String mail, Integer montant, String contextPath) {
 
@@ -68,6 +77,7 @@ public class IzlyPayService extends PayService {
 		headers.set("AppIdentifier", izlyPayConfig.getIdentifier());
 		return headers;
 	}
+
 
 
 }
