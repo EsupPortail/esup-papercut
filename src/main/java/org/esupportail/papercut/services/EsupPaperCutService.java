@@ -152,7 +152,7 @@ public class EsupPaperCutService {
 
 		String reference = izlyPayCallBack.getOperationSMoney().getClientOrderId();
 		String idtrans = reference;
-		Integer montant = izlyPayCallBack.getOperationSMoney().getAmount();
+		Integer montant = izlyPayCallBack.getOperationSMoney().getAmountAsInteger();
 
 		List<PayPapercutTransactionLog> txLogs  = papercutDaoService.findPayPapercutTransactionLogsByIdtransAndPayMode(idtrans, PayMode.IZLYPAY, PageRequest.of(0, Integer.MAX_VALUE)).getContent();		
 

@@ -8,7 +8,7 @@ public class IzlyPayOperationSMoney {
 
 	Integer id;
 	
-	Integer amount;
+	String amount;
 	
 	@JsonFormat(pattern="dd/MM/yyyy HH:mm:ss")
 	Date date;
@@ -29,11 +29,11 @@ public class IzlyPayOperationSMoney {
 		this.id = id;
 	}
 
-	public Integer getAmount() {
+	public String getAmount() {
 		return amount;
 	}
 
-	public void setAmount(Integer amount) {
+	public void setAmount(String amount) {
 		this.amount = amount;
 	}
 
@@ -75,6 +75,12 @@ public class IzlyPayOperationSMoney {
 
 	public void setCallbackParameters(String callbackParameters) {
 		this.callbackParameters = callbackParameters;
+	}
+
+	public Integer getAmountAsInteger() {
+		// Amount est de la forme 200.00 pour 200 centimes
+		Double amountDble = Double.valueOf(getAmount());
+		return Integer.valueOf(amountDble.intValue());
 	}
 	
 }

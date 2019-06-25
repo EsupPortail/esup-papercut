@@ -32,8 +32,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/{papercutContext}/izlypaycallback")
@@ -56,13 +56,11 @@ public class IzlyPayCallbackController {
      * @return empty page
      */
 	@PostMapping
-    public ResponseEntity<String> izlypaycallback(@PathVariable String papercutContext, IzlyPayCallBack izlyPayCallBack, HttpServletRequest request) {
-		
+    public ResponseEntity<String> izlypaycallback(@PathVariable String papercutContext, @RequestBody IzlyPayCallBack izlyPayCallBack, HttpServletRequest request) {
+		HttpHeaders headers = new HttpHeaders();
 		if(esupPaperCutService.izlypayCallback(config.getContext(papercutContext), izlyPayCallBack)) {
-    		HttpHeaders headers = new HttpHeaders();
     		return new ResponseEntity<String>("", headers, HttpStatus.OK);
 		} else {
-    		HttpHeaders headers = new HttpHeaders();
     		IzlyPayError izlyPayError = new IzlyPayError();
     		izlyPayError.setCode(500);
     		izlyPayError.setMessage("Erreur lors du traitement du calbback IzlyPay sur esup-papercut");

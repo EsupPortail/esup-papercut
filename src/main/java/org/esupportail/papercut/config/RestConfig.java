@@ -64,13 +64,12 @@ public class RestConfig implements WebMvcConfigurer {
     
 	@Bean
 	public CommonsRequestLoggingFilter logFilter() {
-		CommonsRequestLoggingFilter filter
-		= new CommonsRequestLoggingFilter();
+		CommonsRequestLoggingFilter filter = new CommonsRequestLoggingFilter();
 		filter.setIncludeQueryString(true);
 		filter.setIncludePayload(true);
 		filter.setMaxPayloadLength(10000);
-		filter.setIncludeHeaders(false);
-		filter.setAfterMessagePrefix("REQUEST DATA : ");
+		filter.setIncludeHeaders(true);
+		filter.setIncludeClientInfo(true);
 		return filter;
 	}
 } 
