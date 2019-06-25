@@ -101,7 +101,7 @@ public class EsupPaperCutService {
 		txLog.setTransactionDate(new Date());
 		txLog.setReference(reference);
 		String uid = reference.split("@")[0];
-		uid = uid.substring(context.getPaybox().getNumCommandePrefix().length(), uid.length());
+		uid = uid.substring(context.getNumCommandePrefix().length(), uid.length());
 		txLog.setUid(uid);
 		String papercutContext = reference.split("@")[1];
 		txLog.setPapercutContext(papercutContext);
@@ -168,7 +168,7 @@ public class EsupPaperCutService {
 		txLog.setIdtrans(idtrans);
 		txLog.setTransactionDate(new Date());
 		String uid = reference.split("@")[0];
-		uid = uid.substring(context.getPaybox().getNumCommandePrefix().length(), uid.length());
+		uid = uid.substring(context.getNumCommandePrefix().length(), uid.length());
 		txLog.setUid(uid);
 		String papercutContext = reference.split("@")[1];
 		txLog.setPapercutContext(papercutContext);

@@ -24,6 +24,8 @@ public class EsupPapercutContext {
 
 	String papercutContext = "univ-ville";
 	
+    String numCommandePrefix = "EsupPaperCut-";
+	
 	String papercutUserUidAttr = "uid";
 	
 	String userEmail = "email";
@@ -80,6 +82,14 @@ public class EsupPapercutContext {
 
 	public void setPapercutContext(String papercutContext) {
 		this.papercutContext = papercutContext;
+	}
+	
+	public String getNumCommandePrefix() {
+		return numCommandePrefix;
+	}
+
+	public void setNumCommandePrefix(String numCommandePrefix) {
+		this.numCommandePrefix = numCommandePrefix;
 	}
 
 	public String getPapercutUserUidAttr() {

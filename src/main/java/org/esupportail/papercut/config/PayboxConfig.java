@@ -33,8 +33,6 @@ public class PayboxConfig {
 
     String retourVariables = "montant:M;reference:R;auto:A;erreur:E;idtrans:S;signature:K";
 
-    String numCommandePrefix = "EsupPaperCut-";
-
     String hmacKey;
 
     String site;
@@ -65,14 +63,7 @@ public class PayboxConfig {
 	public void setRetourVariables(String retourVariables) {
 		this.retourVariables = retourVariables;
 	}
-
-	public String getNumCommandePrefix() {
-		return numCommandePrefix;
-	}
-
-	public void setNumCommandePrefix(String numCommandePrefix) {
-		this.numCommandePrefix = numCommandePrefix;
-	}
+	
 
 	public String getHmacKey() {
 		return hmacKey;
