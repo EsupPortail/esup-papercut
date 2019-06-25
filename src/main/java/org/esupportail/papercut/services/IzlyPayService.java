@@ -17,7 +17,7 @@
  */
 package org.esupportail.papercut.services;
 
-import java.util.Collections;
+import javax.annotation.Resource;
 
 import org.esupportail.papercut.config.EsupPapercutContext;
 import org.esupportail.papercut.config.IzlyPayConfig;
@@ -25,40 +25,19 @@ import org.esupportail.papercut.domain.izlypay.IzlyPayment;
 import org.esupportail.papercut.domain.izlypay.IzlyPaymentResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.BufferingClientHttpRequestFactory;
-import org.springframework.http.client.SimpleClientHttpRequestFactory;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 @Service
-public class IzlyPayService extends PayService implements InitializingBean {
+public class IzlyPayService extends PayService {
 
 	private final Logger log = LoggerFactory.getLogger(getClass());
 
+	@Resource
 	private RestTemplate restTemplate;
-	
-
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
-		restTemplate = new RestTemplate(new BufferingClientHttpRequestFactory(requestFactory));
-		restTemplate.setInterceptors(Collections.singletonList(new RequestResponseLoggingInterceptor()));
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
-		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-		converter.setObjectMapper(mapper);
-	    restTemplate.getMessageConverters().add(0, converter);
-	}
 
 	public String getIzlyPayUrl(EsupPapercutContext context, String uid, String mail, Integer montant, String contextPath) {
 
