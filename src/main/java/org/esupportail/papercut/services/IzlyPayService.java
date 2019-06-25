@@ -77,7 +77,7 @@ public class IzlyPayService extends PayService implements InitializingBean {
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", "application/json");
 		headers.set("Content-Type", "application/vnd.s-money.v1+json");
-		headers.set("Authorization", izlyPayConfig.getKey());
+		headers.set("Authorization", "Basic " + izlyPayConfig.getKey());
 		headers.set("AppIdentifier", izlyPayConfig.getIdentifier());
 		return headers;
 	}
