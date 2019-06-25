@@ -96,6 +96,7 @@ public class EsupPaperCutService {
 		
 		PayPapercutTransactionLog txLog = new PayPapercutTransactionLog();
 	
+		txLog.setPayMode(PayMode.PAYBOX);
 		txLog.setMontant(montant);
 		txLog.setIdtrans(idtrans);
 		txLog.setTransactionDate(new Date());
@@ -163,6 +164,7 @@ public class EsupPaperCutService {
 
 		PayPapercutTransactionLog txLog = new PayPapercutTransactionLog();
 
+		txLog.setPayMode(PayMode.IZLYPAY);
 		txLog.setMontant(montant);
 		txLog.setReference(reference);
 		txLog.setIdtrans(idtrans);
