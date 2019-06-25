@@ -57,6 +57,11 @@
     <logger name="org.esupportail.papercut" level="info" additivity="false">
         <appender-ref ref="FILE"/>
     </logger>
+    
+    <logger name="org.springframework.web.filter.CommonsRequestLoggingFilter" level="info" additivity="false">
+   	 	<appender-ref ref="FILE"/>
+	</logger>
+    
 
 	<root level="warn">
 		<appender-ref ref="FILE"/>
