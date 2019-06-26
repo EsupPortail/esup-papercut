@@ -16,9 +16,7 @@
  * limitations under the License.
  */
 package org.esupportail.papercut.web;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -28,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.esupportail.papercut.config.EsupPapercutConfig;
 import org.esupportail.papercut.config.EsupPapercutContext;
 import org.esupportail.papercut.dao.PapercutDaoService;
+import org.esupportail.papercut.domain.IzlyPayForm;
 import org.esupportail.papercut.domain.PayBoxForm;
 import org.esupportail.papercut.domain.PayPapercutTransactionLog;
 import org.esupportail.papercut.domain.PayPapercutTransactionLog.PayMode;
@@ -37,6 +36,7 @@ import org.esupportail.papercut.services.EsupPaperCutService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -68,6 +68,9 @@ public class UserController {
 	
 	@Autowired
 	PapercutDaoService papercutDaoService;
+	
+	@Autowired
+	MessageSource messageSource;
 	   
 	@GetMapping(produces = "text/html")
     public String userView(HttpServletRequest request, Model uiModel) {	
@@ -77,8 +80,8 @@ public class UserController {
 			return "redirect:/";
 		}
     	
-    	int papercutSheetCost = context.getPapercutSheetCost();
-    	int papercutColorSheetCost = context.getPapercutColorSheetCost();
+    	double papercutSheetCost = context.getPapercutSheetCost();
+    	double papercutColorSheetCost = context.getPapercutColorSheetCost();
         
         String uid = getUid();
         String userMail = getUserMail();
@@ -124,23 +127,39 @@ public class UserController {
 	        Map<Integer, PayBoxForm> payboxForms = new TreeMap<Integer, PayBoxForm>(); 
 	        for(Integer montant=montantMin; montant.compareTo(montantMax)<=0; montant = montant + montantStep) {
 	        	PayBoxForm payBoxForm = esupPaperCutService.getPayBoxForm(context, uid, userMail, montant, contextPath);
-		        if(papercutSheetCost > 0) {
-		        	int nbSheets = (int)(montant/papercutSheetCost);
+	        	int nbSheets = -1;
+	        	int nbColorSheets = -1;
+	        	if(papercutSheetCost > 0) {
+		        	nbSheets = (int)(montant/papercutSheetCost);
 		        	payBoxForm.setNbSheets(nbSheets);
 		        }
 		        if(papercutColorSheetCost > 0) {
-		        	int nbColorSheets = (int)(montant/papercutColorSheetCost);
+		        	nbColorSheets = (int)(montant/papercutColorSheetCost);
 		        	payBoxForm.setNbColorSheets(nbColorSheets);
 		        }
+		        payBoxForm.setToolTip(getToolTipMessage(payBoxForm.getMontant(), nbSheets, nbColorSheets));
 		        payboxForms.put(montant, payBoxForm);
 	        }    
 	        uiModel.addAttribute("payboxForms", payboxForms);
         }
         
         if(esupPaperCutService.getPayModes(context).contains(PayMode.IZLYPAY)) {
-	        Map<Integer, String> izlypayForms = new TreeMap<Integer, String>(); 
+	        Map<Integer, IzlyPayForm> izlypayForms = new TreeMap<Integer, IzlyPayForm>(); 
 	        for(Integer montant=montantMin; montant.compareTo(montantMax)<=0; montant = montant + montantStep) {
-		        izlypayForms.put(montant, new Double(new Double(montant)/100.0).toString());
+	        	IzlyPayForm izlypayForm = new IzlyPayForm();
+	        	izlypayForm.setMontant(new Double(new Double(montant)/100.0).toString());
+	        	int nbSheets = -1;
+	        	int nbColorSheets = -1;
+	        	if(papercutSheetCost > 0) {
+		        	nbSheets = (int)(montant/papercutSheetCost);
+		        	izlypayForm.setNbSheets(nbSheets);
+		        }
+		        if(papercutColorSheetCost > 0) {
+		        	nbColorSheets = (int)(montant/papercutColorSheetCost);
+		        	izlypayForm.setNbColorSheets(nbColorSheets);
+		        }
+		        izlypayForm.setToolTip(getToolTipMessage(izlypayForm.getMontant(), nbSheets, nbColorSheets));
+		        izlypayForms.put(montant, izlypayForm);
 	        }        
 	        uiModel.addAttribute("izlypayForms", izlypayForms);
         }
@@ -161,6 +180,18 @@ public class UserController {
     }
 	
 	
+	private String getToolTipMessage(String montant, int nbSheets, int nbColorSheets) {
+		if(nbSheets > 0 && nbColorSheets > 0) {
+			return messageSource.getMessage("pay.credit-tooltip", new String[] {montant, String.valueOf(nbSheets), String.valueOf(nbColorSheets)}, null);
+		} else if(nbSheets > 0) {
+			return messageSource.getMessage("pay.credit-tooltip-black", new String[] {montant, String.valueOf(nbSheets)}, null);
+		} if(nbColorSheets > 0) {
+			return messageSource.getMessage("pay.credit-tooltip-color", new String[] {montant, String.valueOf(nbColorSheets)}, null);
+		}
+		return null;
+	}
+
+
 	@PostMapping(value = "izlypay", produces = "text/html")
 	public ModelAndView izlypayForm(@RequestParam Integer montant) {	
 

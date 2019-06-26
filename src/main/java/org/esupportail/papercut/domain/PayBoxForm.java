@@ -58,6 +58,8 @@ public class PayBoxForm {
 	
 	private Integer nbColorSheets;
 	
+	private String toolTip;
+	
 	public String getActionUrl() {
 		return actionUrl;
 	}
@@ -200,6 +202,14 @@ public class PayBoxForm {
 
 	public void setNbColorSheets(Integer nbColorSheets) {
 		this.nbColorSheets = nbColorSheets;
+	}
+
+	public String getToolTip() {
+		return toolTip;
+	}
+
+	public void setToolTip(String toolTip) {
+		this.toolTip = toolTip;
 	}
 
 	public SortedMap<String, String> getOrderedParams() {

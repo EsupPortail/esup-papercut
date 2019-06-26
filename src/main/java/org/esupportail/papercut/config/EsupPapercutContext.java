@@ -62,9 +62,9 @@ public class EsupPapercutContext {
 	
 	Integer montantStep = 50;	
 	
-	Integer papercutSheetCost = -1;
+	Double papercutSheetCost = -1.0;
 	
-	Integer papercutColorSheetCost = -1;
+	Double papercutColorSheetCost = -1.0;
 	
 	Integer transactionNbMax = -1;
 	
@@ -236,20 +236,20 @@ public class EsupPapercutContext {
 		this.montantStep = montantStep;
 	}
 
-	public Integer getPapercutSheetCost() {
+	public Double getPapercutSheetCost() {
 		return papercutSheetCost;
 	}
 
-	public void setPapercutSheetCost(Integer papercutSheetCost) {
-		this.papercutSheetCost = papercutSheetCost;
-	}
-
-	public Integer getPapercutColorSheetCost() {
+	public Double getPapercutColorSheetCost() {
 		return papercutColorSheetCost;
 	}
 
-	public void setPapercutColorSheetCost(Integer papercutColorSheetCost) {
+	public void setPapercutColorSheetCost(Double papercutColorSheetCost) {
 		this.papercutColorSheetCost = papercutColorSheetCost;
+	}
+
+	public void setPapercutSheetCost(Double papercutSheetCost) {
+		this.papercutSheetCost = papercutSheetCost;
 	}
 
 	public Integer getTransactionNbMax() {

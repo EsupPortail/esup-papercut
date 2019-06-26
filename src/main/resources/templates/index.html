@@ -70,8 +70,10 @@
 											th:value="${payBoxParam.value}" /> <input type="hidden"
 											name="PBX_HMAC" th:value="${payBoxForm.hmac}" /> <input
 											type="submit" th:id="'pbx_credit_' + ${payboxFormItem.key}"
-											th:value="#{paybox.credit(${payBoxForm.montant})}"
-											class="btn btn-success" role="button" />
+											th:value="#{pay.credit(${payBoxForm.montant})}"
+											class="btn btn-success" role="button" 
+											data-placement="top" title="Tooltip on top"
+											th:title="${payBoxForm.toolTip}"/>
 									</form>
 	
 								</div>
@@ -104,8 +106,10 @@
 											th:value="${izlypayForm.key}" /> 
 										<input
 											type="submit" th:id="'pbx_credit_' + ${izlypayForm.key}"
-											th:value="#{paybox.credit(${izlypayForm.value})}"
-											class="btn btn-success" role="button" />
+											th:value="#{pay.credit(${izlypayForm.value.montant})}"
+											class="btn btn-success" role="button" data-toggle="tooltip"
+											data-placement="top" title="Tooltip on top"
+											th:title="${izlypayForm.value.toolTip}"/>
 									</form>
 	
 								</div>
