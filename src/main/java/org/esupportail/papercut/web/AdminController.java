@@ -85,7 +85,7 @@ public class AdminController {
     
     @GetMapping(produces = "text/html", params = {"id"})
     public String viewTransactionLog(@RequestParam Long id, Model uiModel) {
-    	uiModel.addAttribute("plog", papercutDaoService.findById(id).get());
+    	uiModel.addAttribute("plog", papercutDaoService.findById(id));
     	uiModel.addAttribute("itemId", id);
     	uiModel.addAttribute("active", "admin"); 	
         return "show-transactionlog";
@@ -95,7 +95,7 @@ public class AdminController {
     @PostMapping(value = "archive")                                                                                                                                          
     public String archive(@RequestParam Long id, @PathVariable String papercutContext) {
 
-        PayPapercutTransactionLog txLog =  papercutDaoService.findById(id).get();
+        PayPapercutTransactionLog txLog =  papercutDaoService.findById(id);
         txLog.setArchived(true);
        
         return "redirect:/" + papercutContext + "/admin?id=" + id;

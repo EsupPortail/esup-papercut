@@ -226,7 +226,7 @@ public class UserController {
     
     @GetMapping(value = "/logs", produces = "text/html", params = {"id"})
     public String viewTransactionLog(@RequestParam Long id, Model uiModel) {
-    	uiModel.addAttribute("plog", papercutDaoService.findById(id).get());
+    	uiModel.addAttribute("plog", papercutDaoService.findById(id));
     	uiModel.addAttribute("itemId", id);
     	uiModel.addAttribute("active", "logs"); 	
         return "show-transactionlog";

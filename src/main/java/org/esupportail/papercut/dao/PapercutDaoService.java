@@ -18,11 +18,11 @@
 package org.esupportail.papercut.dao;
 
 import java.util.List;
-import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 import org.esupportail.papercut.domain.PayPapercutTransactionLog;
 import org.esupportail.papercut.domain.PayPapercutTransactionLog.PayMode;
@@ -90,8 +90,16 @@ public class PapercutDaoService {
 		return txRepository.findPayPapercutTransactionLogsByUid(uid, pageable);
 	}
 
-	public Optional<PayPapercutTransactionLog> findById(Long id) {
-		return txRepository.findById(id);
+	
+	/**
+	 * CF doc hibernate "Filters apply to entity queries, but not to direct fetching."
+	 * un simple txRepository.findById(id) n'est pas affecté par @PapercutDaoServiceAspect
+	 * on passe donc par une query ici
+	 */
+	public PayPapercutTransactionLog findById(Long id) {
+		TypedQuery<PayPapercutTransactionLog> q = entityManager.createQuery("SELECT l from PayPapercutTransactionLog AS l WHERE l.id = :id", PayPapercutTransactionLog.class);
+		q.setParameter("id", id);
+		return q.getSingleResult();
 	}
 
 	public Page<PayPapercutTransactionLog> findAllPayPapercutTransactionLogs(Pageable pageable) {
