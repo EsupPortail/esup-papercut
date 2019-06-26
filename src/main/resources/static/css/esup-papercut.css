@@ -67,3 +67,11 @@ nav.navbar .active>.nav-link {
 .sorted-asc::after{
     content: "\25B2";
 }
+
+footer a {
+color: #87CEEB	;	
+}
+
+footer a:hover {
+color: #B0E0E6	;	
+}
