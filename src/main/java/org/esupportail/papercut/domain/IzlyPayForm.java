@@ -20,11 +20,7 @@ package org.esupportail.papercut.domain;
 public class IzlyPayForm {
 
 	private String montant;
-	
-	private Integer nbSheets;
-	
-	private Integer nbColorSheets;
-	
+
 	private String toolTip;
 
 	public String getMontant() {
@@ -33,22 +29,6 @@ public class IzlyPayForm {
 
 	public void setMontant(String montant) {
 		this.montant = montant;
-	}
-
-	public Integer getNbSheets() {
-		return nbSheets;
-	}
-
-	public void setNbSheets(Integer nbSheets) {
-		this.nbSheets = nbSheets;
-	}
-
-	public Integer getNbColorSheets() {
-		return nbColorSheets;
-	}
-
-	public void setNbColorSheets(Integer nbColorSheets) {
-		this.nbColorSheets = nbColorSheets;
 	}
 
 	public String getToolTip() {

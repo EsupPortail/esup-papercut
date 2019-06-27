@@ -120,12 +120,15 @@
 
 					</div>
 
-
-					<p th:if="${!canMakeTransaction}">
-						<i th:text="#{index.nbTransactions}">Max transactions number</i>
-					</p>
+					<p th:text="${tipMessage4MontantMin}"></p>
 
 				</div>
+				
+				
+				<p th:if="${!canMakeTransaction}">
+					<i th:text="#{index.nbTransactions}">Max transactions number</i>
+				</p>
+				
 
 				<br />
 

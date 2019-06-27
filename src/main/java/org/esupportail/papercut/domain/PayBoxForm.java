@@ -53,11 +53,7 @@ public class PayBoxForm {
 	private String forwardAnnuleUrl;
 	
 	private String hmac;
-	
-	private Integer nbSheets;
-	
-	private Integer nbColorSheets;
-	
+
 	private String toolTip;
 	
 	public String getActionUrl() {
@@ -186,22 +182,6 @@ public class PayBoxForm {
 
 	public void setHmac(String hmac) {
 		this.hmac = hmac;
-	}
-
-	public Integer getNbSheets() {
-		return nbSheets;
-	}
-
-	public void setNbSheets(Integer nbSheets) {
-		this.nbSheets = nbSheets;
-	}
-
-	public Integer getNbColorSheets() {
-		return nbColorSheets;
-	}
-
-	public void setNbColorSheets(Integer nbColorSheets) {
-		this.nbColorSheets = nbColorSheets;
 	}
 
 	public String getToolTip() {

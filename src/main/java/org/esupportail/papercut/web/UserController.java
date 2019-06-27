@@ -127,17 +127,7 @@ public class UserController {
 	        Map<Integer, PayBoxForm> payboxForms = new TreeMap<Integer, PayBoxForm>(); 
 	        for(Integer montant=montantMin; montant.compareTo(montantMax)<=0; montant = montant + montantStep) {
 	        	PayBoxForm payBoxForm = esupPaperCutService.getPayBoxForm(context, uid, userMail, montant, contextPath);
-	        	int nbSheets = -1;
-	        	int nbColorSheets = -1;
-	        	if(papercutSheetCost > 0) {
-		        	nbSheets = (int)(montant/papercutSheetCost);
-		        	payBoxForm.setNbSheets(nbSheets);
-		        }
-		        if(papercutColorSheetCost > 0) {
-		        	nbColorSheets = (int)(montant/papercutColorSheetCost);
-		        	payBoxForm.setNbColorSheets(nbColorSheets);
-		        }
-		        payBoxForm.setToolTip(getToolTipMessage(payBoxForm.getMontant(), nbSheets, nbColorSheets));
+		        payBoxForm.setToolTip(getToolTipMessage(payBoxForm.getMontant(), montant, papercutSheetCost, papercutColorSheetCost));
 		        payboxForms.put(montant, payBoxForm);
 	        }    
 	        uiModel.addAttribute("payboxForms", payboxForms);
@@ -148,22 +138,14 @@ public class UserController {
 	        for(Integer montant=montantMin; montant.compareTo(montantMax)<=0; montant = montant + montantStep) {
 	        	IzlyPayForm izlypayForm = new IzlyPayForm();
 	        	izlypayForm.setMontant(new Double(new Double(montant)/100.0).toString());
-	        	int nbSheets = -1;
-	        	int nbColorSheets = -1;
-	        	if(papercutSheetCost > 0) {
-		        	nbSheets = (int)(montant/papercutSheetCost);
-		        	izlypayForm.setNbSheets(nbSheets);
-		        }
-		        if(papercutColorSheetCost > 0) {
-		        	nbColorSheets = (int)(montant/papercutColorSheetCost);
-		        	izlypayForm.setNbColorSheets(nbColorSheets);
-		        }
-		        izlypayForm.setToolTip(getToolTipMessage(izlypayForm.getMontant(), nbSheets, nbColorSheets));
+		        izlypayForm.setToolTip(getToolTipMessage(izlypayForm.getMontant(), montant, papercutSheetCost, papercutColorSheetCost));
 		        izlypayForms.put(montant, izlypayForm);
 	        }        
 	        uiModel.addAttribute("izlypayForms", izlypayForms);
         }
-        
+        if(esupPaperCutService.getPayModes(context).contains(PayMode.PAYBOX) || esupPaperCutService.getPayModes(context).contains(PayMode.IZLYPAY)) {
+        	uiModel.addAttribute("tipMessage4MontantMin", getToolTipMessage(new Double(new Double(montantMin)/100.0).toString(), montantMin, papercutSheetCost, papercutColorSheetCost));
+        }
         
         uiModel.addAttribute("canMakeTransaction", canMakeTransaction);
 
@@ -180,13 +162,21 @@ public class UserController {
     }
 	
 	
-	private String getToolTipMessage(String montant, int nbSheets, int nbColorSheets) {
+	private String getToolTipMessage(String montantAsString, Integer montant, double papercutSheetCost, double papercutColorSheetCost) {
+    	int nbSheets = -1;
+    	int nbColorSheets = -1;
+    	if(papercutSheetCost > 0) {
+        	nbSheets = (int)(montant/papercutSheetCost);
+        }
+        if(papercutColorSheetCost > 0) {
+        	nbColorSheets = (int)(montant/papercutColorSheetCost);
+        }
 		if(nbSheets > 0 && nbColorSheets > 0) {
-			return messageSource.getMessage("pay.credit-tooltip", new String[] {montant, String.valueOf(nbSheets), String.valueOf(nbColorSheets)}, null);
+			return messageSource.getMessage("pay.credit-tooltip", new String[] {montantAsString, String.valueOf(nbSheets), String.valueOf(nbColorSheets)}, null);
 		} else if(nbSheets > 0) {
-			return messageSource.getMessage("pay.credit-tooltip-black", new String[] {montant, String.valueOf(nbSheets)}, null);
+			return messageSource.getMessage("pay.credit-tooltip-black", new String[] {montantAsString, String.valueOf(nbSheets)}, null);
 		} if(nbColorSheets > 0) {
-			return messageSource.getMessage("pay.credit-tooltip-color", new String[] {montant, String.valueOf(nbColorSheets)}, null);
+			return messageSource.getMessage("pay.credit-tooltip-color", new String[] {montantAsString, String.valueOf(nbColorSheets)}, null);
 		}
 		return null;
 	}
