@@ -35,7 +35,7 @@
 
 			<p>
 				<span th:text="#{index.sold}">Solde</span> : <b
-					th:text="${userPapercutInfos.balance}">0 EUR</b>
+					th:text="#{pay.credited(${userPapercutInfos.balance})}">0 EUR</b>
 			</p>
 			<p>
 				<span th:text="#{index.printJobs}">Print Jobs</span> : <b
@@ -54,7 +54,7 @@
 							
 						<fieldset class="border p-2 bg-light">
 						
-   							<legend  class="w-auto">Paiement par carte bancaire via Paybox</legend>
+   							<legend  class="w-auto" th:text="${payboxLegend != null ? payboxLegend : 'Paiement par carte bancaire via Paybox'}"></legend>
    							
    							<div class="row">
    							
@@ -90,7 +90,7 @@
 
 						<fieldset class="border p-2 bg-light">
    							
-   							<legend  class="w-auto">Paiement web via IZLY (CROUS)</legend>
+   							<legend  class="w-auto" th:text="${izlypayLegend != null ? izlypayLegend : 'Paiement via IZLY (CROUS)'}"></legend>
    							
    							<div class="row">
    							

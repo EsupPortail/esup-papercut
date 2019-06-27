@@ -129,7 +129,8 @@ public class UserController {
 	        	PayBoxForm payBoxForm = esupPaperCutService.getPayBoxForm(context, uid, userMail, montant, contextPath);
 		        payBoxForm.setToolTip(getToolTipMessage(payBoxForm.getMontant(), montant, papercutSheetCost, papercutColorSheetCost));
 		        payboxForms.put(montant, payBoxForm);
-	        }    
+	        }   
+	        uiModel.addAttribute("payboxLegend", context.getPaybox().getLegend());   
 	        uiModel.addAttribute("payboxForms", payboxForms);
         }
         
@@ -140,7 +141,8 @@ public class UserController {
 	        	izlypayForm.setMontant(new Double(new Double(montant)/100.0).toString());
 		        izlypayForm.setToolTip(getToolTipMessage(izlypayForm.getMontant(), montant, papercutSheetCost, papercutColorSheetCost));
 		        izlypayForms.put(montant, izlypayForm);
-	        }        
+	        } 
+	        uiModel.addAttribute("izlypayLegend", context.getIzlypay().getLegend());      
 	        uiModel.addAttribute("izlypayForms", izlypayForms);
         }
         if(esupPaperCutService.getPayModes(context).contains(PayMode.PAYBOX) || esupPaperCutService.getPayModes(context).contains(PayMode.IZLYPAY)) {

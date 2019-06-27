@@ -55,6 +55,8 @@ public class PayboxConfig {
     String forwardServerUrl;
 
     String payboxActionUrlOK = null;
+    
+    String legend;
 
 	public String getRetourVariables() {
 		return retourVariables;
@@ -156,6 +158,14 @@ public class PayboxConfig {
 		this.payboxActionUrlOK = payboxActionUrlOK;
 	}
 
+	public String getLegend() {
+		return legend;
+	}
+
+	public void setLegend(String legend) {
+		this.legend = legend;
+	}
+	
 	public void setDerPayboxPublicKeyFile(String derPayboxPublicKeyFile) throws NoSuchAlgorithmException, InvalidKeySpecException, IOException {
 		org.springframework.core.io.Resource derPayboxPublicKeyRessource = new ClassPathResource(derPayboxPublicKeyFile);
 		InputStream fis = derPayboxPublicKeyRessource.getInputStream();

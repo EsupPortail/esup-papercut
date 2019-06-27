@@ -26,6 +26,8 @@ public class IzlyPayConfig {
     String url;
     
     String reponseServerUrl;
+    
+    String legend;
 
 	public String getKey() {
 		return key;
@@ -58,5 +60,14 @@ public class IzlyPayConfig {
 	public void setReponseServerUrl(String reponseServerUrl) {
 		this.reponseServerUrl = reponseServerUrl;
 	}
+
+	public String getLegend() {
+		return legend;
+	}
+
+	public void setLegend(String legend) {
+		this.legend = legend;
+	}
+	
   
 }
