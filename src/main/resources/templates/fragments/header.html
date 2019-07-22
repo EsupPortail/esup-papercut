@@ -33,7 +33,7 @@
 		    </button>
 		    
 		    <div class="collapse navbar-collapse" id="navbarMain">
-		    	<ul class="navbar-nav mr-auto">
+		    	<ul class="navbar-nav mr-auto" th:if="${payAvailable}">
 			    	<li sec:authorize="isAuthenticated()" class="nav-item" th:classappend="${active == 'home'} ? 'active' : ''">
 			    		<a class="nav-link" th:href="@{/{ctx}/user(ctx=${pContext})}">Accueil<span class="sr-only">(current)</span></a>
 			    	</li>
@@ -47,6 +47,7 @@
 			    		<a class="nav-link" th:href="@{/{ctx}/admin/stats(ctx=${pContext})}">Statistiques</a>
 			    	</li>
 			    </ul>
+			    <ul class="navbar-nav mr-auto" th:unless="${payAvailable}"><!--  --></ul>
 			    
 			    <form class="papercutContextForm" th:if="${availableContexts.size() > 1}" th:action="@{/}">
 			    	<select name="papercutContext" onchange="this.form.submit()" class="form-control">

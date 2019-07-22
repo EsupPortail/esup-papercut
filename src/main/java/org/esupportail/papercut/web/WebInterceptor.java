@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.esupportail.papercut.config.EsupPapercutConfig;
 import org.esupportail.papercut.config.EsupPapercutContext;
 import org.esupportail.papercut.security.ContextHelper;
+import org.esupportail.papercut.services.EsupPaperCutService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -34,6 +35,9 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
 	
 	@Resource
 	EsupPapercutConfig config;
+	
+	@Resource 
+	EsupPaperCutService esupPaperCutService;
 
 	@Override
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
@@ -59,6 +63,7 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
 				modelAndView.addObject("isAdmin", WebUtils.isAdmin());
 				modelAndView.addObject("isManager", WebUtils.isManager());
 				modelAndView.addObject("availableContexts", WebUtils.availableContexts());
+				modelAndView.addObject("payAvailable", !esupPaperCutService.getPayModes(configContext).isEmpty());
 			}
 		}
 
