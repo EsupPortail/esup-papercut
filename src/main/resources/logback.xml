@@ -29,7 +29,7 @@
 	    <append>true</append>
 	    <immediateFlush>true</immediateFlush>
 	    <encoder>
-	      <pattern>%-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>
+	      <pattern>[%-5level] %date{dd/MM/yyyy HH:mm:ss} %logger{35} - %msg%n</pattern>
 	    </encoder>
 	</appender>
 
