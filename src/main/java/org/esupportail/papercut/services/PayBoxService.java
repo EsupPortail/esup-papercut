@@ -28,6 +28,7 @@ import java.util.TimeZone;
 
 import javax.annotation.Resource;
 
+import org.esupportail.papercut.config.EsupPapercutConfig;
 import org.esupportail.papercut.config.EsupPapercutContext;
 import org.esupportail.papercut.domain.PayBoxForm;
 import org.slf4j.Logger;
@@ -42,6 +43,9 @@ public class PayBoxService extends PayService {
 
 	@Resource
 	HashService hashService;
+	
+	@Resource
+	EsupPapercutConfig config;
 	
 	/**
 	 * @param uid
@@ -131,30 +135,32 @@ public class PayBoxService extends PayService {
 		}
 	}
 	
-	// TODO ! 
 	@Scheduled(fixedDelay=3600000)
 	public void flushPayboxActionUrlOK() {
-		//updatePayBoxActionUrl();
-		//log.info("Update Paybox Action Url: " + context.getPaybox().getPayboxActionUrlOK());
+		for(EsupPapercutContext context : config.getContexts().values()) {
+			updatePayBoxActionUrl(context);
+			log.info(String.format("Update Paybox Action Url for %s : %s", context.getPapercutContext(), context.getPaybox().getPayboxActionUrlOK()));
+		}
 	}
 	
-	// TODO ! 
 	public void updatePayBoxActionUrl(EsupPapercutContext context) {
-		for(String payboxActionUrl : context.getPaybox().getPayboxActionUrls()) {
-			try {
-				// on teste la connection, pour voir si le serveur est disponible
-				URL url = new URL(payboxActionUrl);
-				URLConnection connection = url.openConnection();
-				connection.connect();
-				connection.getInputStream().read();
-				context.getPaybox().setPayboxActionUrlOK(payboxActionUrl);
-				break;
-			} catch (Exception e) {
-				log.warn("Pb with " + payboxActionUrl, e);
-			} 
-		}
-		if(context.getPaybox().getPayboxActionUrlOK() == null) {
-			throw new RuntimeException("No paybox action url is available at the moment !");
+		if(context.getPaybox() != null) {
+			for(String payboxActionUrl : context.getPaybox().getPayboxActionUrls()) {
+				try {
+					// on teste la connection, pour voir si le serveur est disponible
+					URL url = new URL(payboxActionUrl);
+					URLConnection connection = url.openConnection();
+					connection.connect();
+					connection.getInputStream().read();
+					context.getPaybox().setPayboxActionUrlOK(payboxActionUrl);
+					break;
+				} catch (Exception e) {
+					log.warn("Pb with " + payboxActionUrl, e);
+				} 
+			}
+			if(context.getPaybox().getPayboxActionUrlOK() == null) {
+				log.error(String.format("No paybox action url is available at the moment for %s", context.getPapercutContext()));
+			}
 		}
 	}
 
