@@ -24,15 +24,19 @@ public class ContextUserDetails implements UserDetails {
 	
 	String username;
 	
-	Map<String, Set<GrantedAuthority>> contextAuthorities = new HashMap<String, Set<GrantedAuthority>>(); 
+	Map<String, Set<GrantedAuthority>> contextAuthorities = new HashMap<String, Set<GrantedAuthority>>();
+	Map<String, String> contextUids = new HashMap<String, String>(); 
+	Map<String, String> contextEmails = new HashMap<String, String>(); 
 	
 	final List<GrantedAuthority> defaultAuthorities = Arrays.asList(new GrantedAuthority[] {new SimpleGrantedAuthority("ROLE_NONE")});
 	
 	List<String> availableContexts;
 
-	public ContextUserDetails(String username, Map<String, Set<GrantedAuthority>> contextAuthorities, List<String> availableContexts) {
+	public ContextUserDetails(String username, Map<String, Set<GrantedAuthority>> contextAuthorities, Map<String, String> contextUids, Map<String, String> contextEmails, List<String> availableContexts) {
 		this.username = username;
 		this.contextAuthorities = contextAuthorities;
+		this.contextUids = contextUids;
+		this.contextEmails = contextEmails;
 		this.availableContexts = availableContexts;
 	}
 
@@ -56,7 +60,27 @@ public class ContextUserDetails implements UserDetails {
 
 	@Override
 	public String getUsername() {
+	    RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+	    if (requestAttributes != null && requestAttributes instanceof ServletRequestAttributes) {
+	        HttpServletRequest request = ((ServletRequestAttributes)requestAttributes).getRequest();
+	        String papercutContext = WebUtils.getContext(request);
+	        if(contextUids.get(papercutContext) != null && !contextUids.get(papercutContext).isEmpty()) {
+	        	return contextUids.get(papercutContext);
+	        }
+	    }
 		return username;
+	}
+	
+	public String getEmail() {
+	    RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+	    if (requestAttributes != null && requestAttributes instanceof ServletRequestAttributes) {
+	        HttpServletRequest request = ((ServletRequestAttributes)requestAttributes).getRequest();
+	        String papercutContext = WebUtils.getContext(request);
+	        if(contextEmails.get(papercutContext) != null && !contextEmails.get(papercutContext).isEmpty()) {
+	        	return contextEmails.get(papercutContext);
+	        }
+	    }
+		return null;
 	}
 
 	@Override

@@ -16,7 +16,6 @@
  * limitations under the License.
  */
 package org.esupportail.papercut.web;
-import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -32,6 +31,7 @@ import org.esupportail.papercut.domain.PayPapercutTransactionLog;
 import org.esupportail.papercut.domain.PayPapercutTransactionLog.PayMode;
 import org.esupportail.papercut.domain.UserPapercutInfos;
 import org.esupportail.papercut.security.ContextHelper;
+import org.esupportail.papercut.security.ContextUserDetails;
 import org.esupportail.papercut.services.EsupPaperCutService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -226,16 +226,15 @@ public class UserController {
 
     private String getUid() {
     	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		return auth.getName();
+		ContextUserDetails userDetails = (ContextUserDetails)auth.getPrincipal();
+		return userDetails.getUsername();
 	}
 
     
 	private String getUserMail() {
-		//String mailAttr = request.getPreferences().getValue(PREF_PAPERCUT_USER_MAIL_ATTR, null);
-		//Map<String,String> userinfo = (Map<String,String>)request.getAttribute(PortletRequest.USER_INFO);
-		//String mail = userinfo.get(mailAttr);
-		// TODO
-		return "toto@univ-ville.fr";
+    	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		ContextUserDetails userDetails = (ContextUserDetails)auth.getPrincipal();
+		return userDetails.getEmail();
 	}
 
 		

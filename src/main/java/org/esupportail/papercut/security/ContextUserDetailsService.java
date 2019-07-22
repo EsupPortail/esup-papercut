@@ -27,7 +27,10 @@ public class ContextUserDetailsService extends AbstractCasAssertionUserDetailsSe
 	protected UserDetails loadUserDetails(Assertion assertion) {
 		
 		Map<String, Set<GrantedAuthority>> contextAuthorities = new HashMap<String, Set<GrantedAuthority>>();
+		Map<String, String> contextUids = new HashMap<String, String>(); 
+		Map<String, String> contextEmails = new HashMap<String, String>(); 
 		List<String> availableContexts = new ArrayList<String>(); 
+		
 		
 		for(String contextKey : config.getContexts().keySet()) {
 			
@@ -67,11 +70,20 @@ public class ContextUserDetailsService extends AbstractCasAssertionUserDetailsSe
 			if(!authorities.isEmpty()) {
 				availableContexts.add(contextKey);
 			}
+			
 			contextAuthorities.put(contextKey, authorities);
+
+			if(context.getPapercutUserUidAttr() != null && !context.getPapercutUserUidAttr().isEmpty() && assertion.getPrincipal().getAttributes().get(context.getPapercutUserUidAttr()) != null) {
+				contextUids.put(contextKey, (String)assertion.getPrincipal().getAttributes().get(context.getPapercutUserUidAttr()));
+			}
+			if(context.getUserEmail() != null && !context.getUserEmail().isEmpty() && assertion.getPrincipal().getAttributes().get(context.getUserEmail()) != null) {
+				contextEmails.put(contextKey, (String)assertion.getPrincipal().getAttributes().get(context.getUserEmail()));
+			}
+			
 		}
 		
 		ContextUserDetails contextUserDetails =
-                new ContextUserDetails(assertion.getPrincipal().getName(), contextAuthorities, availableContexts);
+                new ContextUserDetails(assertion.getPrincipal().getName(), contextAuthorities, contextUids, contextEmails, availableContexts);
 
 		return contextUserDetails;
 	}
