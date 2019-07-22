@@ -139,7 +139,6 @@ public class PayBoxService extends PayService {
 	public void flushPayboxActionUrlOK() {
 		for(EsupPapercutContext context : config.getContexts().values()) {
 			updatePayBoxActionUrl(context);
-			log.info(String.format("Update Paybox Action Url for %s : %s", context.getPapercutContext(), context.getPaybox().getPayboxActionUrlOK()));
 		}
 	}
 	
@@ -152,7 +151,10 @@ public class PayBoxService extends PayService {
 					URLConnection connection = url.openConnection();
 					connection.connect();
 					connection.getInputStream().read();
-					context.getPaybox().setPayboxActionUrlOK(payboxActionUrl);
+					if(!payboxActionUrl.equals(context.getPaybox().getPayboxActionUrlOK())) {
+						context.getPaybox().setPayboxActionUrlOK(payboxActionUrl);
+						log.info(String.format("Update Paybox Action Url for %s : %s", context.getPapercutContext(), context.getPaybox().getPayboxActionUrlOK()));
+					}
 					break;
 				} catch (Exception e) {
 					log.warn("Pb with " + payboxActionUrl, e);
