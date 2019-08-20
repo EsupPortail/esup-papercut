@@ -120,7 +120,7 @@ public class EsupPaperCutService {
 					try {
 						log.info("Transaction : " + reference + " pour un montant de " + montant + " OK !");
 						double montantEuros = new Double(montant) / 100.0;
-						papercutService.creditUserBalance(context, uid, montantEuros, idtrans);
+						papercutService.creditUserBalance(context, uid, montantEuros, idtrans, PayMode.PAYBOX);
 						
 						String papercutNewSolde =  papercutService.getUserPapercutInfos(context, uid).getBalance();
 						txLog.setPapercutNewSolde(papercutNewSolde);
@@ -181,7 +181,7 @@ public class EsupPaperCutService {
 		try {
 			log.info("Transaction : " + reference + " pour un montant de " + montant + " OK !");
 			double montantEuros = new Double(montant) / 100.0;
-			papercutService.creditUserBalance(context, uid, montantEuros, idtrans);
+			papercutService.creditUserBalance(context, uid, montantEuros, idtrans, PayMode.IZLYPAY);
 
 			String papercutNewSolde =  papercutService.getUserPapercutInfos(context, uid).getBalance();
 			txLog.setPapercutNewSolde(papercutNewSolde);

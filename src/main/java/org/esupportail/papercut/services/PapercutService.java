@@ -20,6 +20,7 @@ package org.esupportail.papercut.services;
 import java.util.Vector;
 
 import org.esupportail.papercut.config.EsupPapercutContext;
+import org.esupportail.papercut.domain.PayPapercutTransactionLog;
 import org.esupportail.papercut.domain.UserPapercutInfos;
 import org.esupportail.papercut.papercutapi.ServerCommandProxy;
 import org.slf4j.Logger;
@@ -47,9 +48,9 @@ public class PapercutService {
     	return userPapercutInfos;
     }
     
-    public void creditUserBalance(EsupPapercutContext context, String uid, double amount, String idtrans) {
+    public void creditUserBalance(EsupPapercutContext context, String uid, double amount, String idtrans, PayPapercutTransactionLog.PayMode payMode) {
     	ServerCommandProxy serverProxy = getServerCommandProxy(context);
-    	String logMessage = "Ajout de " + amount + " à " + uid + " via l'appli Esup-Papercut - transaction paybox : " + idtrans;
+    	String logMessage = String.format("Ajout de %s à %s via l'appli Esup-Papercut - transaction %s : %s ", amount, uid, payMode, idtrans);
     	log.info(logMessage);
     	serverProxy.adjustUserAccountBalance(uid, amount, logMessage, context.getPapercut().getAccountName());
     }
