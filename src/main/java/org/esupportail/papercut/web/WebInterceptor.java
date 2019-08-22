@@ -44,26 +44,32 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
 			ModelAndView modelAndView) throws Exception {
 
 		String context = WebUtils.getContext(request);
-		ContextHelper.setCurrentContext(context);
-		
-		super.postHandle(request, response, handler, modelAndView);
 
-		if(modelAndView != null) {
-			boolean isViewObject = modelAndView.getView() == null;
-			boolean isRedirectView = !isViewObject && modelAndView.getView() instanceof RedirectView;
-			boolean viewNameStartsWithRedirect = isViewObject && modelAndView.getViewName().startsWith(UrlBasedViewResolver.REDIRECT_URL_PREFIX);
-	
-			if (!isRedirectView && !viewNameStartsWithRedirect && context!=null) {
-				EsupPapercutContext configContext = config.getContext(context);
-				if(configContext != null) {
-					modelAndView.addObject("title", configContext.getTitle());
-					modelAndView.addObject("htmlFooter", configContext.getHtmlFooter());
-					modelAndView.addObject("pContext", context);
+		if("webjars".equals(context) || "resources".equals(context)) {
+			super.postHandle(request, response, handler, modelAndView);
+		} else {
+
+			ContextHelper.setCurrentContext(context);
+
+			super.postHandle(request, response, handler, modelAndView);
+
+			if (modelAndView != null) {
+				boolean isViewObject = modelAndView.getView() == null;
+				boolean isRedirectView = !isViewObject && modelAndView.getView() instanceof RedirectView;
+				boolean viewNameStartsWithRedirect = isViewObject && modelAndView.getViewName().startsWith(UrlBasedViewResolver.REDIRECT_URL_PREFIX);
+
+				if (!isRedirectView && !viewNameStartsWithRedirect && context != null) {
+					EsupPapercutContext configContext = config.getContext(context);
+					if (configContext != null) {
+						modelAndView.addObject("title", configContext.getTitle());
+						modelAndView.addObject("htmlFooter", configContext.getHtmlFooter());
+						modelAndView.addObject("pContext", context);
+					}
+					modelAndView.addObject("isAdmin", WebUtils.isAdmin());
+					modelAndView.addObject("isManager", WebUtils.isManager());
+					modelAndView.addObject("availableContexts", WebUtils.availableContexts());
+					modelAndView.addObject("payAvailable", !esupPaperCutService.getPayModes(configContext).isEmpty());
 				}
-				modelAndView.addObject("isAdmin", WebUtils.isAdmin());
-				modelAndView.addObject("isManager", WebUtils.isManager());
-				modelAndView.addObject("availableContexts", WebUtils.availableContexts());
-				modelAndView.addObject("payAvailable", !esupPaperCutService.getPayModes(configContext).isEmpty());
 			}
 		}
 
