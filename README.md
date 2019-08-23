@@ -38,10 +38,20 @@ grant ALL ON DATABASE esuppapercut to esuppapercut;
 ```
 
 ### Paramétrage mémoire JVM :
-
 Pensez à paramétrer les espaces mémoire JVM : 
 ```
 export JAVA_OPTS="-Xms256m -Xmx256m"
+```
+
+### Création des tables :
+modification de la configuration spring.jpa.hibernate.ddl-auto dans esup-papercut.properties :
+ * passage de update à create
+ * démarrage de l'application esup-papercut (via spring-boot, tomcat, ou autre, cf ci-dessous) pour création effective des tables
+ * puis on repositionne spring.jpa.hibernate.ddl-auto à update pour que les prochains redémarrages n'écrasent pas les tables et donc les données
+
+### Lancement d'esup-papercut via spring-boot :
+```
+mvn spring-boot:run
 ```
 
 ### Obtention du war pour déploiement sur tomcat ou autre :
