@@ -23,11 +23,13 @@ import java.util.Map;
 import org.esupportail.papercut.web.WebUtils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.stereotype.Component;
 
 @Component
 @ConfigurationProperties(prefix="esup")
 @PropertySource(value = "classpath:/esup-papercut.properties", encoding = "UTF-8")
+@EnableGlobalMethodSecurity(prePostEnabled=true)
 public class EsupPapercutConfig {
 
 	String defaultContext = null;
