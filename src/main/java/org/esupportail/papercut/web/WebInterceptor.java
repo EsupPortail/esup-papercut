@@ -25,7 +25,6 @@ import org.esupportail.papercut.config.EsupPapercutConfig;
 import org.esupportail.papercut.config.EsupPapercutContext;
 import org.esupportail.papercut.security.ContextHelper;
 import org.esupportail.papercut.services.EsupPaperCutService;
-import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import org.springframework.web.servlet.view.RedirectView;
