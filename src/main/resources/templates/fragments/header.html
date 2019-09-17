@@ -40,10 +40,10 @@
 			    	<li sec:authorize="isAuthenticated()" class="nav-item" th:classappend="${active == 'logs'} ? 'active' : ''">
 			    		<a class="nav-link" th:href="@{/{ctx}/user/logs(ctx=${pContext})}">Mon historique</a>
 			    	</li>
-			    	<li sec:authorize="isAuthenticated() and hasRole('ROLE_ADMIN')" class="nav-item" th:classappend="${active == 'admin'} ? 'active' : ''">
+			    	<li sec:authorize="isAuthenticated() and (hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER'))" class="nav-item" th:classappend="${active == 'admin'} ? 'active' : ''">
 			    		<a class="nav-link" th:href="@{/{ctx}/admin(ctx=${pContext})}">Admin</a>
 			    	</li>
-			    	<li sec:authorize="isAuthenticated() and hasRole('ROLE_ADMIN')" class="nav-item" th:classappend="${active == 'stats'} ? 'active' : ''">
+			    	<li sec:authorize="isAuthenticated() and (hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER'))" class="nav-item" th:classappend="${active == 'stats'} ? 'active' : ''">
 			    		<a class="nav-link" th:href="@{/{ctx}/admin/stats(ctx=${pContext})}">Statistiques</a>
 			    	</li>
 			    </ul>
