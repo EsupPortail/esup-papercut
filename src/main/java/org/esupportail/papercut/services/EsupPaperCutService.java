@@ -62,11 +62,13 @@ public class EsupPaperCutService {
 	
 	public List<PayMode> getPayModes(EsupPapercutContext context) {
 		List<PayMode> payModes = new ArrayList<PayMode>();
-		if(context.getPaybox() != null) {
-			payModes.add(PayMode.PAYBOX);
-		}
-		if(context.getIzlypay() != null) {
-			payModes.add(PayMode.IZLYPAY);
+		if(context != null) {
+			if(context.getPaybox() != null) {
+				payModes.add(PayMode.PAYBOX);
+			}
+			if(context.getIzlypay() != null) {
+				payModes.add(PayMode.IZLYPAY);
+			}
 		}
 		return payModes;
 	}
