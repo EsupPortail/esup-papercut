@@ -23,14 +23,13 @@ import org.esupportail.papercut.security.ContextCasAuthenticationProvider;
 import org.esupportail.papercut.security.ContextUserDetailsService;
 import org.jasig.cas.client.session.SingleSignOutFilter;
 import org.jasig.cas.client.session.SingleSignOutHttpSessionListener;
-import org.jasig.cas.client.validation.Cas30ServiceTicketValidator;
+import org.jasig.cas.client.validation.Cas20ServiceTicketValidator;
 import org.jasig.cas.client.validation.TicketValidator;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.cas.ServiceProperties;
-import org.springframework.security.cas.authentication.CasAuthenticationProvider;
 import org.springframework.security.cas.web.CasAuthenticationEntryPoint;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
@@ -90,7 +89,7 @@ public class CasConfig {
 
 	@Bean
 	public TicketValidator ticketValidator() {
-		return new Cas30ServiceTicketValidator(url);
+;		return new Cas20ServiceTicketValidator(url);
 	}
 
 	@Bean
