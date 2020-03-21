@@ -17,6 +17,8 @@
  */
 package org.esupportail.papercut.services;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 
 import org.esupportail.papercut.config.EsupPapercutContext;
@@ -32,9 +34,14 @@ public class PapercutService {
 
 	private final Logger log = LoggerFactory.getLogger(getClass());
 
-	// TODO : optimsiation avec map en cache
+	Map<EsupPapercutContext, ServerCommandProxy> papercutProxies = new HashMap<EsupPapercutContext, ServerCommandProxy>();
+
 	ServerCommandProxy getServerCommandProxy(EsupPapercutContext context) {
-		return new ServerCommandProxy(context.getPapercut().getServer(), context.getPapercut().getScheme(), context.getPapercut().getPort(), context.getPapercut().getAuthToken());
+		if(!papercutProxies.containsKey(context)) {
+			ServerCommandProxy papercutProxy = new ServerCommandProxy(context.getPapercut().getServer(), context.getPapercut().getScheme(), context.getPapercut().getPort(), context.getPapercut().getAuthToken());
+			papercutProxies.put(context, papercutProxy);
+		}
+		return papercutProxies.get(context);
 	}
     
     public UserPapercutInfos getUserPapercutInfos(EsupPapercutContext context, String uid) {
