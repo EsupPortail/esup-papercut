@@ -17,6 +17,7 @@
  */
 package org.esupportail.papercut.domain;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -38,7 +39,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Filter(name = "contextFilter", condition = "papercut_context = :papercutContext")
 public class PayPapercutTransactionLog implements ContextSupport {
 
-	public static enum PayMode {
+    public static enum PayMode {
 		IZLYPAY, PAYBOX
 	}
     

@@ -69,6 +69,10 @@ public class EsupPapercutContext {
 	Integer transactionNbMax = -1;
 	
 	Integer transactionMontantMax = -1;
+
+	Boolean anonymiseEnabled = false;
+
+	Long anonymiseOldDays = Long.valueOf(1825);
 	
 	PapercutConfig papercut;
 	
@@ -266,6 +270,22 @@ public class EsupPapercutContext {
 
 	public void setTransactionMontantMax(Integer transactionMontantMax) {
 		this.transactionMontantMax = transactionMontantMax;
+	}
+
+	public Boolean getAnonymiseEnabled() {
+		return anonymiseEnabled;
+	}
+
+	public void setAnonymiseEnabled(Boolean anonymiseEnabled) {
+		this.anonymiseEnabled = anonymiseEnabled;
+	}
+
+	public Long getAnonymiseOldDays() {
+		return anonymiseOldDays;
+	}
+
+	public void setAnonymiseOldDays(Long anonymiseOldDays) {
+		this.anonymiseOldDays = anonymiseOldDays;
 	}
 
 	public PapercutConfig getPapercut() {
