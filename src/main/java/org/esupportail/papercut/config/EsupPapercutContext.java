@@ -76,7 +76,7 @@ public class EsupPapercutContext {
 	
 	IzlyPayConfig izlypay;
 
-	AnonymizationConfig anonymization;
+	AnonymizationConfig anonymization = new AnonymizationConfig();
 	
 	public String getPapercutContext() {
 		return papercutContext;
