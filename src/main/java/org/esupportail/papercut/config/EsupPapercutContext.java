@@ -75,6 +75,8 @@ public class EsupPapercutContext {
 	PayboxConfig paybox;
 	
 	IzlyPayConfig izlypay;
+
+	AnonymizationConfig anonymization;
 	
 	public String getPapercutContext() {
 		return papercutContext;
@@ -291,6 +293,13 @@ public class EsupPapercutContext {
 	public void setIzlypay(IzlyPayConfig izlypay) {
 		this.izlypay = izlypay;
 	}
-	
+
+	public AnonymizationConfig getAnonymization() {
+		return anonymization;
+	}
+
+	public void setAnonymization(AnonymizationConfig anonymization) {
+		this.anonymization = anonymization;
+	}
 }
 
