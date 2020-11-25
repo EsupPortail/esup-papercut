@@ -54,7 +54,7 @@ public class PayBoxCallbackController {
      * @return empty page
      */
 	@GetMapping
-    public ResponseEntity<String> payboxcallback(@PathVariable String papercutContext, @RequestParam Integer montant, @RequestParam String reference, @RequestParam(required=false) String auto, 
+    public ResponseEntity<String> payboxcallback(@PathVariable String papercutContext, @RequestParam(required=false) Integer montant, @RequestParam String reference, @RequestParam(required=false) String auto, 
     		@RequestParam String erreur, @RequestParam String idtrans, @RequestParam String signature, 
     		HttpServletRequest request) {
 		
