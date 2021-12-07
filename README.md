@@ -16,7 +16,7 @@ En plus d'afficher le nombre d'impressions et le quota restant, esup-papercut pe
 ## Installation 
 
 ### Pré-requis
-* Java Open JDK 8 : https://openjdk.java.net/install : le mieux est de l'installer via le système de paquets de votre linux.
+* Java Open JDK 11 : https://openjdk.java.net/install : le mieux est de l'installer via le système de paquets de votre linux.
 * Maven (dernière version 3.0.x) : http://maven.apache.org/download.cgi : le mieux est de l'installer via le système de paquets de votre linux.
 * Postgresql 9 : le mieux est de l'installer via le système de paquets de votre linux.
 * Tomcat 9

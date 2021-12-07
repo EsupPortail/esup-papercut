@@ -48,7 +48,7 @@ public class HashService {
 			Mac mac = Mac.getInstance("HmacSHA512");
 			mac.init(getSecretKey(context.getPaybox().getHmacKey()));
 			final byte[] macData = mac.doFinal(input.getBytes());
-			char[] hex = new Hex().encode(macData);
+			char[] hex = Hex.encode(macData);
 			String hmac = new String(hex).toUpperCase();
 			log.debug(input);
 			log.debug(hmac);
