@@ -45,6 +45,7 @@ public class ContextFilter  implements Filter {
 			ContextHelper.setCurrentContext(context);
 		} 
 		filterChain.doFilter(servletRequest, servletResponse);
+		ContextHelper.clear();
 	}
 
 	@Override
