@@ -35,6 +35,7 @@ host    all             all             127.0.0.1/32            password
 create database esuppapercut;
 create USER esuppapercut with password 'esup';
 grant ALL ON DATABASE esuppapercut to esuppapercut;
+ALTER DATABASE esuppapercut OWNER TO esuppapercut;
 ```
 
 ### Paramétrage mémoire JVM :
