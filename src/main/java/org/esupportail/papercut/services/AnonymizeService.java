@@ -17,10 +17,10 @@
  */
 package org.esupportail.papercut.services;
 
-import java.sql.Date;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -53,9 +53,10 @@ public class AnonymizeService {
         Collection<EsupPapercutContext> availableContexts = esupPapercutConfig.getContexts().values();
         for (EsupPapercutContext availableContext : availableContexts) {
             if (availableContext.getAnonymization().isEnabled()) {
-                log.debug("anonymizeOldTransactions called for context : " + availableContext);
+                Date dateBefore2Anonymous = Date.from(Instant.now().minus(Duration.ofDays(availableContext.getAnonymization().getOldDaysTransactionsLogs())));
+                log.debug("anonymize OldTransactions before {} called for context {}", dateBefore2Anonymous, availableContext);
                 List<PayPapercutTransactionLog> transactionLogs = payPapercutTransactionLogRepository.findAllByTransactionDateBeforeAndUidIsNotLike(
-                        Date.from(Instant.now().minus(Duration.ofDays(availableContext.getAnonymization().getOldDaysTransactionsLogs()))), "anonymized");
+                        dateBefore2Anonymous, "anonymized");
                 for (PayPapercutTransactionLog transactionLog : transactionLogs) {
                     anonymizeOneService.anonymize(transactionLog.getId());
                 }

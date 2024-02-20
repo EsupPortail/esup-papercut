@@ -321,5 +321,10 @@ public class EsupPapercutContext {
 	public void setAnonymization(AnonymizationConfig anonymization) {
 		this.anonymization = anonymization;
 	}
+
+	@Override
+	public String toString() {
+		return "EsupPapercutContext [" + papercutContext + "]";
+	}
 }
 
