@@ -21,30 +21,37 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Pointcut;
 import org.esupportail.papercut.security.ContextHelper;
 import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import javax.persistence.EntityManager;
 
 @Aspect
 @Component
 public class PapercutDaoServiceAspect {
 
 	private final Logger log = LoggerFactory.getLogger(getClass());
+
+	@Autowired
+	private EntityManager em;
 	
 	  // Attention, ne fonctionne pas sur les native query ...
 	  // De même cf doc hibernate "Filters apply to entity queries, but not to direct fetching."
-	  @Before("(execution(public * org.springframework.data.jpa.repository.*.*(..)) || execution(* org.esupportail.papercut.dao.PapercutDaoService.*(..))) && target(papercutDaoService)")
-	  public void aroundExecution(JoinPoint pjp, PapercutDaoService papercutDaoService) throws Throwable {
-	    org.hibernate.Filter filter = papercutDaoService.entityManager.unwrap(Session.class).enableFilter("contextFilter");
+	  @Before("execution(* org.springframework.data.jpa.repository.*.*(..)) || execution(* org.esupportail.papercut.dao.*.*(..))")
+	  public void aroundExecution() {
+	    org.hibernate.Filter filter = em.unwrap(Session.class).enableFilter("contextFilter");
 	    filter.setParameter("papercutContext", ContextHelper.getCurrentContext());
 	    filter.validate();
 	  }
 
-	@After("(execution(public * org.springframework.data.jpa.repository.*.*(..)) || execution(* org.esupportail.papercut.dao.PapercutDaoService.*(..))) && target(papercutDaoService)")
-	public void disableFilter(JoinPoint pjp, PapercutDaoService papercutDaoService) throws Throwable {
-		papercutDaoService.entityManager.unwrap(Session.class).disableFilter("contextFilter");
+	@After("execution(* org.springframework.data.jpa.repository.*.*(..)) || execution(* org.esupportail.papercut.dao.*.*(..))")
+	public void disableFilter() {
+		em.unwrap(Session.class).disableFilter("contextFilter");
 	}
 	
 }

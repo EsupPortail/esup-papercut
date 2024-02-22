@@ -29,6 +29,7 @@ import org.esupportail.papercut.config.EsupPapercutConfig;
 import org.esupportail.papercut.config.EsupPapercutContext;
 import org.esupportail.papercut.dao.PayPapercutTransactionLogRepository;
 import org.esupportail.papercut.domain.PayPapercutTransactionLog;
+import org.esupportail.papercut.security.ContextHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -55,6 +56,7 @@ public class AnonymizeService {
             if (availableContext.getAnonymization().isEnabled()) {
                 Date dateBefore2Anonymous = Date.from(Instant.now().minus(Duration.ofDays(availableContext.getAnonymization().getOldDaysTransactionsLogs())));
                 log.debug("anonymize OldTransactions before {} called for context {}", dateBefore2Anonymous, availableContext);
+                ContextHelper.setCurrentContext(availableContext.getPapercutContext());
                 List<PayPapercutTransactionLog> transactionLogs = payPapercutTransactionLogRepository.findAllByTransactionDateBeforeAndUidIsNotLike(
                         dateBefore2Anonymous, "anonymized");
                 for (PayPapercutTransactionLog transactionLog : transactionLogs) {
@@ -63,6 +65,7 @@ public class AnonymizeService {
                 if (transactionLogs.size() > 0) {
                     log.info(transactionLogs.size() + " old transactionLogs anonymized for context : " + availableContext);
                 }
+                ContextHelper.setCurrentContext(null);
             }
         }
     }

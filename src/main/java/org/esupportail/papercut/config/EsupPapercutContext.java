@@ -81,6 +81,8 @@ public class EsupPapercutContext {
 	IzlyPayConfig izlypay;
 
 	AnonymizationConfig anonymization = new AnonymizationConfig();
+
+	Boolean exportPublicHashEnabled = false;
 	
 	public String getPapercutContext() {
 		return papercutContext;
@@ -320,6 +322,14 @@ public class EsupPapercutContext {
 
 	public void setAnonymization(AnonymizationConfig anonymization) {
 		this.anonymization = anonymization;
+	}
+
+	public Boolean getExportPublicHashEnabled() {
+		return exportPublicHashEnabled;
+	}
+
+	public void setExportPublicHashEnabled(Boolean exportPublicHashEnabled) {
+		this.exportPublicHashEnabled = exportPublicHashEnabled;
 	}
 
 	@Override

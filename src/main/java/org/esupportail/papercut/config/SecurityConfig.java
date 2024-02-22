@@ -63,7 +63,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
       http
-		.anonymous().disable()
         .authorizeRequests()
         .regexMatchers("/login")
         .authenticated()
@@ -73,12 +72,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .hasRole("USER")
         .and()
         .authorizeRequests()
-        .regexMatchers("/[^/]*/admin(/.*|/?)")
-        .hasAnyRole("ADMIN", "MANAGER")
+        .regexMatchers("/[^/]*/api/csv-online")
+        .permitAll()
         .and()
         .authorizeRequests()
-        .regexMatchers("/")
-        .permitAll()
+        .regexMatchers("/[^/]*/admin(/.*|/?)")
+        .hasAnyRole("ADMIN", "MANAGER")
         .and()
         .httpBasic()
         .authenticationEntryPoint(authenticationEntryPoint)

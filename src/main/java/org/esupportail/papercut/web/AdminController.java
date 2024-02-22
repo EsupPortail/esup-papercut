@@ -27,7 +27,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
 import org.esupportail.papercut.config.EsupPapercutConfig;
 import org.esupportail.papercut.config.EsupPapercutContext;
+import org.esupportail.papercut.dao.AdminProfilDaoService;
+import org.esupportail.papercut.dao.AdminProfilRepository;
 import org.esupportail.papercut.dao.PapercutDaoService;
+import org.esupportail.papercut.domain.AdminProfil;
 import org.esupportail.papercut.domain.PayPapercutTransactionLog;
 import org.esupportail.papercut.security.ContextHelper;
 import org.esupportail.papercut.services.EsupPaperCutService;
@@ -41,7 +44,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -49,23 +55,22 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StopWatch;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import flexjson.JSONSerializer;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 @Controller
 @RequestMapping("/{papercutContext}/admin")
-@PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
 public class AdminController {
-	
 
     final static Logger log = LoggerFactory.getLogger(AdminController.class);
-	
-	@Resource 
-	EsupPaperCutService esupPaperCutService;
 	
 	@Resource
 	EsupPapercutConfig config;
@@ -76,11 +81,31 @@ public class AdminController {
 	@Autowired
 	StatsService statsService;
 
-    @GetMapping(produces = "text/html")
+	@Autowired
+	private AdminProfilDaoService adminProfilDaoService;
+
+	@ModelAttribute("active")
+	public String getActiveMenu() {
+		return "admin";
+	}
+
+	@ModelAttribute("papercutContext")
+	public String getPapercutContext() {
+		return ContextHelper.getCurrentContext();
+	}
+
+	@GetMapping(produces = "text/html")
     public String historyList(@PageableDefault(size = 10, direction = Direction.DESC, sort = "transactionDate") Pageable pageable, 
     		Model uiModel) { 	
         uiModel.addAttribute("pageLogs", papercutDaoService.findAllPayPapercutTransactionLogs(pageable));
-        uiModel.addAttribute("active", "admin"); 	
+		EsupPapercutContext context = config.getContext(ContextHelper.getCurrentContext());
+		if(context.getExportPublicHashEnabled()) {
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			String uid = auth.getName();
+			AdminProfil adminProfil = adminProfilDaoService.findOrCreateAdminProfil(uid);
+			uiModel.addAttribute("exportPublicHashKey", adminProfil.getApiJsonHashKey());
+		}
+
         return "history";
     }
 	
@@ -89,17 +114,14 @@ public class AdminController {
     public String viewTransactionLog(@RequestParam Long id, Model uiModel) {
     	uiModel.addAttribute("plog", papercutDaoService.findById(id));
     	uiModel.addAttribute("itemId", id);
-    	uiModel.addAttribute("active", "admin"); 	
         return "show-transactionlog";
     }
     
     @Transactional
     @PostMapping(value = "archive")                                                                                                                                          
     public String archive(@RequestParam Long id, @PathVariable String papercutContext) {
-
         PayPapercutTransactionLog txLog =  papercutDaoService.findById(id);
         txLog.setArchived(true);
-       
         return "redirect:/" + papercutContext + "/admin?id=" + id;
     }
     
@@ -166,6 +188,18 @@ public class AdminController {
 
     	writer.close();
     }
+
+	@RequestMapping("/csv-online")
+	@Transactional
+	public void getCsv(@RequestHeader("x-APIKey") String hashKey, HttpServletResponse response) throws IOException {
+		AdminProfil profil = adminProfilDaoService.findByApiJsonHashKey(hashKey);
+		EsupPapercutContext context = config.getContext(ContextHelper.getCurrentContext());
+		if(context==null || !context.getExportPublicHashEnabled() || profil==null) {
+			response.setStatus(403);
+		} else {
+			getCsv(response);
+		}
+	}
 
     @RequestMapping(value="/stats")
     public String getStats(Model uiModel) {

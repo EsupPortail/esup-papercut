@@ -36,8 +36,7 @@ public class IndexController {
 	EsupPapercutConfig config;
 
 	@GetMapping("/")
-	public String index(@RequestParam(required = false) String papercutContext, Model model) {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	public String index(@RequestParam(required = false) String papercutContext) {
 		if(papercutContext == null) {
 			papercutContext = config.getDefaultContext();
 		}
