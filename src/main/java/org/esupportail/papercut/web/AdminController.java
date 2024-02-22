@@ -160,7 +160,7 @@ public class AdminController {
     	String csv = "Date transaction,uid,montant,ID transaction,context,payMode";
     	writer.write(csv);
 
-    	Page<PayPapercutTransactionLog> txLogsPage = papercutDaoService.findAllPayPapercutTransactionLogs(PageRequest.of(0, 1000, Sort.by("transactionDate").ascending()));
+    	Page<PayPapercutTransactionLog> txLogsPage = papercutDaoService.findAllPayPapercutTransactionLogs(PageRequest.of(0, 100000, Sort.by("transactionDate").ascending()));
 
     	int nbLine = 0;
     	while(true) {
