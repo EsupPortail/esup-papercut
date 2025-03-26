@@ -1,44 +1,46 @@
 package org.esupportail.papercut.domain.izlypay;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+
 public class IzlyWebPayment {
 
-    IzlyPayOperationSMoney operationSMoney;
+    int operationId;
 
-    IzlyPayBeneficiary beneficiary;
+    String orderId;
 
-    IzlyPayUser user;
+    String error;
 
-    IzlyPayError error;
+    String operationStatus;
 
-    public IzlyPayOperationSMoney getOperationSMoney() {
-        return operationSMoney;
+    public int getOperationId() {
+        return operationId;
     }
 
-    public void setOperationSMoney(IzlyPayOperationSMoney operationSMoney) {
-        this.operationSMoney = operationSMoney;
+    public void setOperationId(int operationId) {
+        this.operationId = operationId;
     }
 
-    public IzlyPayBeneficiary getBeneficiary() {
-        return beneficiary;
+    public String getOrderId() {
+        return orderId;
     }
 
-    public void setBeneficiary(IzlyPayBeneficiary beneficiary) {
-        this.beneficiary = beneficiary;
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
     }
 
-    public IzlyPayUser getUser() {
-        return user;
-    }
-
-    public void setUser(IzlyPayUser user) {
-        this.user = user;
-    }
-
-    public IzlyPayError getError() {
+    public String getError() {
         return error;
     }
 
-    public void setError(IzlyPayError error) {
+    public void setError(String error) {
         this.error = error;
+    }
+
+    public String getOperationStatus() {
+        return operationStatus;
+    }
+
+    public void setOperationStatus(String operationStatus) {
+        this.operationStatus = operationStatus;
     }
 }

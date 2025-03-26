@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.esupportail.papercut.config.EsupPapercutContext;
 import org.esupportail.papercut.dao.PapercutDaoService;
 import org.esupportail.papercut.domain.PayBoxForm;
@@ -155,14 +156,14 @@ public class EsupPaperCutService {
 	public boolean izlypayCallback(EsupPapercutContext context, IzlyPayCallBack izlyPayCallBack) {
 
 		int izlyPayOperationId = izlyPayCallBack.getOperationSMoney().getId();
-		log.info("izlyPayOperationId {}, we check get webPayment data direclty from Izly API to ckeck the payment is OK", izlyPayOperationId);
+		log.info("izlyPayOperationId {}, we get webPayment data direclty from Izly API to ckeck the payment is OK", izlyPayOperationId);
 		IzlyWebPayment izlyWebPayment = izlyPayService.getIzlyWebPayment(context, izlyPayOperationId);
-		if(izlyWebPayment.getError() != null && izlyWebPayment.getError().getCode() != 0) {
-			log.error("Error during getIzlyWebPayment for izlyPayOperationId " + izlyPayOperationId + " : " + izlyWebPayment.getError().getMessage());
+		if(StringUtils.isNotBlank(izlyWebPayment.getError())) {
+			log.error("Error during getIzlyWebPayment for izlyPayOperationId {} : {}", izlyPayOperationId, izlyWebPayment.getError());
 			return false;
 		}
-		if(!izlyPayCallBack.getOperationSMoney().getClientOrderId().equals(izlyWebPayment.getOperationSMoney().getClientOrderId())) {
-			log.error("Error - callback reference and izlypay reference are not equals : {} != {}", izlyPayCallBack.getOperationSMoney().getClientOrderId(), izlyWebPayment.getOperationSMoney().getClientOrderId());
+		if(!izlyPayCallBack.getOperationSMoney().getClientOrderId().equals(izlyWebPayment.getOrderId())) {
+			log.error("Error - callback reference and izlypay reference are not equals : {} != {}", izlyPayCallBack.getOperationSMoney().getClientOrderId(), izlyWebPayment.getOrderId());
 			return false;
 		}
 

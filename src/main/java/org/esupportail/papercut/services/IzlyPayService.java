@@ -17,8 +17,6 @@
  */
 package org.esupportail.papercut.services;
 
-import javax.annotation.Resource;
-
 import org.esupportail.papercut.config.EsupPapercutContext;
 import org.esupportail.papercut.config.IzlyPayConfig;
 import org.esupportail.papercut.domain.izlypay.IzlyPayment;
@@ -32,6 +30,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import javax.annotation.Resource;
 
 @Service
 public class IzlyPayService extends PayService {
