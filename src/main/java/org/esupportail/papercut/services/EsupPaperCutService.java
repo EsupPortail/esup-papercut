@@ -28,6 +28,7 @@ import org.esupportail.papercut.domain.PayPapercutTransactionLog;
 import org.esupportail.papercut.domain.PayPapercutTransactionLog.PayMode;
 import org.esupportail.papercut.domain.UserPapercutInfos;
 import org.esupportail.papercut.domain.izlypay.IzlyPayCallBack;
+import org.esupportail.papercut.domain.izlypay.IzlyWebPayment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -152,6 +153,20 @@ public class EsupPaperCutService {
 	}
 
 	public boolean izlypayCallback(EsupPapercutContext context, IzlyPayCallBack izlyPayCallBack) {
+
+		int izlyPayOperationId = izlyPayCallBack.getOperationSMoney().getId();
+		log.info("izlyPayOperationId {}, we check get webPayment data direclty from Izly API to ckeck the payment is OK", izlyPayOperationId);
+		IzlyWebPayment izlyWebPayment = izlyPayService.getIzlyWebPayment(context, izlyPayOperationId);
+		if(izlyWebPayment.getError() != null && izlyWebPayment.getError().getCode() != 0) {
+			log.error("Error during getIzlyWebPayment for izlyPayOperationId " + izlyPayOperationId + " : " + izlyWebPayment.getError().getMessage());
+			return false;
+		}
+		if(!izlyPayCallBack.getOperationSMoney().getClientOrderId().equals(izlyWebPayment.getOperationSMoney().getClientOrderId())) {
+			log.error("Error - callback reference and izlypay reference are not equals : {} != {}", izlyPayCallBack.getOperationSMoney().getClientOrderId(), izlyWebPayment.getOperationSMoney().getClientOrderId());
+			return false;
+		}
+
+		log.info("Payment {} is OK", izlyPayCallBack.getOperationSMoney().getClientOrderId());
 
 		String reference = izlyPayCallBack.getOperationSMoney().getClientOrderId();
 		String idtrans = reference;

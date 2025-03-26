@@ -23,10 +23,12 @@ import org.esupportail.papercut.config.EsupPapercutContext;
 import org.esupportail.papercut.config.IzlyPayConfig;
 import org.esupportail.papercut.domain.izlypay.IzlyPayment;
 import org.esupportail.papercut.domain.izlypay.IzlyPaymentResponse;
+import org.esupportail.papercut.domain.izlypay.IzlyWebPayment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -71,6 +73,15 @@ public class IzlyPayService extends PayService {
 		headers.set("AppIdentifier", izlyPayConfig.getIdentifier());
 		return headers;
 	}
+
+	public IzlyWebPayment getIzlyWebPayment(EsupPapercutContext context, int izlyPayOperationId) {
+		String url = String.format("%s/api/Izly/WebPayments/%s", context.getIzlypay().getUrl(), izlyPayOperationId);
+		HttpHeaders headers = getJsonHeaders(context.getIzlypay());
+		HttpEntity<String> request = new HttpEntity<>(headers);
+		ResponseEntity<IzlyWebPayment> izlyPaymentResponseEntity = restTemplate.exchange(url, HttpMethod.GET, request, IzlyWebPayment.class);
+		return izlyPaymentResponseEntity.getBody();
+	}
+
 
 
 
