@@ -88,70 +88,57 @@ public class EsupPaperCutService {
 		return izlyPayService.getIzlyPayUrl(context, uid, mail, montant, contextPath);
 	}
 
-	
-	public boolean payboxCallback(EsupPapercutContext context, Integer montant, String reference, String auto, String erreur, String idtrans, String signature, String queryString, String ip, String currentUserUid) {
-		
-		List<PayPapercutTransactionLog> txLogs  = papercutDaoService.findPayPapercutTransactionLogsByIdtransAndPayMode(idtrans, PayMode.PAYBOX, PageRequest.of(0, Integer.MAX_VALUE)).getContent();		
-		
-		if(txLogs.size() > 0) {
-			log.info("This transaction + " + idtrans + " is already OK");
-			return true;
-		}
-		
-		PayPapercutTransactionLog txLog = new PayPapercutTransactionLog();
-	
-		txLog.setPayMode(PayMode.PAYBOX);
-		txLog.setMontant(montant);
-		txLog.setIdtrans(idtrans);
-		txLog.setTransactionDate(new Date());
-		txLog.setReference(reference);
-		String uid = reference.split("@")[0];
-		uid = uid.substring(context.getNumCommandePrefix().length(), uid.length());
-		txLog.setUid(uid);
-		String papercutContext = reference.split("@")[1];
-		txLog.setPapercutContext(papercutContext);
 
-		// if paybox server OR connected user ok 
-		if(payBoxService.isPayboxServer(context, ip) || uid.equals(currentUserUid)) {
+    public void payboxCallback(EsupPapercutContext context, Integer montant, String reference, String auto, String erreur, String idtrans, String signature, String queryString, String ip, String currentUserUid) {
 
-			// check signature == message come from paybox
-			if(payBoxService.checkPayboxSignature(context, queryString, signature)) {
+        List<PayPapercutTransactionLog> txLogs  = papercutDaoService.findPayPapercutTransactionLogsByIdtransAndPayMode(idtrans, PayMode.PAYBOX, PageRequest.of(0, Integer.MAX_VALUE)).getContent();
 
-				String papercutOldSolde =  papercutService.getUserPapercutInfos(context, uid).getBalance();
-				txLog.setPapercutOldSolde(papercutOldSolde);
+        if(txLogs.size() > 0) {
+            log.info("This transaction + " + idtrans + " is already OK");
+            return;
+        }
 
-				if("00000".equals(erreur)) {
-					try {
-						log.info("Transaction : " + reference + " pour un montant de " + montant + " OK !");
-						double montantEuros = new Double(montant) / 100.0;
-						papercutService.creditUserBalance(context, uid, montantEuros, idtrans, PayMode.PAYBOX);
-						
-						String papercutNewSolde =  papercutService.getUserPapercutInfos(context, uid).getBalance();
-						txLog.setPapercutNewSolde(papercutNewSolde);
+        PayPapercutTransactionLog txLog = new PayPapercutTransactionLog();
 
-						papercutDaoService.persist(txLog);	
-						
-					} catch(Exception ex) {
-						log.error("Exception during creditUserBalance on papercut ?", ex);
-					}
-				} else {
-					log.info("'Erreur' " + erreur + "  (annulation) lors de la transaction paybox : " + reference + " pour un montant de " + montant);
-				}
-				
-			} else {
-				log.error("signature checking of paybox failed, transaction " + txLog + " canceled.");
-			}
+        txLog.setPayMode(PayMode.PAYBOX);
+        txLog.setMontant(montant);
+        txLog.setIdtrans(idtrans);
+        txLog.setTransactionDate(new Date());
+        txLog.setReference(reference);
+        String uid = reference.split("@")[0];
+        uid = uid.substring(context.getNumCommandePrefix().length(), uid.length());
+        txLog.setUid(uid);
+        String papercutContext = reference.split("@")[1];
+        txLog.setPapercutContext(papercutContext);
 
-			return true;
-			
-		} else {
-			log.warn("this ip " + ip + " is not trusted for the paybox transaction, " +
-					"or this user " + uid + " does'nt correspond to this user " + currentUserUid + "  (validatePayboxJustWithRedirection mode), " +
-					"transaction " + txLog + " canceled.");
-		}
+        // check signature == message come from paybox
+        if(payBoxService.checkPayboxSignature(context, queryString, signature)) {
 
-    	return false;
-	}
+            String papercutOldSolde =  papercutService.getUserPapercutInfos(context, uid).getBalance();
+            txLog.setPapercutOldSolde(papercutOldSolde);
+
+            if("00000".equals(erreur)) {
+                try {
+                    log.info("Transaction : " + reference + " pour un montant de " + montant + " OK !");
+                    double montantEuros = new Double(montant) / 100.0;
+                    papercutService.creditUserBalance(context, uid, montantEuros, idtrans, PayMode.PAYBOX);
+
+                    String papercutNewSolde =  papercutService.getUserPapercutInfos(context, uid).getBalance();
+                    txLog.setPapercutNewSolde(papercutNewSolde);
+
+                    papercutDaoService.persist(txLog);
+
+                } catch(Exception ex) {
+                    log.error("Exception during creditUserBalance on papercut ?", ex);
+                }
+            } else {
+                log.info("'Erreur' " + erreur + "  (annulation) lors de la transaction paybox : " + reference + " pour un montant de " + montant);
+            }
+
+        } else {
+            log.error("signature checking of paybox failed, transaction " + txLog + " canceled.");
+        }
+    }
 
 	public boolean izlypayCallback(EsupPapercutContext context, IzlyPayCallBack izlyPayCallBack) {
 

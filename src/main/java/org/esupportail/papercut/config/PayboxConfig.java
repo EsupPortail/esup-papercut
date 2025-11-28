@@ -46,8 +46,6 @@ public class PayboxConfig {
 
     List<String> payboxActionUrls;
 
-    List<String> payboxServersIP;
-
     PublicKey payboxPublicKey;
 
     String reponseServerUrl;
@@ -113,14 +111,6 @@ public class PayboxConfig {
 
 	public void setPayboxActionUrls(List<String> payboxActionUrls) {
 		this.payboxActionUrls = payboxActionUrls;
-	}
-
-	public List<String> getPayboxServersIP() {
-		return payboxServersIP;
-	}
-
-	public void setPayboxServersIP(List<String> payboxServersIP) {
-		this.payboxServersIP = payboxServersIP;
 	}
 
 	public PublicKey getPayboxPublicKey() {

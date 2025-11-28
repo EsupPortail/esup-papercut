@@ -61,14 +61,9 @@ public class PayBoxCallbackController {
 		String ip = request.getRemoteAddr();
 		String queryString = request.getQueryString();
 		
-		if(esupPaperCutService.payboxCallback(config.getContext(papercutContext), montant, reference, auto, erreur, idtrans, signature, queryString, ip, null)) {
-    		HttpHeaders headers = new HttpHeaders();
-    		headers.add("Content-Type", "text/html; charset=utf-8");
-    		return new ResponseEntity<String>("", headers, HttpStatus.OK);
-		} else {
-    		HttpHeaders headers = new HttpHeaders();
-    		headers.add("Content-Type", "text/html; charset=utf-8");
-    		return new ResponseEntity<String>("", headers, HttpStatus.FORBIDDEN);
-		}
+		esupPaperCutService.payboxCallback(config.getContext(papercutContext), montant, reference, auto, erreur, idtrans, signature, queryString, ip, null);
+    	HttpHeaders headers = new HttpHeaders();
+    	headers.add("Content-Type", "text/html; charset=utf-8");
+    	return new ResponseEntity<String>("", headers, HttpStatus.OK);
     }
 }

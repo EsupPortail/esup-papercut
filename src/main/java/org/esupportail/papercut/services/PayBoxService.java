@@ -101,17 +101,6 @@ public class PayBoxService extends PayService {
 		String nowAsISO = df.format(new Date());
 		return nowAsISO;
 	}
-
-	public boolean isPayboxServer(EsupPapercutContext context, String ip) {
-
-		if(ip == null || !context.getPaybox().getPayboxServersIP().contains(ip)) {
-			log.info(ip + " is not a paybox server");
-			return false;
-		} else {
-			log.info(ip + " is a paybox server");
-			return true;
-		}
-	}
 		
 	public boolean checkPayboxSignature(EsupPapercutContext context, String queryString, String signature) {
 		
