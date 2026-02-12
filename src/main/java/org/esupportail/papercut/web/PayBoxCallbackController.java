@@ -17,8 +17,8 @@
  */
 package org.esupportail.papercut.web;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.esupportail.papercut.config.EsupPapercutConfig;
 import org.esupportail.papercut.services.EsupPaperCutService;

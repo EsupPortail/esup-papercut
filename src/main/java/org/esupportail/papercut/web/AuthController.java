@@ -17,8 +17,8 @@
  */
 package org.esupportail.papercut.web;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,10 +44,5 @@ public class AuthController {
       return "auth/logout";
     }
 
-
-    @GetMapping("/login")
-    public String login() {
-        return "redirect:/secured";
-    }
 
 }

@@ -17,13 +17,14 @@
  */
 package org.esupportail.papercut.web;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.esupportail.papercut.config.EsupPapercutConfig;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,21 +32,39 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class IndexController {
-		
+
+	private static final Logger logger = LoggerFactory.getLogger(IndexController.class);
+
 	@Resource
 	EsupPapercutConfig config;
 
 	@GetMapping("/")
 	public String index(@RequestParam(required = false) String papercutContext) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		boolean authenticated = auth != null && auth.isAuthenticated();
+		logger.debug("[IndexController.index()] Called | Authenticated: {} | User: {} | PapercutContext param: {}",
+				authenticated, auth != null ? auth.getName() : "ANONYMOUS", papercutContext);
+
 		if(papercutContext == null) {
 			papercutContext = config.getDefaultContext();
+			logger.debug("[IndexController.index()] Using default context: {}", papercutContext);
 		}
-		return "redirect:/" + papercutContext;
+
+		String redirectUrl = "redirect:/" + papercutContext;
+		logger.debug("[IndexController.index()] Redirecting to: {}", redirectUrl);
+		return redirectUrl;
 	}
 	
 	@GetMapping("/{papercutContext}")
-    public String papercutContext(@PathVariable String papercutContext) {	
-    	return "redirect:/" + papercutContext + "/user";
+    public String papercutContext(@PathVariable String papercutContext) {
+    	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		boolean authenticated = auth != null && auth.isAuthenticated();
+    	logger.debug("[IndexController.papercutContext()] Called with context: {} | Authenticated: {} | User: {}",
+    			papercutContext, authenticated, auth != null ? auth.getName() : "ANONYMOUS");
+
+    	String redirectUrl = "redirect:/" + papercutContext + "/user";
+    	logger.debug("[IndexController.papercutContext()] Redirecting to: {}", redirectUrl);
+    	return redirectUrl;
     }
 	
     @GetMapping("favicon.ico")

@@ -17,10 +17,13 @@
  */
 package org.esupportail.papercut.config;
 
-import java.util.Arrays;
+import java.util.Collections;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.esupportail.papercut.security.ContextCasAuthenticationProvider;
-import org.jasig.cas.client.session.SingleSignOutFilter;
+import org.esupportail.papercut.security.ContextFilter;
+import org.apereo.cas.client.session.SingleSignOutFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,83 +32,117 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.cas.ServiceProperties;
 import org.springframework.security.cas.web.CasAuthenticationFilter;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 
 @EnableWebSecurity
 @Configuration
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig {
 
-    private AuthenticationProvider authenticationProvider;
+    private static final Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
+
+    private final AuthenticationProvider authenticationProvider;
     
-    private AuthenticationEntryPoint authenticationEntryPoint;
+    private final AuthenticationEntryPoint authenticationEntryPoint;
     
-    private SingleSignOutFilter singleSignOutFilter;
+    private final SingleSignOutFilter singleSignOutFilter;
     
-    private LogoutFilter logoutFilter;
+    private final LogoutFilter logoutFilter;
 
     @Autowired
     public SecurityConfig(ContextCasAuthenticationProvider casAuthenticationProvider, AuthenticationEntryPoint eP,
-                          LogoutFilter lF
-                          , SingleSignOutFilter ssF) {
+                          LogoutFilter lF, SingleSignOutFilter ssF) {
         this.authenticationProvider = casAuthenticationProvider;
         this.authenticationEntryPoint = eP;
         this.logoutFilter = lF;
         this.singleSignOutFilter = ssF;
-
     }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http, CasAuthenticationFilter casAuthFilter) throws Exception {
       http
-        .authorizeRequests()
-        .regexMatchers("/login")
-        .authenticated()
-        .and()
-        .authorizeRequests()
-        .regexMatchers("/[^/]*/user(/.*|/?)")
-        .hasRole("USER")
-        .and()
-        .authorizeRequests()
-        .regexMatchers("/[^/]*/api/csv-online")
-        .permitAll()
-        .and()
-        .authorizeRequests()
-        .regexMatchers("/[^/]*/admin(/.*|/?)")
-        .hasAnyRole("ADMIN", "MANAGER")
-        .and()
-        .httpBasic()
-        .authenticationEntryPoint(authenticationEntryPoint)
-        .and()
-        .logout().logoutSuccessUrl("/logout")
-        .and()
+        .authorizeHttpRequests(authz -> authz
+          .requestMatchers("/login", "/logout", "/webjars/**", "/resources/**", "/error").permitAll()
+          .requestMatchers("/*/user", "/*/user/*").hasRole("USER")
+          .requestMatchers("/*/api/csv-online").permitAll()
+          .requestMatchers("/*/admin", "/*/admin/*").hasAnyRole("ADMIN", "MANAGER")
+          .anyRequest().authenticated()
+        )
+        .exceptionHandling(exception -> exception
+          .authenticationEntryPoint(authenticationEntryPoint)
+        )
+        .logout(logout -> logout
+          .logoutSuccessUrl("/logout")
+          .invalidateHttpSession(true)
+        )
         .addFilterBefore(singleSignOutFilter, CasAuthenticationFilter.class)
-        .addFilterBefore(logoutFilter, LogoutFilter.class)
-        .csrf().disable();
+        .addFilterBefore(casAuthFilter, UsernamePasswordAuthenticationFilter.class)
+        .addFilterBefore(logoutFilter, CasAuthenticationFilter.class)
+        .csrf(AbstractHttpConfigurer::disable);
 
+      return http.build();
     }
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-      auth.authenticationProvider(authenticationProvider);
-    }
-
-    @Override
-    protected AuthenticationManager authenticationManager() throws Exception {
-      return new ProviderManager(Arrays.asList(authenticationProvider));
+    @Bean
+    public AuthenticationManager authenticationManager() {
+      return new ProviderManager(Collections.singletonList(authenticationProvider));
     }
 
     @Bean
     public CasAuthenticationFilter casAuthenticationFilter(ServiceProperties sP) throws Exception {
+      logger.info("=== Initializing CasAuthenticationFilter ===");
+      logger.info("Service URL: {}", sP.getService());
+
       CasAuthenticationFilter filter = new CasAuthenticationFilter();
       filter.setServiceProperties(sP);
       filter.setAuthenticationManager(authenticationManager());
+      filter.setFilterProcessesUrl("/login");
+
+      logger.info("CasAuthenticationFilter will process requests to: /login");
+
+      filter.setAuthenticationFailureHandler((request, response, exception) -> {
+        logger.error("CAS Authentication FAILED: {}", exception.getMessage(), exception);
+        logger.info("Redirecting to / after auth failure");
+        response.sendRedirect("/");
+      });
+
+      SimpleUrlAuthenticationSuccessHandler successHandler = new SimpleUrlAuthenticationSuccessHandler();
+      successHandler.setDefaultTargetUrl("/");
+      successHandler.setAlwaysUseDefaultTargetUrl(false);
+
+      filter.setAuthenticationSuccessHandler(successHandler);
+      logger.info("=== CasAuthenticationFilter initialized ===");
       return filter;
+    }
+
+    /**
+     * Configure l'enregistrement du ContextFilter pour qu'il s'exécute en premier.
+     * Ordre 0 garantit qu'il s'exécute avant tous les autres filtres.
+     */
+    @Bean
+    public FilterRegistrationBean<ContextFilter> contextFilterRegistration(ContextFilter filter) {
+      FilterRegistrationBean<ContextFilter> registration = new FilterRegistrationBean<>(filter);
+      registration.setOrder(0);
+      registration.addUrlPatterns("/*");
+      return registration;
+    }
+
+    /**
+     * Désactive l'enregistrement automatique du CasAuthenticationFilter pour éviter qu'il soit appelé deux fois.
+     * Le filtre est ajouté manuellement dans la chaîne de filtres de sécurité.
+     */
+    @Bean
+    public FilterRegistrationBean<CasAuthenticationFilter> casAuthenticationFilterRegistration(CasAuthenticationFilter filter) {
+      FilterRegistrationBean<CasAuthenticationFilter> registration = new FilterRegistrationBean<>(filter);
+      registration.setEnabled(false);
+      return registration;
     }
 
 }

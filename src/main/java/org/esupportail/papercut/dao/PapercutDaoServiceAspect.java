@@ -17,19 +17,16 @@
  */
 package org.esupportail.papercut.dao;
 
-import org.aspectj.lang.JoinPoint;
+import jakarta.persistence.EntityManager;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
 import org.esupportail.papercut.security.ContextHelper;
 import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import javax.persistence.EntityManager;
 
 @Aspect
 @Component

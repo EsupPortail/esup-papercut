@@ -17,24 +17,22 @@
  */
 package org.esupportail.papercut.config;
 
-import javax.servlet.http.HttpSessionEvent;
-
+import org.apereo.cas.client.session.SingleSignOutFilter;
+import org.apereo.cas.client.session.SingleSignOutHttpSessionListener;
+import org.apereo.cas.client.validation.Cas20ServiceTicketValidator;
+import org.apereo.cas.client.validation.TicketValidator;
 import org.esupportail.papercut.security.ContextCasAuthenticationProvider;
 import org.esupportail.papercut.security.ContextUserDetailsService;
-import org.jasig.cas.client.session.SingleSignOutFilter;
-import org.jasig.cas.client.session.SingleSignOutHttpSessionListener;
-import org.jasig.cas.client.validation.Cas20ServiceTicketValidator;
-import org.jasig.cas.client.validation.TicketValidator;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
-import org.springframework.context.event.EventListener;
 import org.springframework.security.cas.ServiceProperties;
 import org.springframework.security.cas.web.CasAuthenticationEntryPoint;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 
 @Component
 @ConfigurationProperties(prefix="cas")
@@ -73,7 +71,7 @@ public class CasConfig {
 	@Bean
 	public ServiceProperties serviceProperties() {
 		ServiceProperties serviceProperties = new ServiceProperties();
-		serviceProperties.setService(service + "/login/cas");
+		serviceProperties.setService(service + "/login");
 		serviceProperties.setSendRenew(false);
 		return serviceProperties;
 	}
@@ -89,16 +87,16 @@ public class CasConfig {
 
 	@Bean
 	public TicketValidator ticketValidator() {
-;		return new Cas20ServiceTicketValidator(url);
+		return new Cas20ServiceTicketValidator(url);
 	}
 
 	@Bean
-	public ContextCasAuthenticationProvider casAuthenticationProvider(EsupPapercutConfig config) {
+	public ContextCasAuthenticationProvider casAuthenticationProvider(EsupPapercutConfig config, ServiceProperties serviceProperties, TicketValidator ticketValidator) {
 		ContextCasAuthenticationProvider provider = new ContextCasAuthenticationProvider();
-		provider.setServiceProperties(serviceProperties());
-		provider.setTicketValidator(ticketValidator());
+		provider.setServiceProperties(serviceProperties);
+		provider.setTicketValidator(ticketValidator);
 		provider.setAuthenticationUserDetailsService(new ContextUserDetailsService(config));
-		provider.setKey("CAS_PROVIDER_LOCALHOST_9000");
+		provider.setKey(key);
 		return provider;
 	}
 
@@ -109,9 +107,9 @@ public class CasConfig {
 	}
 
 	@Bean
-	public LogoutFilter logoutFilter() {
+	public LogoutFilter logoutFilter(SecurityContextLogoutHandler securityContextLogoutHandler) {
 		LogoutFilter logoutFilter = new LogoutFilter(
-				url + "/logout?service=" + service, securityContextLogoutHandler());
+				url + "/logout?service=" + service, securityContextLogoutHandler);
 		logoutFilter.setFilterProcessesUrl("/logout");
 		return logoutFilter;
 	}
@@ -123,8 +121,30 @@ public class CasConfig {
 		return singleSignOutFilter;
 	}
 
-	@EventListener
-	public SingleSignOutHttpSessionListener singleSignOutHttpSessionListener(HttpSessionEvent event) {
+	@Bean
+	public SingleSignOutHttpSessionListener singleSignOutHttpSessionListener() {
 		return new SingleSignOutHttpSessionListener();
+	}
+
+	/**
+	 * Désactive l'enregistrement automatique du SingleSignOutFilter pour éviter qu'il soit appelé deux fois.
+	 * Le filtre est ajouté manuellement dans la chaîne de filtres de sécurité.
+	 */
+	@Bean
+	public FilterRegistrationBean<SingleSignOutFilter> singleSignOutFilterRegistration(SingleSignOutFilter filter) {
+		FilterRegistrationBean<SingleSignOutFilter> registration = new FilterRegistrationBean<>(filter);
+		registration.setEnabled(false);
+		return registration;
+	}
+
+	/**
+	 * Désactive l'enregistrement automatique du LogoutFilter pour éviter qu'il soit appelé deux fois.
+	 * Le filtre est ajouté manuellement dans la chaîne de filtres de sécurité.
+	 */
+	@Bean
+	public FilterRegistrationBean<LogoutFilter> logoutFilterRegistration(LogoutFilter filter) {
+		FilterRegistrationBean<LogoutFilter> registration = new FilterRegistrationBean<>(filter);
+		registration.setEnabled(false);
+		return registration;
 	}
 }

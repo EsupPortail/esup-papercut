@@ -16,10 +16,10 @@ En plus d'afficher le nombre d'impressions et le quota restant, esup-papercut pe
 ## Installation 
 
 ### Pré-requis
-* Java Open JDK 11 : https://openjdk.java.net/install : le mieux est de l'installer via le système de paquets de votre linux.
-* Maven (dernière version 3.0.x) : http://maven.apache.org/download.cgi : le mieux est de l'installer via le système de paquets de votre linux.
-* Postgresql 9 : le mieux est de l'installer via le système de paquets de votre linux.
-* Tomcat 9
+* Java Open JDK 17 ou supérieur : https://openjdk.java.net/install : le mieux est de l'installer via le système de paquets de votre linux.
+* Maven (version 3.6.x ou supérieur) : http://maven.apache.org/download.cgi : le mieux est de l'installer via le système de paquets de votre linux.
+* PostgreSQL 15 ou supérieur : le mieux est de l'installer via le système de paquets de votre linux.
+* Tomcat 10 (optionnel si utilisation de Spring Boot en standalone)
 
 ### PostgreSQL
 * pg_hba.conf : ajout de 
@@ -38,11 +38,6 @@ grant ALL ON DATABASE esuppapercut to esuppapercut;
 ALTER DATABASE esuppapercut OWNER TO esuppapercut;
 ```
 
-### Paramétrage mémoire JVM :
-Pensez à paramétrer les espaces mémoire JVM : 
-```
-export JAVA_OPTS="-Xms256m -Xmx256m"
-```
 
 ### Création des tables :
 modification de la configuration spring.jpa.hibernate.ddl-auto dans esup-papercut.properties :

@@ -20,8 +20,8 @@ package org.esupportail.papercut.web;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.esupportail.papercut.security.ContextUserDetails;
 import org.springframework.security.core.Authentication;
@@ -35,8 +35,7 @@ public class WebUtils {
 		if("/error".equals(path)) {
 			path = (String)request.getAttribute(RequestDispatcher.FORWARD_REQUEST_URI);
 		}
-		String papercutContext = path.replaceFirst("/([^/]*).*", "$1");
-		return papercutContext;
+        return path.replaceFirst("/([^/]*).*", "$1");
 	}
 	
 	public static List<String> availableContexts() {

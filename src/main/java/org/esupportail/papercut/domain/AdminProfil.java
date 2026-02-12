@@ -17,24 +17,13 @@
  */
 package org.esupportail.papercut.domain;
 
+import jakarta.persistence.*;
 import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.ParamDef;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import java.util.Date;
 
 @Entity
-@FilterDef(name = "contextFilter", parameters = {@ParamDef(name = "papercutContext", type = "string")})
+@FilterDef(name = "contextFilter", parameters = {@ParamDef(name = "papercutContext", type = String.class)})
 @Filter(name = "contextFilter", condition = "papercut_context = :papercutContext")
 public class AdminProfil implements ContextSupport {
 

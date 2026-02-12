@@ -17,14 +17,12 @@
  */
 package org.esupportail.papercut.web;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
 
-import org.apache.commons.io.IOUtils;
 import org.esupportail.papercut.config.EsupPapercutConfig;
 import org.esupportail.papercut.config.EsupPapercutContext;
 import org.esupportail.papercut.dao.AdminProfilDaoService;
@@ -62,9 +60,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import flexjson.JSONSerializer;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
 @RequestMapping("/{papercutContext}/admin")
@@ -83,6 +79,9 @@ public class AdminController {
 
 	@Autowired
 	private AdminProfilDaoService adminProfilDaoService;
+
+	@Autowired
+	private ObjectMapper objectMapper;
 
 	@ModelAttribute("active")
 	public String getActiveMenu() {
@@ -209,29 +208,21 @@ public class AdminController {
 
     @RequestMapping(value="/statsPapercut")
     public void getStatsInfos(HttpServletResponse response) throws IOException, ServletRequestBindingException {
-		
-    	String flexJsonString = "Aucune statistique à récupérer";
-    	
+
+    	String jsonString = "Aucune statistique à récupérer";
+
     	EsupPapercutContext context = config.getContext(ContextHelper.getCurrentContext());
-		
+
     	try {
-
-    		JSONSerializer serializer = new JSONSerializer();
-    		flexJsonString = serializer.deepSerialize(statsService.getStatsPapercut(context));
-
+    		jsonString = objectMapper.writeValueAsString(statsService.getStatsPapercut(context));
     	} catch (Exception e) {
     		log.warn("Impossible de récupérer les statistiques", e);
     	}
 
-    	InputStream jsonStream = IOUtils.toInputStream(flexJsonString, "utf-8");
-
     	response.setContentType("application/json");
-    	response.setCharacterEncoding("utf-8");   
+    	response.setCharacterEncoding("utf-8");
 
-    	FileCopyUtils.copy(jsonStream, response.getOutputStream());
+    	response.getOutputStream().write(jsonString.getBytes("utf-8"));
     }
 
 }    
-
-
-

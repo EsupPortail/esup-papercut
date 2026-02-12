@@ -26,7 +26,7 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.TimeZone;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import org.esupportail.papercut.config.EsupPapercutConfig;
 import org.esupportail.papercut.config.EsupPapercutContext;

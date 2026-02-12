@@ -19,8 +19,8 @@ package org.esupportail.papercut.web;
 import java.util.Map;
 import java.util.TreeMap;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.esupportail.papercut.config.EsupPapercutConfig;
 import org.esupportail.papercut.config.EsupPapercutContext;

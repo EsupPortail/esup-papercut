@@ -19,7 +19,6 @@ package org.esupportail.papercut.services;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import javax.xml.bind.DatatypeConverter;
 
 import org.esupportail.papercut.config.EsupPapercutContext;
 import org.slf4j.Logger;
@@ -38,9 +37,9 @@ public class HashService {
 		return ALGO_HSAH;
 	}
 
-	// TOSO optimisation : cache avec map
+	// TODO optimisation : cache avec map
 	public SecretKeySpec getSecretKey(String hmacKey) {
-		return new SecretKeySpec(DatatypeConverter.parseHexBinary(hmacKey), "HmacSHA512" );		
+		return new SecretKeySpec(hmacKey.getBytes(), "HmacSHA512");
 	}
 
 	public String getHMac(EsupPapercutContext context, String input) {

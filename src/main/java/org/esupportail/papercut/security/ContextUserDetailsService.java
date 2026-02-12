@@ -17,20 +17,15 @@
  */
 package org.esupportail.papercut.security;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import org.apereo.cas.client.validation.Assertion;
 import org.esupportail.papercut.config.EsupPapercutConfig;
 import org.esupportail.papercut.config.EsupPapercutContext;
-import org.jasig.cas.client.validation.Assertion;
 import org.springframework.security.cas.userdetails.AbstractCasAssertionUserDetailsService;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.*;
 
 public class ContextUserDetailsService extends AbstractCasAssertionUserDetailsService {
 
