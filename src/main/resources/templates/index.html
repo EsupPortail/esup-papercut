@@ -69,7 +69,6 @@
 											type="hidden" th:name="${payBoxParam.key}"
 											th:value="${payBoxParam.value}" /> <input type="hidden"
 											name="PBX_HMAC" th:value="${payBoxForm.hmac}" /> <input
-										<input
 											type="submit" th:id="'pbx_credit_' + ${payboxFormItem.key}"
 											th:value="#{pay.credit(${payBoxForm.montant})}"
 											class="btn btn-success" role="button" 
