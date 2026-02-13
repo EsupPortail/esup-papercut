@@ -26,6 +26,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.codec.Hex;
 import org.springframework.stereotype.Service;
 
+import java.util.HexFormat;
+
 @Service
 public class HashService {
 
@@ -39,7 +41,8 @@ public class HashService {
 
 	// TODO optimisation : cache avec map
 	public SecretKeySpec getSecretKey(String hmacKey) {
-		return new SecretKeySpec(hmacKey.getBytes(), "HmacSHA512");
+		byte[] keyBytes = HexFormat.of().parseHex(hmacKey);
+		return new SecretKeySpec(keyBytes, "HmacSHA512");
 	}
 
 	public String getHMac(EsupPapercutContext context, String input) {
