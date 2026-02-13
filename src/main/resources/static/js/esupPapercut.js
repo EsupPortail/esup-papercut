@@ -277,5 +277,11 @@ document.addEventListener('DOMContentLoaded', function () {
 			})
 			.catch(error => console.error('Erreur lors du chargement des données:', error));
 	}
+
+	// Initialiser les tooltips Bootstrap 5
+	const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+	const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+		return new bootstrap.Tooltip(tooltipTriggerEl)
+	})
 });
 
