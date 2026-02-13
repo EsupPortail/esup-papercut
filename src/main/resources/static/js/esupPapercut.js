@@ -34,6 +34,19 @@ for (var k = 0; k < 100; k++) {
 // Fonction helper pour créer les graphiques
 function createChart(canvasId, chartData, options) {
 	const ctx = document.getElementById(canvasId).getContext("2d");
+
+	// Ajouter la transparence aux couleurs de fond des datasets
+	chartData.datasets.forEach(dataset => {
+		if (dataset.fill) {
+			// Convertir rgba et ajuster l'opacité à 0.2
+			const color = dataset.backgroundColor;
+			if (color.startsWith('rgba')) {
+				// Format: rgba(r, g, b, a) - remplacer le dernier chiffre par 0.2
+				dataset.backgroundColor = color.replace(/[\d.]+\)$/, '0.2)');
+			}
+		}
+	});
+
 	return new Chart(ctx, {
 		type: 'line',
 		data: chartData,
@@ -72,8 +85,13 @@ document.addEventListener('DOMContentLoaded', function () {
 							backgroundColor: generateColors[a],
 							borderColor: generateColors[a],
 							borderWidth: 2,
-							fill: false,
-							tension: 0.1,
+							fill: true,
+							tension: 0.4,
+							pointRadius: 4,
+							pointHoverRadius: 6,
+							pointBackgroundColor: generateColors[a],
+							pointBorderColor: "#fff",
+							pointBorderWidth: 2,
 							data: inlineValeurs
 						});
 						a++;
@@ -130,8 +148,13 @@ document.addEventListener('DOMContentLoaded', function () {
 							backgroundColor: generateColors[a],
 							borderColor: generateColors[a],
 							borderWidth: 2,
-							fill: false,
-							tension: 0.1,
+							fill: true,
+							tension: 0.4,
+							pointRadius: 4,
+							pointHoverRadius: 6,
+							pointBackgroundColor: generateColors[a],
+							pointBorderColor: "#fff",
+							pointBorderWidth: 2,
 							data: inlineValeurs
 						});
 						a++;
@@ -191,8 +214,13 @@ document.addEventListener('DOMContentLoaded', function () {
 							backgroundColor: generateColors[a],
 							borderColor: generateColors[a],
 							borderWidth: 2,
-							fill: false,
-							tension: 0.1,
+							fill: true,
+							tension: 0.4,
+							pointRadius: 4,
+							pointHoverRadius: 6,
+							pointBackgroundColor: generateColors[a],
+							pointBorderColor: "#fff",
+							pointBorderWidth: 2,
 							data: inlineValeurs
 						});
 						a++;
@@ -249,8 +277,13 @@ document.addEventListener('DOMContentLoaded', function () {
 							backgroundColor: generateColors[a],
 							borderColor: generateColors[a],
 							borderWidth: 2,
-							fill: false,
-							tension: 0.1,
+							fill: true,
+							tension: 0.4,
+							pointRadius: 4,
+							pointHoverRadius: 6,
+							pointBackgroundColor: generateColors[a],
+							pointBorderColor: "#fff",
+							pointBorderWidth: 2,
 							data: inlineValeurs
 						});
 						a++;
