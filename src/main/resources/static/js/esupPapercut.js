@@ -71,10 +71,9 @@ document.addEventListener('DOMContentLoaded', function () {
 							label: index,
 							backgroundColor: generateColors[a],
 							borderColor: generateColors[a],
-							pointColor: generateBorderColors[a],
-							pointBorderColor: "#fff",
-							pointHoverBorderColor: "#fff",
-							pointBackgroundColor: generateColors[a],
+							borderWidth: 2,
+							fill: false,
+							tension: 0.1,
 							data: inlineValeurs
 						});
 						a++;
@@ -88,20 +87,24 @@ document.addEventListener('DOMContentLoaded', function () {
 					createChart("transactionsNombreChart", dataMois, {
 						responsive: true,
 						scales: {
-							xAxes: [{
+							x: {
 								ticks: {
 									autoSkip: false
 								}
-							}]
+							}
 						},
-						legend: {
-							position: 'bottom'
+						plugins: {
+							legend: {
+								position: 'bottom'
+							},
+							tooltip: {
+								mode: 'index',
+								intersect: false
+							}
 						},
-						tooltips: {
-							mode: 'label'
-						},
-						hover: {
-							mode: 'dataset'
+						interaction: {
+							mode: 'index',
+							intersect: false
 						}
 					});
 				}
@@ -126,10 +129,9 @@ document.addEventListener('DOMContentLoaded', function () {
 							label: index,
 							backgroundColor: generateColors[a],
 							borderColor: generateColors[a],
-							pointColor: generateBorderColors[a],
-							pointBorderColor: "#fff",
-							pointHoverBorderColor: "#fff",
-							pointBackgroundColor: generateColors[a],
+							borderWidth: 2,
+							fill: false,
+							tension: 0.1,
 							data: inlineValeurs
 						});
 						a++;
@@ -141,25 +143,29 @@ document.addEventListener('DOMContentLoaded', function () {
 					};
 
 					createChart("transactionsMontantChart", dataMois, {
+						responsive: true,
 						scales: {
-							type: "category",
-							xAxes: [{
+							x: {
 								ticks: {
 									autoSkip: false
 								}
-							}],
-							yAxes: [{
+							},
+							y: {
 								type: "linear"
-							}]
+							}
 						},
-						legend: {
-							position: 'bottom'
+						plugins: {
+							legend: {
+								position: 'bottom'
+							},
+							tooltip: {
+								mode: 'index',
+								intersect: false
+							}
 						},
-						tooltips: {
-							mode: 'label'
-						},
-						hover: {
-							mode: 'dataset'
+						interaction: {
+							mode: 'index',
+							intersect: false
 						}
 					});
 				}
@@ -184,10 +190,9 @@ document.addEventListener('DOMContentLoaded', function () {
 							label: index,
 							backgroundColor: generateColors[a],
 							borderColor: generateColors[a],
-							pointColor: generateBorderColors[a],
-							pointBorderColor: "#fff",
-							pointHoverBorderColor: "#fff",
-							pointBackgroundColor: generateColors[a],
+							borderWidth: 2,
+							fill: false,
+							tension: 0.1,
 							data: inlineValeurs
 						});
 						a++;
@@ -201,21 +206,24 @@ document.addEventListener('DOMContentLoaded', function () {
 					createChart("transactionsCumulTransactionsChart", dataMois, {
 						responsive: true,
 						scales: {
-							type: "category",
-							xAxes: [{
+							x: {
 								ticks: {
 									autoSkip: false
 								}
-							}]
+							}
 						},
-						legend: {
-							position: 'bottom'
+						plugins: {
+							legend: {
+								position: 'bottom'
+							},
+							tooltip: {
+								mode: 'index',
+								intersect: false
+							}
 						},
-						tooltips: {
-							mode: 'label'
-						},
-						hover: {
-							mode: 'dataset'
+						interaction: {
+							mode: 'index',
+							intersect: false
 						}
 					});
 				}
@@ -240,10 +248,9 @@ document.addEventListener('DOMContentLoaded', function () {
 							label: index,
 							backgroundColor: generateColors[a],
 							borderColor: generateColors[a],
-							pointColor: generateBorderColors[a],
-							pointBorderColor: "#fff",
-							pointHoverBorderColor: "#fff",
-							pointBackgroundColor: generateColors[a],
+							borderWidth: 2,
+							fill: false,
+							tension: 0.1,
 							data: inlineValeurs
 						});
 						a++;
@@ -257,20 +264,24 @@ document.addEventListener('DOMContentLoaded', function () {
 					createChart("transactionsCumulMontantChart", dataMois, {
 						responsive: true,
 						scales: {
-							xAxes: [{
+							x: {
 								ticks: {
 									autoSkip: false
 								}
-							}]
+							}
 						},
-						legend: {
-							position: 'bottom'
+						plugins: {
+							legend: {
+								position: 'bottom'
+							},
+							tooltip: {
+								mode: 'index',
+								intersect: false
+							}
 						},
-						tooltips: {
-							mode: 'label'
-						},
-						hover: {
-							mode: 'dataset'
+						interaction: {
+							mode: 'index',
+							intersect: false
 						}
 					});
 				}
