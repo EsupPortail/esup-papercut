@@ -17,14 +17,13 @@
  */
 package org.esupportail.papercut.config;
 
-import java.util.Collections;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apereo.cas.client.session.SingleSignOutFilter;
 import org.esupportail.papercut.security.ContextCasAuthenticationProvider;
 import org.esupportail.papercut.security.ContextFilter;
-import org.apereo.cas.client.session.SingleSignOutFilter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -37,10 +36,10 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
+
+import java.util.Collections;
 
 @EnableWebSecurity
 @Configuration
@@ -56,37 +55,36 @@ public class SecurityConfig {
     
     private final LogoutFilter logoutFilter;
 
+    private final CasConfig casConfig;
+
     @Autowired
     public SecurityConfig(ContextCasAuthenticationProvider casAuthenticationProvider, AuthenticationEntryPoint eP,
-                          LogoutFilter lF, SingleSignOutFilter ssF) {
+                          LogoutFilter lF, SingleSignOutFilter ssF, CasConfig casConfig) {
         this.authenticationProvider = casAuthenticationProvider;
         this.authenticationEntryPoint = eP;
         this.logoutFilter = lF;
         this.singleSignOutFilter = ssF;
+        this.casConfig = casConfig;
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, CasAuthenticationFilter casAuthFilter) throws Exception {
       http
-        .authorizeHttpRequests(authz -> authz
-          .requestMatchers("/login", "/logout", "/webjars/**", "/resources/**", "/error").permitAll()
+        .authorizeHttpRequests(auth -> auth
           .requestMatchers("/*/user", "/*/user/*").hasRole("USER")
-          .requestMatchers("/*/api/csv-online").permitAll()
           .requestMatchers("/*/admin", "/*/admin/*").hasAnyRole("ADMIN", "MANAGER")
-          .anyRequest().authenticated()
+          .anyRequest().permitAll()
         )
         .exceptionHandling(exception -> exception
           .authenticationEntryPoint(authenticationEntryPoint)
         )
         .logout(logout -> logout
-          .logoutSuccessUrl("/logout")
-          .invalidateHttpSession(true)
+          .logoutSuccessUrl(casConfig.getLogoutUrl())
         )
         .addFilterBefore(singleSignOutFilter, CasAuthenticationFilter.class)
         .addFilterBefore(casAuthFilter, UsernamePasswordAuthenticationFilter.class)
         .addFilterBefore(logoutFilter, CasAuthenticationFilter.class)
         .csrf(AbstractHttpConfigurer::disable);
-
       return http.build();
     }
 
@@ -113,11 +111,6 @@ public class SecurityConfig {
         response.sendRedirect("/");
       });
 
-      SimpleUrlAuthenticationSuccessHandler successHandler = new SimpleUrlAuthenticationSuccessHandler();
-      successHandler.setDefaultTargetUrl("/");
-      successHandler.setAlwaysUseDefaultTargetUrl(false);
-
-      filter.setAuthenticationSuccessHandler(successHandler);
       logger.info("=== CasAuthenticationFilter initialized ===");
       return filter;
     }

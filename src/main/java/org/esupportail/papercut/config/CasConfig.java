@@ -34,6 +34,9 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.stereotype.Component;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+
 @Component
 @ConfigurationProperties(prefix="cas")
 public class CasConfig {
@@ -66,6 +69,11 @@ public class CasConfig {
 
 	public void setKey(String key) {
 		this.key = key;
+	}
+
+	public String getLogoutUrl() {
+		String encodedService = URLEncoder.encode(service, StandardCharsets.UTF_8);
+		return url + "/logout?service=" + encodedService;
 	}
 
 	@Bean
@@ -108,10 +116,7 @@ public class CasConfig {
 
 	@Bean
 	public LogoutFilter logoutFilter(SecurityContextLogoutHandler securityContextLogoutHandler) {
-		LogoutFilter logoutFilter = new LogoutFilter(
-				url + "/logout?service=" + service, securityContextLogoutHandler);
-		logoutFilter.setFilterProcessesUrl("/logout");
-		return logoutFilter;
+        return new LogoutFilter(getLogoutUrl(), securityContextLogoutHandler);
 	}
 
 	@Bean
