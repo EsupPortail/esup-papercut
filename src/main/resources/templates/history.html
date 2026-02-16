@@ -45,15 +45,13 @@
 				<a th:href="@{/{papercutContext}/admin/csv(papercutContext=${papercutContext})}" data-role="button"><img th:src="@{/resources/images/csv.svg}" th:alt="#{history.csv.alt}" alt="CSV" width="50px"/></a>
 			</div>
 			<div class="col-1" th:if="${exportPublicHashKey}">
-				<a href="#" id="csv-online" data-role="button" data-toggle="modal" data-target="#csvOnlineModal"><img th:src="@{/resources/images/csv-online.svg}" th:alt="#{history.csvOnline.alt}" alt="CSV online" width="50px"/></a>
+				<a href="#" id="csv-online" role="button" data-role="button" data-bs-toggle="modal" data-bs-target="#csvOnlineModal"><img th:src="@{/resources/images/csv-online.svg}" th:alt="#{history.csvOnline.alt}" alt="CSV online" width="50px"/></a>
 				<div class="modal fade" id="csvOnlineModal" tabindex="-1" role="dialog" aria-hidden="true">
 					<div class="modal-dialog" role="document">
 						<div class="modal-content">
 							<div class="modal-header">
 								<h5 class="modal-title" th:text="#{history.csvOnline.title}">CSV online</h5>
-								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-									<span aria-hidden="true">&times;</span>
-								</button>
+								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 							</div>
 							<div class="modal-body">
 								<dl>
@@ -64,7 +62,7 @@
 								</dl>
 							</div>
 							<div class="modal-footer">
-								<button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{history.csvOnline.close}">Close</button>
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" th:text="#{history.csvOnline.close}">Close</button>
 							</div>
 						</div>
 					</div>
