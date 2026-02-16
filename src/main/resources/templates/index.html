@@ -34,15 +34,15 @@
 		<div class="esupPapercutBody">
 
 			<p>
-				<span th:text="#{index.sold}">Solde</span> : <b
+				<span th:text="#{index.sold}">Balance</span> : <b
 					th:text="#{pay.credited(${userPapercutInfos.balance})}">0 EUR</b>
 			</p>
 			<p>
-				<span th:text="#{index.printJobs}">Print Jobs</span> : <b
+				<span th:text="#{index.printJobs}">Print jobs</span> : <b
 					th:text="${userPapercutInfos.printJobs}">0</b>
 			</p>
 			<p>
-				<span th:text="#{index.printPages}">Print pages</span> : <b
+				<span th:text="#{index.printPages}">Printed pages</span> : <b
 					th:text="${userPapercutInfos.printPages}">0</b>
 			</p>
 
@@ -54,8 +54,8 @@
 							
 						<fieldset class="border p-2 bg-light">
 						
-   							<legend  class="w-auto" th:text="${payboxLegend != null ? payboxLegend : 'Paiement par carte bancaire via Paybox'}"></legend>
-   							
+   							<legend  class="w-auto" th:text="${payboxLegend != null} ? ${payboxLegend} : #{index.paybox.legend}">Card payment via Paybox</legend>
+
    							<div class="row">
    							
 								<div class="payboxFormPost col-6 col-md-3 col-xl-2"
@@ -90,8 +90,8 @@
 
 						<fieldset class="border p-2 bg-light">
    							
-   							<legend  class="w-auto" th:text="${izlypayLegend != null ? izlypayLegend : 'Paiement via IZLY (CROUS)'}"></legend>
-   							
+   							<legend  class="w-auto" th:text="${izlypayLegend != null ? izlypayLegend : #{index.izly.legend}}">Payment via IZLY (CROUS)</legend>
+
    							<div class="row">
    							
 								<div class="izlypayFormPost col-6 col-md-3 col-xl-2"
@@ -126,9 +126,9 @@
 				
 				
 				<p th:if="${!canMakeTransaction}">
-					<i th:text="#{index.nbTransactions}">Max transactions number</i>
-				</p>
-				
+                    <i th:text="#{index.nbTransactions}">Maximum transactions or amount reached.</i>
+                </p>
+
 
 				<br />
 

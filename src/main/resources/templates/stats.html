@@ -37,19 +37,19 @@
 
 		<div class="charts col-6">
 			<canvas id="transactionsNombreChart">&amp;nbsp;</canvas>
-			<h3>Nombre de transactions</h3>
+			<h3 th:text="#{stats.transactions}">Transactions</h3>
 		</div>
 		<div class="charts col-6">
 			<canvas id="transactionsMontantChart">&amp;nbsp;</canvas>
-			<h3>Montants</h3>
+			<h3 th:text="#{stats.montants}">Amounts</h3>
 		</div>
 		<div class="charts col-6">
 			<canvas id="transactionsCumulTransactionsChart">&amp;nbsp;</canvas>
-			<h3>Cumul du nombre de transactions</h3>
+			<h3 th:text="#{stats.transactions.cumul}">Cumulative transactions</h3>
 		</div>
 		<div class="charts col-6">
 			<canvas id="transactionsCumulMontantChart">&amp;nbsp;</canvas>
-			<h3>Cumul des montants</h3>
+			<h3 th:text="#{stats.montants.cumul}">Cumulative amounts</h3>
 		</div>
 
 	</div>

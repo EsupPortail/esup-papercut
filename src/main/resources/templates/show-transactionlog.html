@@ -28,34 +28,34 @@
 	<div layout:fragment="content">
 
 		<div th:if="${isAdmin and !plog.archived and active=='admin'}">
-			<form method="post" th:action="@{admin/archive}">
-				<input type="hidden" name="id" th:value="${plog.id}" /> <input
-					type="submit" value="Archiver ce log" class="btn btn-info" />
-			</form>
-		</div>
+            <form method="post" th:action="@{admin/archive}">
+                <input type="hidden" name="id" th:value="${plog.id}" /> <input
+                    type="submit" th:value="#{history.archiveOne}" value="Archive this log" class="btn btn-info" />
+            </form>
+        </div>
 
-		<dl>
-			<dt>reference</dt>
-			<dd th:text="${plog.reference}"></dd>
-			<dt>montantDevise</dt>
-			<dd th:text="${plog.montantDevise}"></dd>
-			<dt>idtrans</dt>
-			<dd th:text="${plog.idtrans}"></dd>
-			<dt>uid</dt>
-			<dd th:text="${plog.uid}"></dd>
-			<dt>transactionDate</dt>
-			<dd th:text="${plog.transactionDate}"></dd>
-			<dt>papercutOldSolde</dt>
-			<dd th:text="${plog.papercutOldSolde}"></dd>
-			<dt>papercutNewSolde</dt>
-			<dd th:text="${plog.papercutNewSolde}"></dd>
-			<dt>payMode</dt>
-			<dd th:text="${plog.payMode}"></dd>
-			<dt>archived</dt>
-			<dd th:text="${plog.archived}"></dd>
-			<dt>papercutContext</dt>
-			<dd th:text="${plog.papercutContext}"></dd>
-		</dl>
+        <dl>
+            <dt th:text="#{history.table.reference}">Reference</dt>
+            <dd th:text="${plog.reference}"></dd>
+            <dt th:text="#{transaction.amount}">Amount</dt>
+            <dd th:text="${plog.montantDevise}"></dd>
+            <dt th:text="#{transaction.idtrans}">Transaction id</dt>
+            <dd th:text="${plog.idtrans}"></dd>
+            <dt th:text="#{history.table.uid}">User</dt>
+            <dd th:text="${plog.uid}"></dd>
+            <dt th:text="#{history.table.date}">Date</dt>
+            <dd th:text="${plog.transactionDate}"></dd>
+            <dt th:text="#{transaction.oldBalance}">Old balance</dt>
+            <dd th:text="${plog.papercutOldSolde}"></dd>
+            <dt th:text="#{history.table.newBalance}">New balance</dt>
+            <dd th:text="${plog.papercutNewSolde}"></dd>
+            <dt th:text="#{history.table.payMode}">Payment mode</dt>
+            <dd th:text="${plog.payMode}"></dd>
+            <dt th:text="#{history.table.archived}">Archived</dt>
+            <dd th:text="${plog.archived} ? #{boolean.yes} : #{boolean.no}"></dd>
+            <dt th:text="#{transaction.context}">Context</dt>
+            <dd th:text="${plog.papercutContext}"></dd>
+        </dl>
 
 	</div>
 

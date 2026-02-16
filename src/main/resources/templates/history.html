@@ -31,41 +31,40 @@
 				
 			<div class="col-7">
 				<form method="post" th:action="@{admin/archiveAll}">
-					<input
-						type="submit" value="Archiver l'ensemble des logs" class="btn btn-info" />
+					<input type="submit" th:value="#{history.archiveAll}" value="Archive all logs" class="btn btn-info" />
 				</form>
 			</div>
 			
 			<div class="col-2 alert alert-primary text-center">
-				<b th:text="${pageLogs.totalElements}">.</b> logs.
+				<b th:text="${pageLogs.totalElements}">0</b> <span th:text="#{history.logs.label}">logs</span>
 			</div>
 
 			<div class="col-1"></div>
 
 			<div class="col-1">
-				<a th:href="@{/{papercutContext}/admin/csv(papercutContext=${papercutContext})}" data-role="button"><img th:src="@{/resources/images/csv.svg}" alt="CSV" width="50px"/></a>
+				<a th:href="@{/{papercutContext}/admin/csv(papercutContext=${papercutContext})}" data-role="button"><img th:src="@{/resources/images/csv.svg}" th:alt="#{history.csv.alt}" alt="CSV" width="50px"/></a>
 			</div>
 			<div class="col-1" th:if="${exportPublicHashKey}">
-				<a href="#" id="csv-online" data-role="button" data-toggle="modal" data-target="#csvOnlineModal"><img th:src="@{/resources/images/csv-online.svg}" alt="CSV online" width="50px"/></a>
+				<a href="#" id="csv-online" data-role="button" data-toggle="modal" data-target="#csvOnlineModal"><img th:src="@{/resources/images/csv-online.svg}" th:alt="#{history.csvOnline.alt}" alt="CSV online" width="50px"/></a>
 				<div class="modal fade" id="csvOnlineModal" tabindex="-1" role="dialog" aria-hidden="true">
 					<div class="modal-dialog" role="document">
 						<div class="modal-content">
 							<div class="modal-header">
-								<h5 class="modal-title">CSV Online</h5>
+								<h5 class="modal-title" th:text="#{history.csvOnline.title}">CSV online</h5>
 								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 									<span aria-hidden="true">&times;</span>
 								</button>
 							</div>
 							<div class="modal-body">
 								<dl>
-									<dt>URL :</dt>
+									<dt th:text="#{history.csvOnline.url}">URL:</dt>
 									<dt><a th:href="@{/{papercutContext}/api/csv-online(papercutContext=${papercutContext})}" th:utext="@{/{papercutContext}/api/csv-online(papercutContext=${papercutContext})}"/></dt>
-									<dt>x-APIKey :</dt>
+									<dt th:text="#{history.csvOnline.apiKey}">x-APIKey:</dt>
 									<dd th:utext="${exportPublicHashKey}"/>
 								</dl>
 							</div>
 							<div class="modal-footer">
-								<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+								<button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{history.csvOnline.close}">Close</button>
 							</div>
 						</div>
 					</div>
@@ -78,34 +77,34 @@
 			<thead>
 				<tr>
 					<th scope="col">
-						<a class="sorted" sd:pagination-sort="transactionDate">Date</a>
+						<a class="sorted" sd:pagination-sort="transactionDate" th:text="#{history.table.date}">Date</a>
 					</th>
 					<th scope="col">
-						<a class="sorted" sd:pagination-sort="uid">Identifiant</a>
+						<a class="sorted" sd:pagination-sort="uid" th:text="#{history.table.uid}">User</a>
 					</th>
-					<th scope="col">Référence</th>
-					<th scope="col">Montant (€)</th>
-					<th scope="col">Nouveau solde (€)</th>
-					<th scope="col">PayMode</th>
+					<th scope="col" th:text="#{history.table.reference}">Reference</th>
+					<th scope="col" th:text="#{history.table.amount}">Amount (EUR)</th>
+					<th scope="col" th:text="#{history.table.newBalance}">New balance (EUR)</th>
+					<th scope="col" th:text="#{history.table.payMode}">Payment mode</th>
 					<th scope="col">
-						<a class="sorted" sd:pagination-sort="archived">Archivé</a>
+						<a class="sorted" sd:pagination-sort="archived" th:text="#{history.table.archived}">Archived</a>
 					</th>
-					<th scope="col">Détail</th>
+					<th scope="col" th:text="#{history.table.detail}">Detail</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr th:each="log : ${pageLogs.content}">
-					<td th:text="${log.transactionDate}">transactionDate</td>
-					<td th:text="${log.uid}">uid</td>
+					<td th:text="${log.transactionDate}">date</td>
+					<td th:text="${log.uid}">user</td>
 					<td th:text="${log.reference}">reference</td>
-					<td th:text="${log.montantDevise}">montantDevise</td>
-					<td th:text="${log.papercutNewSolde}">papercutNewSolde</td>
-					<td th:text="${log.payMode}">payMode</td>
-					<td th:text="${log.archived}">archived</td>
-					<td class="utilbox"><a class="btn btn-success" title="Voir"
-						alt="Détail" th:href="@{~{id}(id=${log.id})}"><img
-							title="Voir" th:src="@{/resources/images/show.png}" class="image"
-							alt="Voir"></a></td>
+					<td th:text="${log.montantDevise}">amount</td>
+					<td th:text="${log.papercutNewSolde}">new balance</td>
+					<td th:text="${log.payMode}">payment mode</td>
+					<td th:text="${log.archived} ? #{boolean.yes} : #{boolean.no}">archived</td>
+					<td class="utilbox"><a class="btn btn-success" th:title="#{history.action.view}"
+						th:alt="#{history.action.view}" th:href="@{~{id}(id=${log.id})}"><img
+							th:title="#{history.action.view}" th:src="@{/resources/images/show.png}" class="image"
+							th:alt="#{history.action.view}"></a></td>
 				</tr>
 			</tbody>
 		</table>

@@ -26,12 +26,12 @@
 	<div layout:fragment="content">
 		<div class="row my-5">
 			<div class="col-md text-center alert alert-warning">
-				<h2>Accès refusé.</h2>
+				<h2 th:text="#{error403.title}">Access denied.</h2>
 			</div>
 		</div>
 		<div class="row my-5">
-			<div class="col-md text-center border p-3 bg-light">
-				Vous n'avez pas les droits d'accéder à cette ressource.
+			<div class="col-md text-center border p-3 bg-light" th:text="#{error403.message}">
+				You do not have access to this resource.
 			</div>
 		</div>
 	</div>

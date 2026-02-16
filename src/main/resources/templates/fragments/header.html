@@ -26,27 +26,27 @@
 </head>
 <body>
 	<header th:fragment="header">
-		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-		    <a class="navbar-brand" th:href="@{/}"><img th:src="@{/resources/images/logo.png}" width="200" class="d-inline-block align-top" alt="URN"/></a>
-		    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
-		    	<span class="navbar-toggler-icon"></span>
-		    </button>
-		    
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" th:href="@{/}"><img th:src="@{/resources/images/logo.png}" width="200" class="d-inline-block align-top" alt="URN"/></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation" th:attr="aria-label=#{navbar.toggle}">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
 		    <div class="collapse navbar-collapse" id="navbarMain">
 		    	<ul class="navbar-nav me-auto" th:if="${payAvailable}">
-			    	<li sec:authorize="isAuthenticated()" class="nav-item" th:classappend="${active == 'home'} ? 'active' : ''">
-			    		<a class="nav-link" th:href="@{/{ctx}/user(ctx=${pContext})}">Accueil<span class="visually-hidden">(current)</span></a>
-			    	</li>
-			    	<li sec:authorize="isAuthenticated()" class="nav-item" th:classappend="${active == 'logs'} ? 'active' : ''">
-			    		<a class="nav-link" th:href="@{/{ctx}/user/logs(ctx=${pContext})}">Mon historique</a>
-			    	</li>
-			    	<li sec:authorize="isAuthenticated() and (hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER'))" class="nav-item" th:classappend="${active == 'admin'} ? 'active' : ''">
-			    		<a class="nav-link" th:href="@{/{ctx}/admin(ctx=${pContext})}">Admin</a>
-			    	</li>
-			    	<li sec:authorize="isAuthenticated() and (hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER'))" class="nav-item" th:classappend="${active == 'stats'} ? 'active' : ''">
-			    		<a class="nav-link" th:href="@{/{ctx}/admin/stats(ctx=${pContext})}">Statistiques</a>
-			    	</li>
-			    </ul>
+                    <li sec:authorize="isAuthenticated()" class="nav-item" th:classappend="${active == 'home'} ? 'active' : ''">
+                        <a class="nav-link" th:href="@{/{ctx}/user(ctx=${pContext})}"><span th:text="#{menu.home}">Home</span> <span class="visually-hidden" th:text="#{menu.current}">(current)</span></a>
+                    </li>
+                    <li sec:authorize="isAuthenticated()" class="nav-item" th:classappend="${active == 'logs'} ? 'active' : ''">
+                        <a class="nav-link" th:href="@{/{ctx}/user/logs(ctx=${pContext})}" th:text="#{menu.myhistory}">My history</a>
+                    </li>
+                    <li sec:authorize="isAuthenticated() and (hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER'))" class="nav-item" th:classappend="${active == 'admin'} ? 'active' : ''">
+                        <a class="nav-link" th:href="@{/{ctx}/admin(ctx=${pContext})}" th:text="#{menu.admin}">Admin</a>
+                    </li>
+                    <li sec:authorize="isAuthenticated() and (hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER'))" class="nav-item" th:classappend="${active == 'stats'} ? 'active' : ''">
+                        <a class="nav-link" th:href="@{/{ctx}/admin/stats(ctx=${pContext})}" th:text="#{menu.stats}">Stats</a>
+                    </li>
+                </ul>
 			    <ul class="navbar-nav me-auto" th:unless="${payAvailable}"><!--  --></ul>
 
 			    <form class="papercutContextForm" th:if="${availableContexts != null and availableContexts.size() > 1}" th:action="@{/}">
@@ -55,13 +55,13 @@
 			    	</select>
 			    </form>
 			    
-			    <a sec:authorize="not isAuthenticated()" class="btn btn-outline-info my-2 my-sm-0" th:href="@{/user}" role="button" th:text="#{navbar.button.login}">Connexion</a>
+			    <a sec:authorize="not isAuthenticated()" class="btn btn-outline-info my-2 my-sm-0" th:href="@{/user}" role="button" th:text="#{navbar.button.login}">Login</a>
 			    <!--<a sec:authorize="not isAuthenticated()" class="btn btn-outline-info my-2 my-sm-0" th:href="@{/user-nocas}" role="button" th:text="#{navbar.button.login.nocas}">Connexion (nocas)</a>-->
 			    
 			    <!--<a sec:authorize="isAuthenticated()and hasRole('ROLE_CAS')" class="btn btn-outline-info my-2 my-sm-0" th:href="@{/logout}" role="button"><span th:text="#{navbar.button.logout}">Déconnexion</span> [<span sec:authentication="name">uid</span>]</a>-->
 			    <form sec:authorize="isAuthenticated()" class="d-flex" method="POST" th:action="@{/logout}">
-			    	<button class="btn btn-warning my-2 my-sm-0" type="submit" ><span th:text="#{navbar.button.logout}">Déconnexion</span> [<span sec:authentication="name">uid</span>]</button>
-			    </form>
+                    <button class="btn btn-warning my-2 my-sm-0" type="submit" ><span th:text="#{navbar.button.logout}">Logout</span> [<span sec:authentication="name">uid</span>]</button>
+                </form>
 			</div>
 		</nav>
 	</header>

@@ -27,15 +27,15 @@
 
 		<div class="row my-5">
 			<div class="col-md text-center alert alert-warning">
-				<h2>Une erreur est survenue</h2>
+				<h2 th:text="#{error.title}">An error occurred</h2>
 			</div>
 		</div>
 		<dl>
-			<dt>Erreur</dt>
+			<dt th:text="#{error.label.error}">Error</dt>
 			<dd th:text="${error}"></dd>
-			<dt>Message</dt>
+			<dt th:text="#{error.label.message}">Message</dt>
 			<dd th:text="${message}"></dd>
-			<dt th:if="${trace}">Trace</dt>
+			<dt th:if="${trace}" th:text="#{error.label.trace}">Trace</dt>
 			<dd th:if="${trace}" th:text="${trace}"></dd>
 		</dl>
 	</div>

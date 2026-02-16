@@ -26,12 +26,12 @@
 	<div layout:fragment="content">
 		<div class="row my-5">
 			<div class="col-md text-center alert alert-warning">
-				<h2>Ressource introuvable.</h2>
+				<h2 th:text="#{error404.title}">Resource not found.</h2>
 			</div>
 		</div>
 		<div class="row my-5">
-			<div class="col-md text-center border p-3 bg-light">
-				Cette ressource est inconnue de cette application.
+			<div class="col-md text-center border p-3 bg-light" th:text="#{error404.message}">
+				This resource is not available in this application.
 			</div>
 		</div>
 	</div>
