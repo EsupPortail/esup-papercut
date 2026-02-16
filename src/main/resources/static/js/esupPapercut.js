@@ -322,6 +322,71 @@ document.addEventListener('DOMContentLoaded', function () {
 			.catch(error => console.error('Erreur lors du chargement des données:', error));
 	}
 
+	document.querySelectorAll('[data-clipboard-text], [data-clipboard-target]').forEach(function (button) {
+		button.addEventListener('click', function () {
+			var text = button.getAttribute('data-clipboard-text');
+			if (!text) {
+				var target = button.getAttribute('data-clipboard-target');
+				var targetEl = target ? document.querySelector(target) : null;
+				text = targetEl ? (targetEl.value || targetEl.textContent) : '';
+			}
+			if (!text) {
+				return;
+			}
+			if (text.charAt(0) === '/') {
+				text = window.location.origin + text;
+			}
+			var showCopiedState = function () {
+				if (!button.dataset.originalText) {
+					button.dataset.originalText = button.textContent;
+				}
+				button.textContent = 'Copié !';
+				button.classList.add('btn-success');
+				button.classList.remove('btn-outline-secondary');
+				setTimeout(function () {
+					button.textContent = button.dataset.originalText;
+					button.classList.remove('btn-success');
+					button.classList.add('btn-outline-secondary');
+				}, 1200);
+			};
+			if (navigator.clipboard && window.isSecureContext) {
+				navigator.clipboard.writeText(text).then(showCopiedState).catch(function () {});
+				return;
+			}
+			var textarea = document.createElement('textarea');
+			textarea.value = text;
+			textarea.setAttribute('readonly', '');
+			textarea.style.position = 'absolute';
+			textarea.style.left = '-9999px';
+			document.body.appendChild(textarea);
+			textarea.select();
+			try {
+				document.execCommand('copy');
+				showCopiedState();
+			} catch (err) {
+				// No fallback available.
+			}
+			document.body.removeChild(textarea);
+		});
+	});
+
+	// Affiche l'URL CSV complète dans la modale en préfixant l'origine du navigateur.
+	var csvOnlineModal = document.getElementById('csvOnlineModal');
+	if (csvOnlineModal) {
+		csvOnlineModal.addEventListener('shown.bs.modal', function () {
+			var urlEl = document.getElementById('csv-online-url');
+			if (!urlEl) {
+				return;
+			}
+			var baseUrl = urlEl.getAttribute('data-base-url') || urlEl.getAttribute('href') || '';
+			if (baseUrl.charAt(0) === '/') {
+				baseUrl = window.location.origin + baseUrl;
+			}
+			urlEl.textContent = baseUrl;
+			urlEl.setAttribute('href', baseUrl);
+		});
+	}
+
 	// Initialiser les tooltips Bootstrap 5
 	const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
 	const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {

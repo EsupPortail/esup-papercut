@@ -28,6 +28,8 @@
 	<div layout:fragment="content">
 
 		<div th:if="${isAdmin and active=='admin'}" class="row">
+
+			<script th:src="@{/resources/js/esupPapercut.js}"></script>
 				
 			<div class="col-7">
 				<form method="post" th:action="@{admin/archiveAll}">
@@ -56,9 +58,21 @@
 							<div class="modal-body">
 								<dl>
 									<dt th:text="#{history.csvOnline.url}">URL:</dt>
-									<dt><a th:href="@{/{papercutContext}/api/csv-online(papercutContext=${papercutContext})}" th:utext="@{/{papercutContext}/api/csv-online(papercutContext=${papercutContext})}"/></dt>
+									<dd>
+										<a id="csv-online-url" class="d-block" th:href="@{/{papercutContext}/api/csv-online(papercutContext=${papercutContext})}"
+											th:text="@{/{papercutContext}/api/csv-online(papercutContext=${papercutContext})}"
+											th:attr="data-base-url=@{/{papercutContext}/api/csv-online(papercutContext=${papercutContext})}">/context/api/csv-online</a>
+										<button type="button" class="btn btn-sm btn-outline-secondary ms-2"
+											data-clipboard-target="#csv-online-url"
+											aria-label="Copier l'URL">Copier</button>
+									</dd>
 									<dt th:text="#{history.csvOnline.apiKey}">x-APIKey:</dt>
-									<dd th:utext="${exportPublicHashKey}"/>
+									<dd>
+										<span id="csv-online-apikey" th:text="${exportPublicHashKey}">apikey</span>
+										<button type="button" class="btn btn-sm btn-outline-secondary ms-2"
+											th:attr="data-clipboard-text=${exportPublicHashKey}"
+											aria-label="Copier la clef">Copier</button>
+									</dd>
 								</dl>
 							</div>
 							<div class="modal-footer">
