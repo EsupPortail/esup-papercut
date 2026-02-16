@@ -90,7 +90,7 @@
 
 						<fieldset class="border p-2 bg-light">
    							
-   							<legend  class="w-auto" th:text="${izlypayLegend != null ? izlypayLegend : #{index.izly.legend}}">Payment via IZLY (CROUS)</legend>
+   							<legend  class="w-auto" th:text="${izlypayLegend != null} ? ${izlypayLegend} : #{index.izly.legend}">Payment via IZLY (CROUS)</legend>
 
    							<div class="row">
    							
