@@ -219,7 +219,11 @@ public class UserController {
 	
     
     @GetMapping(value = "/logs", produces = "text/html", params = {"id"})
-    public String viewTransactionLog(@RequestParam Long id, Model uiModel) {
+    public String viewTransactionLog(@PathVariable String papercutContext, @RequestParam Long id, Model uiModel) {
+		PayPapercutTransactionLog  payPapercutTransactionLog = papercutDaoService.findById(id);
+		if(payPapercutTransactionLog == null || !payPapercutTransactionLog.getUid().equals(getUid())) {
+			return "redirect:/" + papercutContext + "/user/logs";
+		}
     	uiModel.addAttribute("plog", papercutDaoService.findById(id));
     	uiModel.addAttribute("itemId", id);
     	uiModel.addAttribute("active", "logs"); 	
@@ -262,7 +266,7 @@ public class UserController {
 	    	esupPaperCutService.payboxCallback(context, montant, reference, auto, erreur, idtrans, signature, queryString, null, uid);
     	}
     	
-    	return "redirect:/user";
+    	return "redirect:/" + papercutContext + "/user/logs";
     }
 
 
