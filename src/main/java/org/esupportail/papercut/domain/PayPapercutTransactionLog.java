@@ -32,7 +32,8 @@ public class PayPapercutTransactionLog implements ContextSupport {
 	}
     
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "papercut_pay_transaction_log_seq_gen")
+	@SequenceGenerator(name = "papercut_pay_transaction_log_seq_gen", sequenceName = "hibernate_sequence", allocationSize = 1)
     @Column(name = "id")
     private Long id;
     

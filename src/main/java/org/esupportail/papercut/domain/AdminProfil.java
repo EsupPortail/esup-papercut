@@ -29,7 +29,8 @@ public class AdminProfil implements ContextSupport {
 
     
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "papercut_admin_profil_seq_gen")
+	@SequenceGenerator(name = "papercut_admin_profil_seq_gen", sequenceName = "hibernate_sequence", allocationSize = 1)
     @Column(name = "id")
     private Long id;
 
