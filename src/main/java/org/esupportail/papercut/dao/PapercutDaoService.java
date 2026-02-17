@@ -30,9 +30,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
-import java.time.Duration;
-import java.time.Instant;
-import java.util.Date;
+
 import java.util.List;
 
 @Service
@@ -58,23 +56,7 @@ public class PapercutDaoService {
             entityManager.remove(attached);
         }
     }
-    
-    @Transactional
-    public void flush() {       
-        entityManager.flush();
-    }
-    
-    @Transactional
-    public void clear() {        
-        entityManager.clear();
-    }
-    
-    @Transactional
-    public PayPapercutTransactionLog merge(PayPapercutTransactionLog txLog) {        
-        PayPapercutTransactionLog merged = entityManager.merge(txLog);
-        entityManager.flush();
-        return merged;
-    }
+
     
 	public Long countByUidAndArchived(String uid, boolean archived) {
 		return txRepository.countByUidAndArchived(uid, archived);
@@ -113,8 +95,7 @@ public class PapercutDaoService {
 	 * Requêtes pour PostgreSQL : corespondent aux préférences "requetes***" positionnées à la valeur "useOriginal"
 	 * 	Pour adapter les requêtes à un autre SGBD, changer la valeur "useOriginal" par la requête directement
 	*/
-	
-    public List<Object>  countNumberTranscationsBydate(String sqlQuery) {
+    public List countNumberTranscationsBydate(String sqlQuery) {
     	
     	String papercutContext = ContextHelper.getCurrentContext();
     	
@@ -129,7 +110,7 @@ public class PapercutDaoService {
         return q.getResultList();
     }
     
-    public List<Object>  countMontantTranscationsBydate(String sqlQuery) {
+    public List countMontantTranscationsBydate(String sqlQuery) {
     	
     	String papercutContext = ContextHelper.getCurrentContext();
     	
@@ -144,7 +125,7 @@ public class PapercutDaoService {
         return q.getResultList();
     }
     
-    public List<Object>  countCumulNombreTranscationsBydate(String sqlQuery) {
+    public List countCumulNombreTranscationsBydate(String sqlQuery) {
     	
     	String papercutContext = ContextHelper.getCurrentContext();
     	
@@ -159,7 +140,7 @@ public class PapercutDaoService {
         return q.getResultList();
     }
     
-    public List<Object>  countCumulMontantTranscationsBydate(String sqlQuery) {
+    public List countCumulMontantTranscationsBydate(String sqlQuery) {
     	
     	String papercutContext = ContextHelper.getCurrentContext();
     	
