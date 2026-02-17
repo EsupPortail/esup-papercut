@@ -29,6 +29,59 @@
 
 		<div th:if="${isAdmin and active=='admin'}" class="row">
 
+			<!-- Formulaire de recherche -->
+			<div class="card mb-3">
+				<div class="card-header">
+					<h5>
+						<a data-bs-toggle="collapse" href="#searchForm" role="button"
+							th:attr="aria-expanded=${payPapercutTransactionLogSearch.searchCriteriasAreEmpty() ? 'false' : 'true'}"
+							aria-expanded="false"
+							aria-controls="searchForm" class="text-decoration-none">
+							<span th:text="#{search.title}">Recherche</span>
+							<i class="bi bi-chevron-down"></i>
+						</a>
+					</h5>
+				</div>
+				<div class="card-body collapse"
+					th:classappend="${payPapercutTransactionLogSearch.uid != null || payPapercutTransactionLogSearch.montant != null || payPapercutTransactionLogSearch.payMode != null || payPapercutTransactionLogSearch.archived != null ? 'show' : ''}"
+					id="searchForm">
+					<form method="get" th:action="@{admin}">
+						<div class="row g-3">
+							<div class="col-md-3">
+								<label for="uid" class="form-label" th:text="#{search.uid}">Identifiant</label>
+								<input type="text" class="form-control" id="uid" name="uid" th:value="${payPapercutTransactionLogSearch.uid}"/>
+							</div>
+							<div class="col-md-3">
+								<label for="montant" class="form-label" th:text="#{search.montant}">Montant (centimes)</label>
+								<input type="number" class="form-control" id="montant" name="montant" th:value="${payPapercutTransactionLogSearch.montant}"/>
+							</div>
+							<div class="col-md-3">
+								<label for="payMode" class="form-label" th:text="#{search.payMode}">Mode de paiement</label>
+								<select class="form-select" id="payMode" name="payMode">
+									<option value="" th:text="#{search.all}">Tous</option>
+									<option value="IZLYPAY" th:selected="${payPapercutTransactionLogSearch.payMode != null && payPapercutTransactionLogSearch.payMode.name() == 'IZLYPAY'}">IZLYPAY</option>
+									<option value="PAYBOX" th:selected="${payPapercutTransactionLogSearch.payMode != null && payPapercutTransactionLogSearch.payMode.name() == 'PAYBOX'}">PAYBOX</option>
+								</select>
+							</div>
+							<div class="col-md-3">
+								<label for="archived" class="form-label" th:text="#{search.archived}">Archivé</label>
+								<select class="form-select" id="archived" name="archived">
+									<option value="" th:text="#{search.all}">Tous</option>
+									<option value="true" th:selected="${payPapercutTransactionLogSearch.archived != null && payPapercutTransactionLogSearch.archived}">[[#{boolean.yes}]]</option>
+									<option value="false" th:selected="${payPapercutTransactionLogSearch.archived != null && !payPapercutTransactionLogSearch.archived}">[[#{boolean.no}]]</option>
+								</select>
+							</div>
+						</div>
+						<div class="row mt-3">
+							<div class="col-12">
+								<button type="submit" class="btn btn-primary" th:text="#{search.submit}">Rechercher</button>
+								<a th:href="@{admin}" class="btn btn-secondary" th:text="#{search.reset}">Réinitialiser</a>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+
 			<script th:src="@{/resources/js/esupPapercut.js}"></script>
 				
 			<div class="col-7">

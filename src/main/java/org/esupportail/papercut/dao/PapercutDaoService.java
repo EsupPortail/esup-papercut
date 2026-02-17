@@ -19,10 +19,13 @@ package org.esupportail.papercut.dao;
 
 import org.esupportail.papercut.domain.PayPapercutTransactionLog;
 import org.esupportail.papercut.domain.PayPapercutTransactionLog.PayMode;
+import org.esupportail.papercut.domain.PayPapercutTransactionLogSearch;
 import org.esupportail.papercut.security.ContextHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -89,7 +92,21 @@ public class PapercutDaoService {
 	public Page<PayPapercutTransactionLog> findAllPayPapercutTransactionLogs(Pageable pageable) {
 		return txRepository.findAll(pageable);
 	}
-    
+
+	public Page<PayPapercutTransactionLog> findPayPapercutTransactionLogsByExample(PayPapercutTransactionLogSearch payPapercutTransactionLogSearch, Pageable pageable) {
+		// Création d'un exemple de recherche à partir de l'objet de recherche
+		PayPapercutTransactionLog example = new PayPapercutTransactionLog(payPapercutTransactionLogSearch);
+
+		// Utilisation de ExampleMatcher pour définir les critères de recherche
+		ExampleMatcher matcher = ExampleMatcher.matching()
+			.withIgnoreNullValues() // Ignorer les valeurs null
+			.withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING) // Recherche par contenu pour les String
+			.withIgnoreCase(); // Ignorer la casse pour les String
+
+		Example<PayPapercutTransactionLog> exampleQuery = Example.of(example, matcher);
+		return txRepository.findAll(exampleQuery, pageable);
+	}
+
 	
 	/*
 	 * Requêtes pour PostgreSQL : corespondent aux préférences "requetes***" positionnées à la valeur "useOriginal"

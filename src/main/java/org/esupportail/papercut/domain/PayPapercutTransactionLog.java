@@ -35,30 +35,46 @@ public class PayPapercutTransactionLog implements ContextSupport {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "papercut_pay_transaction_log_seq_gen")
 	@SequenceGenerator(name = "papercut_pay_transaction_log_seq_gen", sequenceName = "hibernate_sequence", allocationSize = 1)
     @Column(name = "id")
-    private Long id;
+    Long id;
     
     @Temporal(TemporalType.TIMESTAMP)
     @DateTimeFormat(style = "dd/MM/yyyy-HH:mm:ss")
-    private Date transactionDate;
+    Date transactionDate;
     
     @Enumerated(EnumType.STRING)
-    private PayMode payMode;
+    PayMode payMode;
 
-    private String uid;
+    String uid;
 
-    private String papercutContext;
+    String papercutContext;
 
-    private String reference;
+    String reference;
 
-    private Integer montant;
+    Integer montant;
 
-    private String papercutNewSolde;
+    String papercutNewSolde;
 
-    private String idtrans;
+    String idtrans;
 
-    private String papercutOldSolde;
+    String papercutOldSolde;
     
-    private Boolean archived = false;   
+    Boolean archived = false;
+
+	public PayPapercutTransactionLog() {
+	}
+
+	public PayPapercutTransactionLog(PayPapercutTransactionLog tx) {
+		this.transactionDate = tx.transactionDate;
+		this.payMode = tx.payMode;
+		this.uid = tx.uid;
+		this.papercutContext = tx.papercutContext;
+		this.reference = tx.reference;
+		this.montant = tx.montant;
+		this.papercutNewSolde = tx.papercutNewSolde;
+		this.idtrans = tx.idtrans;
+		this.papercutOldSolde = tx.papercutOldSolde;
+		this.archived = tx.archived;
+	}
     
     public Long getId() {
 		return id;

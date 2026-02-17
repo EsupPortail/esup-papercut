@@ -30,6 +30,7 @@ import org.esupportail.papercut.dao.AdminProfilRepository;
 import org.esupportail.papercut.dao.PapercutDaoService;
 import org.esupportail.papercut.domain.AdminProfil;
 import org.esupportail.papercut.domain.PayPapercutTransactionLog;
+import org.esupportail.papercut.domain.PayPapercutTransactionLogSearch;
 import org.esupportail.papercut.security.ContextHelper;
 import org.esupportail.papercut.services.EsupPaperCutService;
 import org.esupportail.papercut.services.StatsService;
@@ -94,9 +95,21 @@ public class AdminController {
 	}
 
 	@GetMapping(produces = "text/html")
-    public String historyList(@PageableDefault(size = 10, direction = Direction.DESC, sort = "transactionDate") Pageable pageable, 
-    		Model uiModel) { 	
-        uiModel.addAttribute("pageLogs", papercutDaoService.findAllPayPapercutTransactionLogs(pageable));
+    public String historyList(@PageableDefault(size = 10, direction = Direction.DESC, sort = "transactionDate") Pageable pageable,
+    		PayPapercutTransactionLogSearch payPapercutTransactionLogSearch,
+    		Model uiModel) {
+
+    	Page<PayPapercutTransactionLog> pageLogs;
+    	// Si tous les critères sont vides, on récupère tous les logs
+    	if((payPapercutTransactionLogSearch.searchCriteriasAreEmpty())) {
+    		pageLogs = papercutDaoService.findAllPayPapercutTransactionLogs(pageable);
+    	} else {
+    		pageLogs = papercutDaoService.findPayPapercutTransactionLogsByExample(payPapercutTransactionLogSearch, pageable);
+    	}
+
+        uiModel.addAttribute("pageLogs", pageLogs);
+		uiModel.addAttribute("payPapercutTransactionLogSearch", payPapercutTransactionLogSearch);
+
 		EsupPapercutContext context = config.getContext(ContextHelper.getCurrentContext());
 		if(context.getExportPublicHashEnabled()) {
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
